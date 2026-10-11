@@ -1,0 +1,127 @@
+{
+  "version": "iwsdk.scene.v1",
+  "units": "meters",
+  "resources": {},
+  "nodes": [
+    {
+      "id": "viewing-space",
+      "name": "Viewing space",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      "children": [
+        {
+          "id": "surfaces",
+          "name": "Viewing surfaces",
+          "content": {
+            "type": "asset",
+            "asset": "surfaces"
+          },
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "watch-controls",
+          "name": "watch-controls",
+          "content": {
+            "type": "asset",
+            "asset": "watch-controls"
+          },
+          "transform": {
+            "position": [
+              -0.65,
+              0.65,
+              -2.2
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
+        },
+        {
+          "id": "learning",
+          "name": "learning",
+          "content": {
+            "type": "asset",
+            "asset": "learning"
+          },
+          "transform": {
+            "position": [
+              1.2,
+              1.24,
+              -2.05
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
+        },
+        {
+          "id": "explore",
+          "name": "explore",
+          "content": {
+            "type": "asset",
+            "asset": "explore"
+          },
+          "transform": {
+            "position": [
+              0,
+              1.04,
+              -0.85
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
+        },
+        {
+          "id": "welcome",
+          "name": "welcome",
+          "content": {
+            "type": "asset",
+            "asset": "welcome"
+          },
+          "transform": {
+            "position": [
+              0,
+              1.3,
+              -1.7
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
+        }
+      ]
+    }
+  ],
+  "authoring": {
+    "views": [
+      {
+        "id": "hero",
+        "role": "hero",
+        "projection": "perspective",
+        "position": [
+          0,
+          1.3,
+          0
+        ],
+        "target": [
+          0,
+          1.3,
+          -2
+        ],
+        "fov": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101917" />
+    <link rel="icon" href="data:," />
+    <title>Football Spanish Companion</title>
+  </head>
+  <body>
+    <div id="scene-container"></div>
+    <div id="desktop">
+      <header>
+        <a class="brand" href="./"
+          ><span class="brand-mark">↗</span
+          ><span
+            >Football <b>Spanish</b><small>LEARN FROM THE ACTION</small></span
+          ></a
+        >
+        <div class="header-actions">
+          <span class="prototype">FIRST PLAY · 30 SECONDS</span
+          ><button id="enter-vr" disabled>Enter VR ↗</button>
+        </div>
+      </header>
+      <main>
+        <section id="intro" class="intro">
+          <p class="eyebrow">A MATCH WORTH REMEMBERING</p>
+          <h1>
+            Enjoy the football.<br />Take a little <em>Spanish</em> with you.
+          </h1>
+          <p class="lead">
+            Watch an original passing play. Explore the movement.<br />Connect
+            the words to the game you already know.
+          </p>
+          <div class="intro-details">
+            <span>01 &nbsp; Watch the match</span
+            ><span>02 &nbsp; Trace the pass</span
+            ><span>03 &nbsp; Keep the phrase</span>
+          </div>
+          <p class="muted">
+            Spanish audio plays only when you choose Listen. Learning prompts
+            can be hidden.<br />In VR, point at a control and pinch to select
+            it.
+          </p>
+          <div class="row">
+            <button id="start" class="primary" disabled>
+              Preparing your match…</button
+            ><button id="resume-saved" hidden>Resume previous session</button>
+          </div>
+        </section>
+        <div id="experience" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" id="mode-label">WATCH & LEARN</p>
+              <h1 class="small-title" id="experience-title">
+                A simple pass. A new connection.
+              </h1>
+            </div>
+            <div class="row">
+              <button id="library">
+                Your phrases <span id="saved-count">0</span></button
+              ><button id="hide-prompts">Hide prompts</button>
+            </div>
+          </div>
+          <div class="watch-layout" id="watch-layout">
+            <section class="match-card">
+              <div class="scoreboard">
+                <span class="team-blue">BLUE</span><b>0 – 0</b
+                ><span class="team-amber">AMBER</span
+                ><span class="simulation">SIMULATED MATCH</span>
+              </div>
+              <div id="video-mount"></div>
+              <div class="caption" id="caption" aria-live="off"></div>
+              <div class="playback">
+                <button id="play" aria-label="Pause match">Pause</button
+                ><span id="time">00:00 / 00:30</span
+                ><progress
+                  id="match-progress"
+                  max="30"
+                  value="0"
+                  aria-label="Match progress"
+                ></progress
+                ><button id="mute">Mute</button
+                ><button id="restart">Restart</button>
+              </div>
+            </section>
+            <aside class="learning-card">
+              <div id="waiting">
+                <p class="eyebrow">THE LEARNING COMPANION</p>
+                <h2>Follow the play.</h2>
+                <div class="waiting-pitch">↗</div>
+                <p>
+                  A phrase will appear during the replay.<br />You can keep
+                  watching or take a closer look.
+                </p>
+                <span class="tag">NO COMPULSORY STUDY</span>
+              </div>
+              <div id="phrase-card" hidden>
+                <p class="eyebrow">THE PASS <span class="tag">01</span></p>
+                <canvas
+                  id="watch-diagram"
+                  width="640"
+                  height="360"
+                  aria-label="Illustrated pass between two blue players"
+                ></canvas>
+                <h2>El jugador pasa el balón.</h2>
+                <p class="translation">The player passes the ball.</p>
+                <div class="row">
+                  <button id="listen">Listen</button
+                  ><button id="save">Save phrase</button>
+                </div>
+                <button id="explore" class="primary wide">
+                  Explore action ↗
+                </button>
+              </div>
+            </aside>
+          </div>
+          <section id="explore-view" class="explore-card" hidden>
+            <p class="eyebrow">MATCH PAUSED · EXPLORE THE PASS</p>
+            <h2>Let the movement tell the story.</h2>
+            <div id="chunks" class="chunks">
+              <span>El jugador</span><span>pasa</span><span>el balón</span>
+            </div>
+            <canvas
+              id="trace-diagram"
+              width="960"
+              height="540"
+              tabindex="0"
+              aria-label="Pass route. Select Start trace, then drag from player 7 to player 9. Replay is available without tracing."
+            ></canvas>
+            <p id="trace-instruction">
+              Choose Start trace, then follow the ball from player 7 to player
+              9.
+            </p>
+            <div class="row center">
+              <button id="trace-start" class="primary">Start trace</button
+              ><button id="replay">Replay action</button
+              ><button id="explore-listen">Listen</button
+              ><button id="explore-save">Save phrase</button
+              ><button id="back">Back to match →</button>
+            </div>
+          </section>
+          <section id="library-view" class="library-card" hidden>
+            <p class="eyebrow">YOUR PHRASES</p>
+            <h2>A little football. A little Spanish.</h2>
+            <div id="library-empty">
+              Watch the passing replay to see your first phrase.
+            </div>
+            <div id="library-phrase" hidden>
+              <h3>El jugador pasa el balón.</h3>
+              <p>The player passes the ball.</p>
+              <p id="library-status"></p>
+              <div class="row">
+                <button id="library-listen">Listen</button
+                ><button id="library-save">Save phrase</button>
+              </div>
+            </div>
+            <button id="library-back">Back to match →</button>
+          </section>
+          <section id="completed" class="completion" hidden>
+            <p class="eyebrow">FULL TIME · FIRST PLAY</p>
+            <h2>A pass you can put into words.</h2>
+            <p>
+              You’ve finished the 30-second prototype. Your saved phrase stays
+              on this device.
+            </p>
+            <div class="row center">
+              <button id="completed-library">Your phrases</button
+              ><button id="completed-restart" class="primary">
+                Watch again
+              </button>
+            </div>
+          </section>
+          <section id="suspended" class="completion" hidden>
+            <p class="eyebrow">TAKE YOUR TIME</p>
+            <h2>Your match is paused.</h2>
+            <p>Resume from the same moment when you are ready.</p>
+            <div class="row center">
+              <button id="resume" class="primary">Resume match</button
+              ><button id="suspended-restart">Restart</button>
+            </div>
+          </section>
+        </div>
+        <button id="stop-audio" hidden>Stop Spanish audio</button>
+        <p id="status" role="status">Preparing your match…</p>
+        <button id="retry" hidden>Retry loading</button>
+        <p id="xr-status" class="muted"></p>
+      </main>
+      <footer>
+        <span>FOOTBALL SPANISH COMPANION</span
+        ><span
+          >Original simulation · Device-local progress · Prototype audio
+          awaiting review</span
+        >
+      </footer>
+    </div>
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>

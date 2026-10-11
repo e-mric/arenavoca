@@ -1,0 +1,17 @@
+.DS_Store
+app/node_modules/
+app/dist/
+app/.iwsdk/
+app/test-results/
+app/playwright-report/
+app/coverage/
+app/content-source/frames/
+app/content-source/*.log
+app/content-source/*.blend1
+app/.claude/
+app/.cursor/
+app/.vscode/
+app/.codex/
+app/.mcp.json
+app/opencode.json
+app/CLAUDE.md

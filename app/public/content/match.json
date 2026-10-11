@@ -1,0 +1,85 @@
+{
+  "version": "prototype-pass-v1",
+  "duration": 30,
+  "video": "media/match.mp4",
+  "phrases": [
+    {
+      "id": "pass",
+      "spanish": "El jugador pasa el balón.",
+      "english": "The player passes the ball.",
+      "chunks": [
+        "El jugador",
+        "pasa",
+        "el balón"
+      ],
+      "pronunciation": "audio/pass-es.mp3",
+      "action": "pass",
+      "reviewStatus": "pending"
+    }
+  ],
+  "events": [
+    {
+      "id": "pass-01",
+      "phraseId": "pass",
+      "diagramId": "pass-diagram",
+      "actionStart": 6,
+      "actionEnd": 8,
+      "promptStart": 12,
+      "promptEnd": 20
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "pass-diagram",
+      "duration": 3,
+      "route": [
+        [
+          0.32,
+          0.7
+        ],
+        [
+          0.65,
+          0.35
+        ]
+      ],
+      "players": [
+        {
+          "id": "b7",
+          "team": "blue",
+          "position": [
+            0.32,
+            0.7
+          ]
+        },
+        {
+          "id": "b9",
+          "team": "blue",
+          "position": [
+            0.65,
+            0.35
+          ]
+        },
+        {
+          "id": "a4",
+          "team": "amber",
+          "position": [
+            0.56,
+            0.62
+          ]
+        }
+      ]
+    }
+  ],
+  "captions": [
+    {
+      "start": 6,
+      "end": 9.6,
+      "text": "A lovely pass to his teammate. Blue keep possession."
+    },
+    {
+      "start": 12,
+      "end": 15,
+      "text": "Replay · The pass between the blue teammates."
+    }
+  ]
+}

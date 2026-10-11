@@ -1,0 +1,18 @@
+{
+  "version": "prototype-pass-v1",
+  "duration": 30,
+  "pass": {"from": [0.32, 0.70], "to": [0.65, 0.35], "start": 6, "end": 8, "replayStart": 12, "replayEnd": 15},
+  "players": [
+    {"id":"b7","team":"blue","position":[0.32,0.70]},
+    {"id":"b9","team":"blue","position":[0.65,0.35]},
+    {"id":"a4","team":"amber","position":[0.56,0.62]},
+    {"id":"b3","team":"blue","position":[0.18,0.36]},
+    {"id":"b5","team":"blue","position":[0.38,0.22]},
+    {"id":"b2","team":"blue","position":[0.77,0.74]},
+    {"id":"a6","team":"amber","position":[0.70,0.48]},
+    {"id":"a8","team":"amber","position":[0.43,0.44]},
+    {"id":"a2","team":"amber","position":[0.84,0.22]},
+    {"id":"a1","team":"amber","position":[0.96,0.50]},
+    {"id":"b1","team":"blue","position":[0.04,0.50]}
+  ]
+}
