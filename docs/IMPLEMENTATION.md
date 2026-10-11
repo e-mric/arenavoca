@@ -32,7 +32,7 @@
 | XR | Required hand-tracking, no locomotion, in-world controls/hand ray components and local font bindings; active emulated immersive session observed |
 | Browser journeys | Watch → trace/listen/save/back/reopen, Replay, ignored muted offline completion, failed Save, media/audio recovery, narrow layout |
 
-The browser tests caught and fixed three defects: Replay reset its sentence after completion; initial non-immersive XR initialization suspended a browser-started match; repeated storage-write failures overwrote the Save retry message. Unit regressions cover these behaviors.
+The browser tests caught and fixed startup and recovery defects: Replay reset its sentence after completion; initial non-immersive XR initialization suspended a browser-started match; repeated storage-write failures overwrote the Save retry message; browser playback initially waited for spatial font preparation. The desktop loop now runs independently during VR initialization. Unit regressions cover these behaviors.
 
 Browser screenshots in this folder are actual implementation captures. `prototype-xr.png` is an **emulator** capture, not Quest footage. The handoff design PNG remains a static reference.
 

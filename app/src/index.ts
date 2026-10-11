@@ -38,6 +38,16 @@ async function boot() {
         "Pronunciation could not load. You can still watch; retry with Listen.";
     }
     session.ready();
+    let last = performance.now(),
+      active = true;
+    function frame(now: number) {
+      if (!active) return;
+      const delta = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      if (!world?.xrSession) experience.frame(delta);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
     try {
       world = await World.create(element("scene-container"), projectOptions);
       const fontFamilies = await loadCompanionFont();
@@ -57,17 +67,7 @@ async function boot() {
       element("xr-status").textContent =
         "VR could not initialize. Desktop preview is available. Reload to retry VR.";
     }
-    let last = performance.now(),
-      active = true;
-    function frame(now: number) {
-      if (!active) return;
-      const delta = Math.min(0.1, (now - last) / 1000);
-      last = now;
-      if (!world?.xrSession) experience.frame(delta);
-      requestAnimationFrame(frame);
-    }
     world?.onXRFrame((_frame, delta) => experience.frame(delta));
-    requestAnimationFrame(frame);
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) session.suspend();
     });
