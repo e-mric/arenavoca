@@ -1,4 +1,4 @@
-# Football Spanish Companion
+# ArenaVoca
 
 Read PRD.md before changing product behavior. Application code lives in app/.
 

@@ -1,4 +1,10 @@
-# Sports Spanish Companion
+# ArenaVoca
+
+**Your sport. A new way to speak.**
+
+Learn languages through immersive sports. Watch football, F1 and more in a virtual theater or mixed reality on Meta Quest.
+
+[GitHub repository](https://github.com/e-mric/arenavoca)
 
 The primary prototype is an **immersive sports viewing lounge** with a large match screen and optional floating Spanish panels. Choose **Theater** for the enclosed room or **My room · Passthrough** to keep your real surroundings visible behind the screen. Both use one video timeline; Explore, Replay and Save leave playback running. Pause remains explicit.
 

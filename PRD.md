@@ -1,4 +1,4 @@
-# Football Spanish Companion PRD
+# ArenaVoca PRD
 
 Version 4 · Consolidated project handoff · 12 October 2026
 
@@ -51,7 +51,7 @@ The current scope and first milestone are sufficiently defined to begin. Exact p
 
 ## Product Summary
 
-The broader product helps English-speaking sports fans learn useful Spanish phrases through sporting actions they already understand. Football Spanish Companion is its first implemented content pack and working prototype name. A virtual viewing screen remains the centre of attention. At selected moments, a sport-specific illustration reconstructs an action and connects it to a Spanish phrase with an English explanation. The viewer chooses whether to listen, explore, or save the phrase.
+The broader product helps English-speaking sports fans learn useful Spanish phrases through sporting actions they already understand. ArenaVoca is the product name; Football Spanish Companion was the original working name for its first content pack. A virtual viewing screen remains the centre of attention. At selected moments, a sport-specific illustration reconstructs an action and connects it to a Spanish phrase with an English explanation. The viewer chooses whether to listen, explore, or save the phrase.
 
 The first release demonstrates this experience through one original, unbranded, six-minute match simulation and an optional one-minute review. It tests whether contextual learning can improve phrase recall without reducing viewing enjoyment. The user additionally authorized real YouTube source playback with a separate browser-window companion; this is a parallel prototype path alongside the original immersive demo.
 

@@ -1,5 +1,5 @@
 /** Immersive viewing identity, independent of the browser-window source route. */
-export const theaterName = "Sports viewing lounge";
+export const theaterName = "ArenaVoca viewing lounge";
 
 export type ViewingMode = "theater" | "passthrough";
 /** AR keeps the camera view clear; geometry and panels remain world anchored. */
