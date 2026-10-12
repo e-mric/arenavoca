@@ -223,6 +223,24 @@
               "castShadow": false
             }
           }
+        },
+        {
+          "id": "coach",
+          "name": "coach",
+          "content": {
+            "type": "asset",
+            "asset": "coach"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
         }
       ]
     }

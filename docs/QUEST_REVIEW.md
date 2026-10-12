@@ -114,3 +114,17 @@ Was the learning card distracting? ______
 Did tracing help connect the sentence to the action? ______
 
 Frame rate, ten-minute comfort, three-person text readability, full six-target content, and release language review remain later acceptance work. No headset measurements have been claimed.
+
+## AI coach acceptance (pending physical Quest confirmation)
+
+Reload the production page on Quest after the build. Start the full match, then choose **AI coach** in the floating playback controls. The coach opens beside the screen in both Theater and My room; its placement controls use the existing side/distance/height preferences.
+
+1. Before Start voice, verify no microphone prompt or coach speech. Read the short speech-processing notice. Start voice and grant microphone permission when ready.
+2. Select Explain. Hear a short English explanation with Spanish examples. The game continues; commentary lowers during the answer and recovers afterward.
+3. Select Say it slowly. Check Spanish intelligibility with a fluent reviewer. Select Let me try, then Speak a question and answer. Verify the Listening label, Done control and automatic mute after your turn (15-second maximum). Use headphones to reduce match sound in the mic.
+4. Select Simple Spanish. Replies should become short, simple Spanish. Check full reply pagination when necessary.
+5. End session: speech stops and the browser's microphone indicator clears. Close coach: the prior learning panel returns, without seeking or resuming an explicitly paused match.
+6. Try Start text after End, then Explain: response without a microphone prompt. Test connection failure and recovery. Remove the headset or open the system menu during speech; verify the session ends.
+7. Repeat in passthrough. Record device/browser version, perception of latency, pinch accuracy, speech recognition, echo, readability and comfort. Browser emulation does not establish these results.
+
+Provider settings verified: no stored call audio; one-day transcript retention; 60-second silence cutoff; five-minute session cap; 30 calls/day and two concurrent calls. No application transcript history is persisted. The local demo agent is public and its ID is kept in ignored local configuration; authenticated server credentials are required before public deployment.

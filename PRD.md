@@ -327,7 +327,7 @@ Acceptance criteria:
 - Progress includes saved phrases, completed review results, session position, and display preferences.
 - Clear Progress explains what will be removed and requires a deliberate confirmation within the product.
 - Clearing progress returns the learning experience to its initial state.
-- No voice recording or pronunciation evaluation is part of the first release.
+- Optional AI voice practice was authorized on 12 October 2026. Microphone access is explicit; speech is processed by ElevenLabs, with audio storage disabled and a one-day transcript retention setting. Formal pronunciation evaluation remains out of scope.
 
 ## Edge Cases
 
@@ -368,7 +368,7 @@ Protect pass tracing for the first passing example: the user selected it as the 
 - **Additional native languages beyond English:** the prototype supports English and Spanish commentary; further native-language audio and captions need separate content production and review.
 - **Full 3D match reconstruction:** the chosen visual is an illustrated tactical diagram with animated markers and arrows.
 - **Social viewing, multiplayer, accounts, subscriptions, and cloud syncing:** a single viewer can complete the experience without them.
-- **Speech assessment or an open-ended AI tutor:** these add a separate learning experience and evaluation burden.
+- **Formal speech assessment:** requires separate acoustic evaluation and fluent-speaker validation. The authorized AI coach offers bounded phrase explanations and short practice exchanges.
 - **Live human coaching:** planned for a later release after the individual learning experience has been validated.
 - **Formal proficiency grading or promised fluency:** the available demonstration supports a narrower vocabulary-learning hypothesis.
 - **Watching a real TV through passthrough:** the selected viewing arrangement is a screen inside the headset.
@@ -385,6 +385,28 @@ Future work should follow evidence that viewers enjoy and remember the first exp
 5. Additional commentary and learning languages, each with reviewed content.
 6. Connect learners with a human Spanish language coach, using saved phrases and illustrated plays as the starting point for conversation.
 7. Shared match viewing and live coaching during stoppages, after the individual experience and coach sessions are useful.
+
+### AI Coach Roadmap · 12 October 2026
+
+The first AI coach is an optional floating panel in Theater and My room, with a desktop equivalent. It uses the selected sport, team, Spanish phrase and translation. The match remains under its existing playback controls. Coach speech and invited microphone windows lower commentary volume temporarily, respecting the current mute preference.
+
+**Implemented for prototype review:** Explain phrase; Say it slowly; Let me try; Simple Spanish; visible response text; explicit voice start; microphone muted between invited speaking windows (maximum 15 seconds); End session and Close; text-only fallback; connection failure recovery; five-minute client/server session limit. The provider ends a session after 60 seconds of silence. Closing, suspension and page exit end the conversation. Replies are session-local in the app; ElevenLabs is configured not to store audio and to retain transcripts for one day. Slow delivery is an AI instruction, pending fluent-speaker and device review. There is no pronunciation score.
+
+**Next, before sharing outside the local demo:**
+
+1. Quest 3 voice acceptance in theater and passthrough: microphone permission, reliable mute/stop, speech echo from the match, English/Spanish recognition, latency, readable replies and hand-ray selection. Test glasses hardware independently when available.
+2. Server-issued authenticated session credentials, per-user limits and cost monitoring. The demo agent uses a public ID configured only in ignored `.env.local`; this is not authentication. The provider dashboard rejected localhost allowlist entries during setup. Do not deploy that demo configuration publicly. API keys must remain server-side.
+3. Reviewed football and F1 dialogues, AI grounding evaluations, better slow speech, interruption handling, and native-language preferences beyond English. Text-only input should support a comfortable spatial keyboard or dictated input fallback.
+
+**Later product experiments:**
+
+- Timestamp-aligned, rights-cleared transcripts for “What did the commentator say?” and translation of the last sentence. Show the exact source/time and admit when context is missing. The current coach cannot hear or watch the broadcast.
+- Voice commands to save the current phrase, move the panel and switch supported learning modes, with explicit confirmation for disruptive playback changes.
+- Optional pronunciation feedback validated against human reviewers; no proficiency claims based on speech recognition alone.
+- Spaced practice using saved phrases, adjustable coaching frequency, and brief post-match review. Store learning history only with a clear learner choice.
+- More sports and languages, shared viewing, and handoff to the human coaching experience below.
+
+Acceptance remains evidence-driven: keep the sports experience enjoyable, verify phrase recall separately, and never use browser emulation as proof of physical headset microphone performance.
 
 ### Future Human Spanish Coaching
 
@@ -562,7 +584,7 @@ Use one event source for the diagram and simulation authoring so the explanation
 
 Implements PRD S05 and R05.
 
-Preload six reviewed pronunciation clips. Listen explicitly starts or restarts the selected clip, without overlapping voices. Temporarily reduce the commentary volume in Watch mode, restoring the user's current volume and mute preference when playback ends or stops. Listen ducks commentary in exploration too, without pausing the match. No microphone permission is needed. The optional Spanish commentary track follows the video clock, replaces rather than overlaps English, and obeys the same mute and ducking settings.
+Preload six reviewed pronunciation clips. Listen explicitly starts or restarts the selected clip, without overlapping voices. Temporarily reduce the commentary volume in Watch mode, restoring the user's current volume and mute preference when playback ends or stops. Listen ducks commentary in exploration too, without pausing the match. Prepared Listen clips need no microphone permission. The optional voice coach asks for microphone permission only when the learner starts it. The optional Spanish commentary track follows the video clock, replaces rather than overlaps English, and obeys the same mute and ducking settings.
 
 English and Spanish commentary captions use authored timed cues and appear inside the XR scene; ordinary browser DOM overlays are not a substitute for captions visible in VR. Caption timing follows the match player. Release font assets must include Spanish accented characters.
 

@@ -56,7 +56,8 @@ export function attachXR(
     learning = panel("learning"),
     explore = panel("explore"),
     welcome = panel("welcome"),
-    karaoke = panel("karaoke");
+    karaoke = panel("karaoke"),
+    coachPanel = panel("coach");
   watch.document.setTargetDimensions(1.95, 0.57);
   learning.document.setTargetDimensions(1.05, 1.435);
   explore.document.setTargetDimensions(1.12, 1.12);
@@ -90,7 +91,9 @@ export function attachXR(
     layout.position.set(position.x, 0, position.z);
     layout.rotation.y = Math.atan2(direction.x, direction.z);
   };
-  const roots = [watch, learning, explore, welcome, karaoke];
+  const roots = [watch, learning, explore, welcome, karaoke, coachPanel];
+  let coachPage = 0,
+    previousReply = "";
   for (const root of roots)
     root.document.rootElement.setProperties({ fontFamilies });
   const find = (id: string) =>
@@ -104,6 +107,8 @@ export function attachXR(
   const probes = new Map<string, ReturnType<World["createTransformEntity"]>>();
   if (import.meta.env.DEV) {
     for (const id of [
+      "xr-coach-open",
+      "xr-coach-close",
       "xr-start",
       "xr-explore",
       "xr-replay",
@@ -115,6 +120,22 @@ export function attachXR(
     }
   }
   const actions: Record<string, () => unknown> = {
+    "xr-coach-open": () => experience.openCoach(),
+    "xr-coach-close": () => experience.coach?.close(),
+    "xr-coach-end": () => experience.coach?.stop(),
+    "xr-coach-voice": () => experience.coach?.start("voice"),
+    "xr-coach-text": () => experience.coach?.start("text"),
+    "xr-coach-mic": () => experience.coach?.toggleMic(),
+    "xr-coach-explain": () => experience.coach?.ask("explain"),
+    "xr-coach-slow": () => experience.coach?.ask("slow"),
+    "xr-coach-practice": () => experience.coach?.ask("practice"),
+    "xr-coach-spanish": () => experience.coach?.ask("spanish"),
+    "xr-coach-next": () => {
+      coachPage++;
+    },
+    "xr-coach-side": () => actions["xr-side"](),
+    "xr-coach-distance": () => actions["xr-panel-distance"](),
+    "xr-coach-height": () => actions["xr-panel-height"](),
     "xr-play": () => s.togglePlayback(),
     "xr-restart": () => s.restart(),
     "xr-mute": () => s.setPreference("muted", !s.snapshot.preferences.muted),
@@ -290,8 +311,43 @@ export function attachXR(
     watch.visible = s.matchActive;
     learning.visible =
       (mode === "Watching" && !!s.prompt) || (library && !!s.phrase);
+    const coach = experience.coach;
+    coachPanel.visible = !!coach?.open && watching;
+    learning.visible &&= !coachPanel.visible;
+    if (coach) {
+      text("xr-coach-status", coach.status);
+      text("xr-coach-phrase", coach.context?.phrase ?? "");
+      if (previousReply !== coach.reply) {
+        coachPage = 0;
+        previousReply = coach.reply;
+      }
+      const pages = Math.max(1, Math.ceil(coach.reply.length / 240));
+      coachPage %= pages;
+      text(
+        "xr-coach-reply",
+        coach.reply.slice(coachPage * 240, (coachPage + 1) * 240) ||
+          "Choose Start voice or Start text, then a practice option.",
+      );
+      text(
+        "xr-coach-page",
+        pages > 1 ? `Reply ${coachPage + 1} / ${pages}` : "",
+      );
+      text("xr-coach-notice", coach.notice);
+      text(
+        "xr-coach-mic-label",
+        coach.listening ? "Done speaking" : "Speak a question",
+      );
+      show("xr-coach-next", pages > 1);
+      show("xr-coach-starts", coach.phase === "off" || coach.phase === "error");
+      show("xr-coach-actions", coach.phase === "ready");
+      show("xr-coach-mic", coach.mode === "voice" && !coach.speaking);
+      show(
+        "xr-coach-end",
+        coach.phase === "ready" || coach.phase === "connecting",
+      );
+    }
     diagram.visible = learning.visible;
-    explore.visible = mode === "Exploring";
+    explore.visible = mode === "Exploring" && !coachPanel.visible;
     tracePlane.visible = explore.visible;
     welcome.visible = [
       "Onboarding",
@@ -348,6 +404,9 @@ export function attachXR(
       const pose = companionPlacement(s.snapshot.preferences);
       explore.position.set(pose.x, pose.y, pose.z);
       explore.rotation.y = -0.55 * side;
+      coachPanel.position.set(pose.x, pose.y, pose.z);
+      coachPanel.rotation.y = -0.55 * side;
+      coachPanel.document.setTargetDimensions(pose.width, pose.width);
       explore.document.setTargetDimensions(pose.width, pose.width);
       tracePlane.scale.setScalar(pose.width / 1.12);
       placementKey = key;

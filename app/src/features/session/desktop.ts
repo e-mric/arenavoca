@@ -22,6 +22,16 @@ export function bindDesktop(experience: Experience) {
   const companion = element("companion");
   companion.append(element("explore-view"), element("library-view"));
   const handlers: Record<string, () => unknown> = {
+    "coach-open": () => experience.openCoach(),
+    "coach-voice": () => experience.coach?.start("voice"),
+    "coach-text": () => experience.coach?.start("text"),
+    "coach-mic": () => experience.coach?.toggleMic(),
+    "coach-explain": () => experience.coach?.ask("explain"),
+    "coach-slow": () => experience.coach?.ask("slow"),
+    "coach-practice": () => experience.coach?.ask("practice"),
+    "coach-spanish": () => experience.coach?.ask("spanish"),
+    "coach-end": () => experience.coach?.stop(),
+    "coach-close": () => experience.coach?.close(),
     start: () => s.start(),
     "resume-saved": () => s.start(true),
     play: () => s.togglePlayback(),
@@ -78,6 +88,12 @@ export function bindDesktop(experience: Experience) {
   };
   for (const [id, action] of Object.entries(handlers))
     element(id).addEventListener("click", () => void action());
+  element("coach-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = element<HTMLInputElement>("coach-question");
+    experience.coach?.ask(input.value);
+    input.value = "";
+  });
   const canvas = element<HTMLCanvasElement>("trace-diagram");
   let pointer: number | undefined;
   canvas.addEventListener("pointerdown", (e) => {
@@ -143,14 +159,40 @@ export function bindDesktop(experience: Experience) {
       !s.snapshot.resumableSession || s.snapshot.resumableSession.completed,
     );
     hidden(element("watch-layout"), mode === "Suspended");
-    const companionOpen = mode === "Exploring" || mode === "PhraseLibrary";
+    const coach = experience.coach;
+    const coaching = !!coach?.open;
+    hidden(element("coach-card"), !coaching);
+    if (coach) {
+      text(element("coach-phrase"), coach.context?.phrase ?? "");
+      text(element("coach-status"), coach.status);
+      text(element("coach-reply"), coach.reply);
+      text(element("coach-heard"), coach.heard ? `You: ${coach.heard}` : "");
+      text(element("coach-notice"), coach.notice);
+      hidden(
+        element("coach-starts"),
+        coach.phase === "ready" || coach.phase === "connecting",
+      );
+      hidden(element("coach-actions"), coach.phase !== "ready");
+      hidden(
+        element("coach-end"),
+        coach.phase !== "ready" && coach.phase !== "connecting",
+      );
+      hidden(element("coach-mic"), coach.mode !== "voice");
+      element<HTMLButtonElement>("coach-mic").disabled = coach.speaking;
+      text(
+        element("coach-mic"),
+        coach.listening ? "Done speaking" : "Speak a question",
+      );
+    }
+    const companionOpen =
+      coaching || mode === "Exploring" || mode === "PhraseLibrary";
     element("watch-layout").classList.toggle("companion-open", companionOpen);
     element("watch-layout").classList.toggle(
       "left",
       s.snapshot.preferences.panelSide === "left",
     );
-    hidden(element("explore-view"), mode !== "Exploring");
-    hidden(element("library-view"), mode !== "PhraseLibrary");
+    hidden(element("explore-view"), mode !== "Exploring" || coaching);
+    hidden(element("library-view"), mode !== "PhraseLibrary" || coaching);
     hidden(element("completed"), mode !== "Completed");
     hidden(element("suspended"), mode !== "Suspended");
     hidden(element("waiting"), companionOpen || !!s.prompt || !!s.chant);
@@ -242,7 +284,7 @@ export function bindDesktop(experience: Experience) {
         : "Enable chant lyrics",
     );
     const chant = s.chant;
-    hidden(element("karaoke-card"), !chant);
+    hidden(element("karaoke-card"), !chant || coaching);
     if (chant) {
       const word = activeWord(chant, s.player.position);
       element("karaoke-lyrics")

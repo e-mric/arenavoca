@@ -6,15 +6,20 @@ export default defineAssets({
   surfaces,
   theater,
   ...Object.fromEntries(
-    ["watch-controls", "learning", "explore", "welcome", "karaoke"].map(
-      (id) => [
-        id,
-        {
-          url: assetUrl(`ui/${id}.uikitml`),
-          type: AssetType.UIKitML,
-          name: id,
-        },
-      ],
-    ),
+    [
+      "watch-controls",
+      "learning",
+      "explore",
+      "welcome",
+      "karaoke",
+      "coach",
+    ].map((id) => [
+      id,
+      {
+        url: assetUrl(`ui/${id}.uikitml`),
+        type: AssetType.UIKitML,
+        name: id,
+      },
+    ]),
   ),
 });

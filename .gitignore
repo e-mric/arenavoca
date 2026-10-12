@@ -22,3 +22,8 @@ app/public/media/user/
 /*.mp4
 /*.webm
 /*.mkv
+
+# Local service configuration and credentials
+.env*
+app/.env*
+!app/.env.example

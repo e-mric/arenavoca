@@ -125,3 +125,46 @@ it("Back during a pronunciation fetch never starts a stale phrase", async () => 
   await pending;
   expect(audio.listen).not.toHaveBeenCalled();
 });
+
+it("voice coach ducks without pausing, respects mute, and releases on suspension", async () => {
+  const { Coach } = await import("../coach/coach");
+  const { e, session, player } = await setup();
+  let events!: import("../coach/coach").CoachEvents;
+  const endSession = vi.fn(async () => {});
+  const coach = new Coach(async (_, callbacks) => {
+    events = callbacks;
+    return {
+      endSession,
+      setMicMuted: vi.fn(),
+      sendContextualUpdate: vi.fn(),
+      sendUserMessage: vi.fn(),
+    };
+  });
+  e.attachCoach(coach);
+  e.openCoach();
+  await coach.start("voice");
+  coach.toggleMic();
+  expect(player.playing).toBe(true);
+  expect(player.position).toBe(13);
+  expect(player.video.volume).toBe(0.22);
+  events.message("user", "Explain");
+  events.speaking(true);
+  session.setPreference("muted", true);
+  coach.stop();
+  expect(player.video.volume).toBe(0);
+  expect(player.playing).toBe(true);
+  await coach.start("voice");
+  session.suspend();
+  expect(coach.phase).toBe("off");
+  expect(endSession).toHaveBeenCalledTimes(2);
+});
+it("opening and closing coach never resumes an explicitly paused match", async () => {
+  const { Coach } = await import("../coach/coach");
+  const { e, player } = await setup();
+  player.pause();
+  e.attachCoach(new Coach(vi.fn()));
+  e.openCoach();
+  e.coach!.close();
+  expect(player.playing).toBe(false);
+  expect(player.position).toBe(13);
+});

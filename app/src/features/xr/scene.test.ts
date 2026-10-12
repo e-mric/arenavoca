@@ -13,16 +13,28 @@ it("registers every spatial control as a hand-ray target", () => {
   for (const node of scene.nodes[0].children.filter(
     (n) =>
       "content" in n &&
-      ["welcome", "learning", "explore", "watch-controls", "karaoke"].includes(
-        n.id,
-      ),
+      [
+        "welcome",
+        "learning",
+        "explore",
+        "watch-controls",
+        "karaoke",
+        "coach",
+      ].includes(n.id),
   )) {
     expect(node.components).toHaveProperty("RayInteractable");
     expect(node.transform?.position?.[2]).toBeLessThan(0);
   }
 });
 it("has real UIKitML controls for every essential action", () => {
-  const markup = ["watch-controls", "learning", "explore", "welcome", "karaoke"]
+  const markup = [
+    "watch-controls",
+    "learning",
+    "explore",
+    "welcome",
+    "karaoke",
+    "coach",
+  ]
     .map((id) =>
       fs.readFileSync(
         new URL(`../../../public/ui/${id}.uikitml`, import.meta.url),
@@ -31,6 +43,10 @@ it("has real UIKitML controls for every essential action", () => {
     )
     .join("");
   for (const id of [
+    "xr-coach-open",
+    "xr-coach-close",
+    "xr-coach-mic",
+    "xr-coach-end",
     "xr-start",
     "xr-play",
     "xr-explore",

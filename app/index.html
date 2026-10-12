@@ -14,7 +14,8 @@
         <a class="brand" href="./"
           ><span class="brand-mark">↗</span
           ><span
-            >Arena<b>Voca</b><small>YOUR SPORT. A NEW WAY TO SPEAK.</small></span
+            >Arena<b>Voca</b
+            ><small>YOUR SPORT. A NEW WAY TO SPEAK.</small></span
           ></a
         >
         <div class="header-actions">
@@ -112,6 +113,7 @@
               </h1>
             </div>
             <div class="row">
+              <button id="coach-open">AI coach</button>
               <button id="library">
                 Your phrases <span id="saved-count">0</span></button
               ><button id="hide-prompts">Hide prompts</button
@@ -162,6 +164,50 @@
                   Timing illustration · No chant audio · Spanish review pending
                 </p>
                 <button id="karaoke-hide">Hide chant lyrics</button>
+              </section>
+              <section id="coach-card" hidden aria-label="Spanish AI coach">
+                <p class="eyebrow">ARENAVOCA COACH / AI</p>
+                <h2 id="coach-phrase"></h2>
+                <p id="coach-status" role="status"></p>
+                <p class="muted">
+                  Start voice to enable your microphone. ElevenLabs processes
+                  your speech and selected phrase. Text mode uses no microphone.
+                  No match audio is shared directly.
+                </p>
+                <p class="muted">
+                  Audio is not stored by the coach provider; transcripts are
+                  retained for one day. Headphones help keep match audio out of
+                  your microphone.
+                </p>
+                <div id="coach-starts" class="row">
+                  <button id="coach-voice">Start voice coach</button
+                  ><button id="coach-text">Start text coach</button>
+                </div>
+                <div id="coach-actions" hidden>
+                  <div class="row">
+                    <button id="coach-explain">Explain phrase</button
+                    ><button id="coach-slow">Say it slowly</button
+                    ><button id="coach-practice">Let me try</button
+                    ><button id="coach-spanish">Simple Spanish</button>
+                  </div>
+                  <button id="coach-mic">Speak a question</button>
+                  <form id="coach-form">
+                    <label for="coach-question">Ask about this phrase</label
+                    ><input
+                      id="coach-question"
+                      maxlength="500"
+                      autocomplete="off"
+                      placeholder="What does pasa mean?"
+                    /><button type="submit">Send question</button>
+                  </form>
+                </div>
+                <p id="coach-heard" class="muted"></p>
+                <p id="coach-reply" aria-live="polite"></p>
+                <p id="coach-notice" role="status"></p>
+                <div class="row">
+                  <button id="coach-end">End session</button
+                  ><button id="coach-close">Close coach</button>
+                </div>
               </section>
               <div id="waiting">
                 <p class="eyebrow">THE LEARNING COMPANION</p>

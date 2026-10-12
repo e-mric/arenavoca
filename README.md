@@ -10,6 +10,8 @@ The primary prototype is an **immersive sports viewing lounge** with a large mat
 
 The locally supplied Barça 5–1 Madrid full match is configured as the native immersive source. The original 30-second passing sample remains available at `/?sample=1`. Football and F1 practice share learning behavior and supply different vocabulary and diagrams. A native F1 race needs its own local video; the separate YouTube browser player remains available as a secondary route.
 
+The optional **AI coach** explains the selected phrase, models it slowly, and offers short Spanish practice in a floating panel. Choose Start voice explicitly, or use text mode without a microphone. The match keeps playing. [Coach setup](app/README.md#optional-ai-coach) · [AI roadmap](PRD.md#ai-coach-roadmap--12-october-2026).
+
 Three personas are in [docs/PERSONAS.md](docs/PERSONAS.md). The user confirmed real-room passthrough and the floating screen on physical Quest 3. Hand comfort/performance, upcoming Meta VR glasses acceptance and fluent Spanish review remain pending.
 
 ## Run
@@ -50,6 +52,7 @@ app/src/features/
   session/       Modes, playback intent, command coordinator, browser views
   learning/      Tactical drawing, route projection, deliberate tracing
   audio/         Preloaded pronunciation and commentary ducking
+  coach/         Optional ElevenLabs conversation, context, lifecycle and tests
   progress/      Validated device-local snapshots and storage failure behavior
   sports/        Shared football/F1 concept packs and diagrams
   streaming/     YouTube clock, detachable browser companion, source-scoped saves

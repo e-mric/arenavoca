@@ -1,3 +1,4 @@
+import type { Coach } from "../coach/coach";
 import { Session } from "./session";
 import { PassTrace } from "../learning/tracing";
 import { Pronunciation, commentaryVolume } from "../audio/pronunciation";
@@ -5,6 +6,7 @@ import type { MatchPlayer } from "../playback/player";
 import type { Commentary, CommentaryLanguage } from "../audio/commentary";
 /** Both the DOM preview and spatial controls issue commands through this coordinator. */
 export class Experience {
+  coach?: Coach;
   trace: PassTrace;
   replaying = false;
   diagramProgress = 0;
@@ -34,14 +36,36 @@ export class Experience {
         session.setPreference("commentaryLanguage", "english");
       };
   }
+  attachCoach(coach: Coach) {
+    this.coach = coach;
+    coach.beforeStart = () => {
+      this.listenRequest++;
+      this.audio.stop();
+    };
+    coach.onChange = () => {
+      this.syncAudio();
+      this.onChange();
+    };
+  }
+  openCoach() {
+    const phrase = this.session.phrase ?? this.session.content.phrases[0];
+    const { sport, team } = this.session.snapshot.preferences;
+    this.coach?.show({
+      sport,
+      team,
+      phrase: phrase.spanish,
+      translation: phrase.english,
+    });
+  }
   stopAudio() {
+    this.coach?.stop();
     this.listenRequest++;
     this.audio.stop();
   }
   syncAudio() {
     const volume = commentaryVolume(
       this.session.snapshot.preferences.muted,
-      this.audio.speaking,
+      this.audio.speaking || !!this.coach?.ducking,
     );
     const spanish =
       !this.session.content.manualPractice &&
@@ -71,6 +95,7 @@ export class Experience {
     this.session.setPreference("commentaryLanguage", language);
   }
   async listen() {
+    this.coach?.stop();
     const phrase = this.session.phrase;
     if (!phrase) return;
     const request = ++this.listenRequest;

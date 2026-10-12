@@ -95,3 +95,15 @@ Final production verification: typecheck and build passed; 127 unit tests passed
 ## Physical Quest connection · 12 October 2026
 
 A physical Quest 3 was detected with USB debugging authorized. Port 4173 was forwarded over USB, and Quest Browser was launched at `http://localhost:4173/watch.html?source=barca`. The device reports the browser as focused and visible; the user confirmed the Barça page is visible inside the headset. The available screenshot fallback returned black, so it is not visual acceptance evidence. Embedded playback, independent-window focus and movement, hand interaction, comfort, audio, persistence and immersive-session checks remain pending.
+
+## Optional AI coach · 12 October 2026
+
+Added `features/coach` with the actual ElevenLabs JavaScript SDK loaded on invitation, authored phrase context, voice/text sessions, concise transcript display and paginated spatial replies. The coach panel shares the learning companion's placement in theater and passthrough. Session teardown covers close, explicit End, app suspension, page exit and late connection resolution. Each speaking window is capped at 15 seconds and the conversation at five minutes. The provider has a 60-second silence cutoff. Playback authority stays with the match; the coordinator only ducks volume while the coach speaks or listens.
+
+The public demo agent was created with the connected ElevenLabs plugin. Its prompt and verified settings are versioned in `app/src/features/coach/agent-config.json`; the actual ID is configured in ignored `.env.local`. The connector rejected advanced `body` arguments, so privacy/session limits were saved through the dashboard and verified with an agent read. The dashboard also rejected local hostname allowlist entries despite the documented localhost format; no origin restriction is claimed. Use a server-authenticated agent before external deployment.
+
+Verification: TypeScript and production build passed; 153 unit tests passed across 22 files. Seven affected browser tests passed, including real provider text explanation and rejection of unsupported live-commentary knowledge, real streamed voice response with a synthetic microphone, ducking while the match plays, and microphone track termination after End. The synthetic mic test uses no person's voice. Mocked network tests exercise the actual SDK and cover opt-in start, text context/reply, close cleanup and connection failure. Full-match playback and F1 concept regression checks passed.
+
+The existing build still reports large IWSDK bundle chunks. The coach client is dynamically loaded. Fluent Spanish/slow-delivery review and physical Quest microphone acceptance are pending; existing passthrough confirmation predates this coach feature.
+
+Spatial input evidence: the emulator controller ray opened AI coach and closed it again; the coach entity changed visibility and the playback control remained “Pause” throughout, proving uninterrupted playback. The seated runtime showed the coach beside the match. No physical voice acceptance is inferred from this.

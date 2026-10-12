@@ -644,3 +644,11 @@ button[aria-pressed="true"] {
   flex: 1;
   min-width: 60px;
 }
+
+#coach-card { text-align: left; }
+#coach-card .row { flex-wrap: wrap; gap: 8px; }
+#coach-reply { padding: 18px; border-left: 3px solid var(--team-accent); background: var(--team-control); line-height: 1.5; min-height: 80px; white-space: pre-wrap; }
+#coach-status { color: var(--team-accent); }
+#coach-form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+#coach-form label { width: 100%; }
+#coach-question { min-width: 0; flex: 1; font: inherit; border: 1px solid #60786a; border-radius: 8px; padding: 12px; background: #111b18; color: #edf3e8; }

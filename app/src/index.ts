@@ -1,3 +1,5 @@
+import { Coach } from "./features/coach/coach";
+import { connectCoach } from "./features/coach/elevenlabs";
 import { World, SessionMode } from "@iwsdk/core";
 import projectOptions from "virtual:iwsdk-project";
 import "./styles.css";
@@ -43,6 +45,7 @@ async function boot() {
       ),
     );
     const experience = new Experience(session, audio, player, commentary);
+    experience.attachCoach(new Coach(connectCoach));
     const renderDesktop = bindDesktop(experience);
     let renderXR = () => {};
     experience.onChange = () => {
@@ -135,7 +138,7 @@ async function boot() {
         const launch = async (mode: ViewingMode) => {
           viewingMode = mode;
           renderXR();
-          audio.stop();
+          experience.stopAudio();
           try {
             await world?.launchXR({
               sessionMode:
@@ -164,7 +167,7 @@ async function boot() {
     });
     window.addEventListener("pagehide", () => {
       session.persist();
-      audio.stop();
+      experience.stopAudio();
     });
     player.video.addEventListener("error", () =>
       session.fail("The match could not play. Reload to retry."),
@@ -172,6 +175,7 @@ async function boot() {
     if (import.meta.hot)
       import.meta.hot.dispose(() => {
         active = false;
+        experience.coach?.close();
         world?.destroy();
         player.destroy();
         audio.destroy();
