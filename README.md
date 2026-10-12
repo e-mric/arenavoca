@@ -4,6 +4,8 @@ The first runnable prototype: a 30-second original blue-versus-amber passing pla
 
 The six-minute match and recall activity are later milestones. Actual Quest 3 acceptance and Spanish language review are still pending.
 
+The broader product direction supports language learning through multiple sports, including F1. Football is the first implemented pack. Future packs share playback, learning, audio, and progress behavior while supplying sport-specific footage and action illustrations; see [the multi-sport direction in the PRD](PRD.md#multi-sport-direction--12-october-2026).
+
 ## Run
 
 ```sh

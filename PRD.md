@@ -45,16 +45,37 @@ The current scope and first milestone are sufficiently defined to begin. Exact p
 
 ## Product Summary
 
-Football Spanish Companion helps English-speaking football fans learn a small set of useful Spanish phrases while enjoying a match inside a VR headset. A virtual match screen remains the centre of attention. At selected moments, an illustrated tactical diagram beside it reconstructs an action and connects that action to a Spanish phrase with an English explanation. The viewer chooses whether to listen, explore, or save the phrase.
+The broader product helps English-speaking sports fans learn useful Spanish phrases through sporting actions they already understand. Football Spanish Companion is its first implemented content pack and working prototype name. A virtual viewing screen remains the centre of attention. At selected moments, a sport-specific illustration reconstructs an action and connects it to a Spanish phrase with an English explanation. The viewer chooses whether to listen, explore, or save the phrase.
 
 The first release demonstrates this experience through one original, unbranded, six-minute match simulation and an optional one-minute review. It tests whether contextual learning can improve phrase recall without reducing viewing enjoyment. Support for real broadcasts is a future product direction, rather than a dependency of this demo.
 
-The product promise is: **Enjoy the match and leave with Spanish phrases you can remember.** It does not promise fluency or effortless language acquisition.
+The broader product promise is: **Enjoy your sport and leave with Spanish phrases you can remember.** The football pack expresses this as enjoying the match. It does not promise fluency or effortless language acquisition.
+
+### Multi-Sport Direction · 12 October 2026
+
+The user broadened the concept beyond football to other sports, explicitly naming F1. The product should support sport-specific content packs around one shared learning loop: Watch → Explore → Hear → Save → Recall. Each pack supplies original viewing content, authored action timings, language material, and an illustration suited to that sport.
+
+The football sample remains the first Quest 3 verification checkpoint. This direction does not replace the current prototype or establish that other sports are already implemented. F1 is a concrete candidate for a subsequent pack; a change to the first release's football scope still needs an explicit scope decision.
+
+| Sport | Familiar action | Spatial explanation and interaction |
+| --- | --- | --- |
+| Football | A pass between teammates | Pitch diagram; trace the ball's route while the phrase unfolds. |
+| F1 / motorsport | One driver overtakes another | Track diagram with two car markers; follow the overtaking route while the phrase unfolds. |
+| Tennis | A serve or return | Court diagram; follow the ball's path and connect its movement to the phrase. |
+| Basketball | A pass or shot | Court diagram; replay the route between players or towards the basket. |
+
+For an F1-style original demonstration, a first learning target could be **El piloto adelanta.** / **The driver overtakes.** Other draft targets could cover braking and entering the pits. These are proposed content examples, not reviewed or implemented language assets. Use fictional drivers and original racing footage for a prepared prototype, consistent with the existing content-production approach.
+
+The illustration should teach the sporting action through movement rather than reuse a football pitch with different labels. An overtake can use route tracing; a pit-stop explanation may instead show a short sequence of stages. Replay remains a complete alternative to any tracing interaction. Whether each interaction improves understanding and preserves viewing enjoyment must be tested separately.
+
+The shared product should own playback timing, pause/resume, pronunciation, saving, progress, review, and hand-operated navigation. Each sport should own its action vocabulary, diagram geometry, and explanation behavior. When a second pack is implemented, introduce explicit pack/sport identity, scope persisted progress by content pack, and test switching packs without leaking events, phrases, or saved positions. These are future implementation requirements; the current sample validator still intentionally covers the football passing slice.
 
 ### Confirmed Product Decisions
 
 | Decision | Choice |
 | --- | --- |
+| Broader product direction | Multi-sport Spanish learning through sport-specific content packs; F1 is an explicit example |
+| First implemented pack and device checkpoint | Football passing prototype |
 | Match viewing | A virtual screen inside the headset |
 | Demo content | An original, unbranded match simulation |
 | Commentary and explanations | English |
@@ -72,7 +93,7 @@ Other behaviours below are proposed requirements for the first release. The comp
 
 ## Target User
 
-The primary user is an English-speaking adult football fan with beginner Spanish knowledge who already understands common match actions. They want to learn through something they enjoy and are willing to use a headset for a short viewing session.
+The broader audience is English-speaking adult sports fans with beginner Spanish knowledge who already understand their chosen sport. The first prototype and pilot focus on football fans familiar with common match actions. They want to learn through something they enjoy and are willing to use a headset for a short viewing session.
 
 Their problem is maintaining a separate study habit. Their existing football knowledge can help them understand a phrase through the action they see, even when the Spanish is unfamiliar. Whether they actually retain the phrases and prefer this viewing experience remains a hypothesis to validate.
 
@@ -314,6 +335,7 @@ Protect pass tracing for the first passing example: the user selected it as the 
 Future work should follow evidence that viewers enjoy and remember the first experience.
 
 1. Longer sessions and additional scenarios, with reviews scheduled across days.
+   Sport-specific packs can extend this to F1/motorsport, tennis, basketball, and other sports after the first device learning loop is validated. Each pack needs its own authored action explanations and reviewed language content.
 2. A larger phrase library that progresses from action descriptions to understanding short Spanish commentary.
 3. Adjustable prompt frequency and difficulty based on demonstrated recall and user preferences.
 4. Rights-cleared recorded football content, then a separately scoped live-broadcast companion with explicit synchronisation and failure behaviour.
