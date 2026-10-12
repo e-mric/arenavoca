@@ -1,12 +1,10 @@
 # Sports Spanish Companion
 
-Two runnable paths are available: **[full sports viewing](app/watch.html)** with the Barça full match, an embeddable F1 behind-the-scenes video, and a detachable learning companion; and the original immersive sample described below.
+The primary prototype is an **immersive sports viewing lounge** with a large match screen and optional floating Spanish panels. Choose **Theater** for the enclosed room or **My room · Passthrough** to keep your real surroundings visible behind the screen. Both use one video timeline; Explore, Replay and Save leave playback running. Pause remains explicit.
 
-The immersive prototype: a 30-second original blue-versus-amber passing play with synchronized captions and a Spanish phrase, Explore, deliberate pass tracing, Replay, on-demand pronunciation, and device-local saving. Watch and Explore run in both a browser preview and IWSDK world-space panels. Explore and the phrase library leave the match playing; pause is optional. Floating companion presets persist on-device. Pre-match fictional team selection and opt-in original chant text demonstrate karaoke timing at 21–27 seconds; supporter audio and real-match lyrics are not integrated.
+The locally supplied Barça 5–1 Madrid full match is configured as the native immersive source. The original 30-second passing sample remains available at `/?sample=1`. Football and F1 practice share learning behavior and supply different vocabulary and diagrams. A native F1 race needs its own local video; the separate YouTube browser player remains available as a secondary route.
 
-The six-minute match and recall activity are later milestones. Actual Quest 3 acceptance and Spanish language review are still pending.
-
-The broader product direction supports language learning through multiple sports, including F1. Football passing and F1 overtaking practice are implemented. Future packs share playback, learning, audio, and progress behavior while supplying sport-specific footage and action illustrations; see [the multi-sport direction in the PRD](PRD.md#multi-sport-direction--12-october-2026).
+Three personas are in [docs/PERSONAS.md](docs/PERSONAS.md). The user confirmed real-room passthrough and the floating screen on physical Quest 3. Hand comfort/performance, upcoming Meta VR glasses acceptance and fluent Spanish review remain pending.
 
 ## Run
 
@@ -23,7 +21,7 @@ npm run build
 npm run preview
 ```
 
-Open **http://127.0.0.1:4173/watch.html?source=barca** for the full match, or **http://127.0.0.1:4173/** for the original immersive sample. The same production preview can be used on Quest over USB; see [the morning Quest checklist](docs/QUEST_REVIEW.md). Keep the Mac awake during testing. No site has been published.
+Open **http://127.0.0.1:4173/** for the immersive full-match prototype, or **http://127.0.0.1:4173/?sample=1** for the original calibration sample. The same production preview can be used on Quest over USB; see [the morning Quest checklist](docs/QUEST_REVIEW.md). Keep the Mac awake during testing. No site has been published.
 
 ## Verify
 
@@ -47,6 +45,7 @@ app/src/features/
   learning/      Tactical drawing, route projection, deliberate tracing
   audio/         Preloaded pronunciation and commentary ducking
   progress/      Validated device-local snapshots and storage failure behavior
+  sports/        Shared football/F1 concept packs and diagrams
   streaming/     YouTube clock, detachable browser companion, source-scoped saves
   theme/         Compatible football/F1 team palettes and contrast
   karaoke/       Original opt-in team-filtered text timing
@@ -59,4 +58,6 @@ Tests live beside each feature. Cross-feature browser journeys live in `app/test
 
 Pinned SDK: IWSDK 1.0.1; Three.js is the generated `super-three@0.181.0` alias. Development used Node 24.20.0. The lockfile records exact installed versions. Keep the SDK dependency set together.
 
-Team choice now changes the browser and world-space panel identity: FC Barcelona, Real Madrid, Ferrari and McLaren inspired palettes are available alongside fictional demo teams. Theme selection does not switch the sample footage. Commentary starts in English and can switch to the prepared Spanish track without moving the match timeline. Full-source audio tracks depend on the uploader. Other native-language tracks, supporter audio, automatic event detection and real-song cueing remain later work. The F1 replacement is an 8:05 behind-the-scenes video, not a full race; the supplied Miami replay blocks embeds. No source videos were downloaded.
+Team choice changes browser and spatial panel identity using football/F1 palettes. Full-match practice concepts are selected manually, without event detection. The downloaded recording retains its source audio; Spanish Listen supplies phrase pronunciation. Only the original sample has the prepared alternate Spanish commentary. Native-language dubbing, real supporter-song alignment and automatic event detection remain future work.
+
+The user-supplied recording and its H264/AAC demo conversion stay local and are ignored by Git. `app/public/content/theater-source.json` points to `media/user/barca-2018-h264.mp4` (1280×720, 25 fps, 99:21). A fresh checkout needs that local file or the explicit calibration fallback. The F1 browser replacement is an 8:05 behind-the-scenes video, not a full race. No media was published.

@@ -5,7 +5,7 @@ export interface Phrase {
   english: string;
   chunks: string[];
   pronunciation: string;
-  action: "pass";
+  action: "pass" | "overtake";
   reviewStatus: "pending" | "reviewed";
 }
 export interface MatchEvent {
@@ -30,6 +30,9 @@ export interface Caption {
   spanish?: string;
 }
 export interface Content {
+  title?: string;
+  sport?: "football" | "f1";
+  manualPractice?: boolean;
   version: string;
   duration: number;
   video: string;
@@ -65,6 +68,16 @@ export function validateContent(raw: unknown): Content {
   for (const key of ["phrases", "events", "diagrams", "captions"])
     assert(Array.isArray(raw[key]), `${key} must be an array`);
   const data = raw as unknown as Content;
+  assert(data.title === undefined || text(data.title), "invalid title");
+  assert(
+    data.sport === undefined || ["football", "f1"].includes(data.sport),
+    "invalid sport",
+  );
+  assert(
+    data.manualPractice === undefined ||
+      typeof data.manualPractice === "boolean",
+    "invalid practice mode",
+  );
   for (const [key, entries] of Object.entries({
     phrases: data.phrases,
     events: data.events,
@@ -90,10 +103,10 @@ export function validateContent(raw: unknown): Content {
       text(p.spanish) &&
         text(p.english) &&
         Array.isArray(p.chunks) &&
-        p.chunks.length === 3 &&
+        p.chunks.length === (p.action === "overtake" ? 2 : 3) &&
         p.chunks.every(text) &&
         path(p.pronunciation) &&
-        p.action === "pass" &&
+        ["pass", "overtake"].includes(p.action) &&
         ["pending", "reviewed"].includes(p.reviewStatus),
       "invalid phrase",
     );

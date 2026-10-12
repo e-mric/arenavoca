@@ -11,11 +11,12 @@
   "world": {
     "xr": {
       "mode": "vr",
-      "offer": "none",
+      "offer": "once",
       "features": {
         "handTracking": {
           "required": true
-        }
+        },
+        "gazeTracking": true
       }
     },
     "input": {

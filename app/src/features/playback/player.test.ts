@@ -66,3 +66,15 @@ it("reports unsupported video decoding", async () => {
   await expect(p.load("media/match.mp4")).rejects.toThrow("could not play");
   p.destroy();
 });
+it("streams a full recording with metadata preload instead of allocating a full-match Blob", async () => {
+  const video = new Video();
+  const player = new MatchPlayer(video as unknown as HTMLVideoElement);
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  await player.loadStream("media/user/game.mp4");
+  expect(fetcher).not.toHaveBeenCalled();
+  expect(video.src).toContain("media/user/game.mp4");
+  expect(video.preload).toBe("metadata");
+  expect(video.src).not.toMatch(/^blob:/);
+  player.destroy();
+});

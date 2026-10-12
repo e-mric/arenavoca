@@ -1,6 +1,18 @@
 # Morning Quest 3 prototype review
 
-Milestone A is ready for device testing. On 12 October 2026, the physical Quest 3 was detected over USB, the browser was launched at `http://localhost:4173/watch.html?source=barca`, and the user confirmed that the Barça page was visible. Playback, floating-window interaction and immersive hand tests remain unverified. Use hands and stay seated. Review the full-game browser companion first, then the original 30-second immersive sample. Keep the Mac awake and the server running.
+The primary review is now the immersive full-match prototype, not the earlier browser-window flow. Use hands and stay seated. Keep the Mac awake and the server running.
+
+1. Open **http://localhost:4173/** in Quest Browser through the USB route below.
+2. Choose **Theater**: expect a dark lounge, a large Barça match screen and floating controls. Point and pinch **Start**.
+3. Open **Explore**, use Replay, Listen and Save. The full match must continue; only explicit Pause should stop it. Try left/right, near/far and low/high placement presets and Recenter.
+4. Exit the immersive session, then choose **My room · Passthrough** from the page header. Expect your real surroundings, with the lounge walls/floor/seats removed and the same video and panels floating in space. Resume explicitly after leaving a session. Confirm the background is genuinely camera passthrough, not black.
+5. Check text readability, hand-ray selection, tracking loss, comfort and sustained frame rate. Passthrough currently has no room scanning, surface placement or real-object occlusion; panels use deliberate world-space presets.
+
+The upcoming Meta VR glasses are the intended product target; Quest 3 is the available test device. Optional gaze tracking is enabled with headset-ray fallback. The installed IWSDK 1.0.1 configuration does not support the glasses field-of-view mask, so glasses field-of-view and hardware acceptance are still unverified.
+
+Physical Quest 3 passthrough checkpoint passed by user report on 12 October 2026: after My room entry, the real room and floating screen are visible. This confirms camera passthrough and screen presentation; it does not establish sustained video playback, hands-only controls, comfort or performance.
+
+The earlier physical Quest result proved only that the Barça browser page was visible. Emulator evidence now proves VR/AR entry and controller-ray Start/Explore/Replay, with the theater removed in AR; it does not prove hands-only acceptance. Physical passthrough visibility is now separately user-confirmed. The Mac screenshot fallback returned black on the Quest, so visual headset results must be reported by the wearer.
 
 ## Choose a test route
 
@@ -21,7 +33,7 @@ npx metavr device list
 npx metavr adb reverse tcp:4173 tcp:4173
 ```
 
-Open **http://localhost:4173/** in Quest Browser. Loopback is treated as a secure browser origin, so this route avoids a local certificate. Keep the cable connected. With multiple devices, pass the desired serial through metavr's `-d` option. Enter VR requests hand tracking. If VR entry is unavailable, record the browser message rather than treating desktop rendering as a device pass.
+Open **http://localhost:4173/** in Quest Browser. Loopback is treated as a secure browser origin, so this route avoids a local certificate. Keep the cable connected. With multiple devices, pass the desired serial through metavr's `-d` option. Both Theater and My room request hand tracking. If VR entry is unavailable, record the browser message rather than treating desktop rendering as a device pass.
 
 ### Wi-Fi HTTPS development server
 
@@ -35,7 +47,7 @@ Put the Quest and Mac on the same Wi-Fi network. Open one of the **HTTPS network
 
 A published stable HTTPS origin is still a later hosting decision. Device-local progress belongs to an origin: `localhost:4173` and the Wi-Fi URL have different progress stores. Pick one route when checking reopening.
 
-## Full match and F1 browser-window review
+## Secondary YouTube browser-window review
 
 Open **http://localhost:4173/watch.html?source=barca** through the USB route above, or `/watch.html?source=barca` on the HTTPS network origin. This page uses Quest Browser windows; **do not select Enter VR** for this path.
 
@@ -59,7 +71,7 @@ Open **http://localhost:4173/watch.html?source=barca** through the USB route abo
 
 ## About five minutes of hands-only checks
 
-1. Select **Enter VR**, then **Start match** using hand pointing and pinch. The original simulation should play with English commentary. Watch one complete run without using the learning card.
+1. Open **http://localhost:4173/?sample=1**, select **Enter theater**, then **Start** using hand pointing and pinch. The original simulation should play with English commentary. Watch one complete run without using the learning card.
 2. Restart. At **12 seconds**, the pass card appears beside the match, through 20 seconds. Check that it does not overlap the video and that “balón” displays its accent.
 3. Select **Explore action**. The match and commentary must keep playing, at normal brightness. The separate explanation stays pinned after 20 seconds. Choose **Trace right hand** or **Trace left hand**, then move that index fingertip to the start of the pass route and follow the ball. The sentence unfolds in three chunks. Resting hands should not start tracing.
 4. Lower the tracing hand out of tracking. Progress should freeze. Bring it back, or select **Replay action**. Replay must finish with the complete sentence still visible.

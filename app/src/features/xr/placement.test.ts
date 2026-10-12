@@ -13,7 +13,7 @@ it.each(["near", "far"] as const)(
           panelHeight,
         });
         const companionInnerEdge = (Math.abs(p.x) - p.width / 2) / -p.z;
-        const matchOuterEdge = (-0.65 + 2.57 / 2) / 2.2;
+        const matchOuterEdge = 7.29 / 2 / 5.95;
         expect(companionInnerEdge - matchOuterEdge).toBeGreaterThan(0.05);
         expect(p.z).toBeLessThan(0);
         expect(Math.sign(p.x)).toBe(panelSide === "right" ? 1 : -1);

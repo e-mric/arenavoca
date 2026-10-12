@@ -44,6 +44,7 @@ export class Experience {
       this.audio.speaking,
     );
     const spanish =
+      !this.session.content.manualPractice &&
       this.session.snapshot.preferences.commentaryLanguage === "spanish" &&
       this.commentary?.ready;
     this.player.video.volume = spanish ? 0 : volume;
@@ -54,6 +55,12 @@ export class Experience {
     );
   }
   setCommentaryLanguage(language: CommentaryLanguage) {
+    if (language === "spanish" && this.session.content.manualPractice) {
+      this.session.message =
+        "This video keeps its source commentary. Use Listen for Spanish pronunciation.";
+      this.onChange();
+      return;
+    }
     if (language === "spanish" && !this.commentary?.ready) {
       this.session.message =
         "Spanish commentary is unavailable. English is still available.";

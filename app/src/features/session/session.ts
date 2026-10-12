@@ -43,6 +43,10 @@ export class Session {
     return this.content.phrases.find((p) => p.id === this.selected?.phraseId);
   }
   get prompt() {
+    if (this.content.manualPractice)
+      return this.snapshot.preferences.promptsHidden
+        ? undefined
+        : this.content.events[0];
     return timelineAt(
       this.content,
       this.player.position,

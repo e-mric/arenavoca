@@ -31,7 +31,18 @@ export class MatchPlayer implements Playback {
     if (!blob.size) throw new Error("The match video is empty. Please retry.");
     if (this.objectUrl) URL.revokeObjectURL(this.objectUrl);
     this.objectUrl = URL.createObjectURL(blob);
-    await new Promise<void>((resolve, reject) => {
+    await this.decode(this.objectUrl);
+  }
+  /** Full matches buffer from the local server rather than preloading gigabytes. */
+  async loadStream(path: string) {
+    if (this.objectUrl) URL.revokeObjectURL(this.objectUrl);
+    this.objectUrl = undefined;
+    this.video.crossOrigin = "anonymous";
+    this.video.preload = "metadata";
+    await this.decode(assetUrl(path));
+  }
+  private decode(source: string) {
+    return new Promise<void>((resolve, reject) => {
       const clear = () => {
         clearTimeout(timeout);
         this.video.removeEventListener("loadeddata", ready);
@@ -52,7 +63,7 @@ export class MatchPlayer implements Playback {
       const timeout = setTimeout(error, 30_000);
       this.video.addEventListener("loadeddata", ready);
       this.video.addEventListener("error", error);
-      this.video.src = this.objectUrl!;
+      this.video.src = source;
       this.video.load();
     });
   }

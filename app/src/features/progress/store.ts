@@ -119,10 +119,11 @@ export function validateSnapshot(
 export class ProgressStore {
   constructor(
     private readonly getStorage: () => StoragePort = () => window.localStorage,
+    private readonly key = PROGRESS_KEY,
   ) {}
   read(content: Content): { snapshot: Snapshot; warning?: string } {
     try {
-      const raw = this.getStorage().getItem(PROGRESS_KEY);
+      const raw = this.getStorage().getItem(this.key);
       if (!raw) return { snapshot: emptySnapshot(content.version) };
       const snapshot = validateSnapshot(JSON.parse(raw), content);
       if (snapshot) return { snapshot };
@@ -140,7 +141,7 @@ export class ProgressStore {
   }
   write(snapshot: Snapshot): boolean {
     try {
-      this.getStorage().setItem(PROGRESS_KEY, JSON.stringify(snapshot));
+      this.getStorage().setItem(this.key, JSON.stringify(snapshot));
       return true;
     } catch {
       return false;

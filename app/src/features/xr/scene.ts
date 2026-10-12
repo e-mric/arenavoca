@@ -12,9 +12,13 @@ import {
   VideoTexture,
 } from "@iwsdk/core";
 import type { Experience } from "../session/experience";
-import { drawDiagram, diagramPoint } from "../learning/diagram";
-import { revealedChunks } from "../learning/tracing";
+import {
+  drawContentDiagram,
+  contentDiagramPoint,
+  contentChunkCount,
+} from "../learning/content-diagram";
 import { time } from "../../shared/dom";
+import { applyViewingMode, type ViewingMode } from "./theater";
 import { companionPlacement } from "./placement";
 import { activeWord } from "../karaoke/karaoke";
 import { teamThemes, themeFor, type Team } from "../theme/team-theme";
@@ -22,11 +26,20 @@ export function attachXR(
   world: World,
   experience: Experience,
   fontFamilies: Awaited<ReturnType<typeof import("./font").loadCompanionFont>>,
+  getViewingMode: () => ViewingMode = () => "theater",
 ) {
   const s = experience.session;
   world.scene.background = new Color("#101917");
   const layout = world.requireSceneObject<Group>("viewing-space");
   const stage = world.requireSceneObject<Group>("surfaces");
+  const room = world.requireSceneObject<Group>("theater");
+  const accents: Mesh<PlaneGeometry, MeshBasicMaterial>[] = [];
+  room.traverse((node) => {
+    if (node instanceof Mesh && node.name.startsWith("Accent")) {
+      node.material = node.material.clone();
+      accents.push(node as Mesh<PlaneGeometry, MeshBasicMaterial>);
+    }
+  });
   const surface = (name: string) =>
     stage.getObjectByName(name) as Mesh<PlaneGeometry, MeshBasicMaterial>;
   const videoTexture = new VideoTexture(experience.player.video);
@@ -44,10 +57,10 @@ export function attachXR(
     explore = panel("explore"),
     welcome = panel("welcome"),
     karaoke = panel("karaoke");
-  watch.document.setTargetDimensions(2.5, 0.73);
-  learning.document.setTargetDimensions(0.85, 1.2);
+  watch.document.setTargetDimensions(1.95, 0.57);
+  learning.document.setTargetDimensions(1.05, 1.435);
   explore.document.setTargetDimensions(1.12, 1.12);
-  welcome.document.setTargetDimensions(1.35, 1.75);
+  welcome.document.setTargetDimensions(1.3, 1.17);
   karaoke.document.setTargetDimensions(0.95, 0.44);
   const canvas = document.createElement("canvas");
   canvas.width = 960;
@@ -55,6 +68,7 @@ export function attachXR(
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   const diagram = surface("Pass diagram");
+  diagram.scale.setScalar(0.85 / 0.7);
   diagram.material = diagram.material.clone();
   diagram.material.map = texture;
   diagram.material.color.set("#ffffff");
@@ -85,6 +99,21 @@ export function attachXR(
     find(id)?.setProperties({ text: value });
   const show = (id: string, visible: boolean) =>
     find(id)?.setProperties({ display: visible ? "flex" : "none" });
+  // Read-only developer probes expose actual UIKit world positions to ECS tools.
+  // They have no geometry, input components or production presence.
+  const probes = new Map<string, ReturnType<World["createTransformEntity"]>>();
+  if (import.meta.env.DEV) {
+    for (const id of [
+      "xr-start",
+      "xr-explore",
+      "xr-replay",
+      "xr-explore-play",
+    ]) {
+      const marker = new Group();
+      marker.name = `xr-target/${id}`;
+      probes.set(id, world.createTransformEntity(marker));
+    }
+  }
   const actions: Record<string, () => unknown> = {
     "xr-play": () => s.togglePlayback(),
     "xr-restart": () => s.restart(),
@@ -217,7 +246,8 @@ export function attachXR(
       );
       tracePlane.worldToLocal(origin);
       experience.trace.sample({
-        point: diagramPoint(
+        point: contentDiagramPoint(
+          s.content,
           origin.x / 0.98 + 0.5,
           0.5 - origin.y / ((0.98 * 9) / 16),
         ),
@@ -243,7 +273,10 @@ export function attachXR(
   let placementKey = "";
   let appliedTheme = "";
   const traceOrigin = new Vector3();
+  const traceOffset = new Vector3();
+  const learningOrigin = new Vector3();
   function render() {
+    const viewingMode = getViewingMode();
     const mode = s.mode;
     const watching = [
         "Watching",
@@ -252,8 +285,8 @@ export function attachXR(
         "Completed",
       ].includes(mode),
       library = mode === "PhraseLibrary";
-    screen.visible = watching;
-    frame.visible = watching;
+    screen.visible = true;
+    frame.visible = true;
     watch.visible = s.matchActive;
     learning.visible =
       (mode === "Watching" && !!s.prompt) || (library && !!s.phrase);
@@ -273,10 +306,17 @@ export function attachXR(
     const side = s.snapshot.preferences.panelSide === "left" ? -1 : 1;
     const preferences = s.snapshot.preferences;
     const theme = themeFor(preferences.team, preferences.sport);
-    const themeKey = `${preferences.sport}/${preferences.team}`;
+    const themeKey = `${preferences.sport}/${preferences.team}/${viewingMode}`;
     if (themeKey !== appliedTheme) {
-      world.scene.background = new Color(theme.background);
+      applyViewingMode(
+        viewingMode,
+        world.scene,
+        room,
+        world.renderer,
+        new Color(theme.background),
+      );
       frame.material.color.set(theme.stripe);
+      for (const accent of accents) accent.material.color.set(theme.accent);
       for (const root of roots)
         root.document.rootElement.setProperties({
           backgroundColor: theme.panel,
@@ -300,11 +340,14 @@ export function attachXR(
         });
       }
       appliedTheme = themeKey;
+      find("xr-start").setProperties({ backgroundColor: theme.accent });
+      find("xr-start-label").setProperties({ color: theme.accentInk });
     }
     const key = `${side}/${s.snapshot.preferences.panelDistance}/${s.snapshot.preferences.panelHeight}`;
     if (key !== placementKey) {
       const pose = companionPlacement(s.snapshot.preferences);
       explore.position.set(pose.x, pose.y, pose.z);
+      explore.rotation.y = -0.55 * side;
       explore.document.setTargetDimensions(pose.width, pose.width);
       tracePlane.scale.setScalar(pose.width / 1.12);
       placementKey = key;
@@ -312,13 +355,22 @@ export function attachXR(
     find("xr-trace-area").getWorldPosition(traceOrigin);
     stage.worldToLocal(traceOrigin);
     tracePlane.position.copy(traceOrigin);
-    tracePlane.position.z += 0.021;
-    learning.position.x = 1.4 * side;
-    diagram.position.x = learning.position.x;
-    screen.position.x = -0.65 * side;
+    tracePlane.position.add(
+      traceOffset.set(0, 0, 0.021).applyQuaternion(explore.quaternion),
+    );
+    learning.position.x = 3 * side;
+    learning.position.z = -3.65;
+    learning.rotation.y = -0.55 * side;
+    diagram.rotation.y = learning.rotation.y;
+    tracePlane.rotation.y = explore.rotation.y;
+    find("xr-learning-area").getWorldPosition(learningOrigin);
+    stage.worldToLocal(learningOrigin);
+    diagram.position
+      .copy(learningOrigin)
+      .add(traceOffset.set(0, 0, 0.021).applyQuaternion(learning.quaternion));
+    screen.position.x = 0;
     frame.position.x = screen.position.x;
     watch.position.x = screen.position.x;
-    watch.position.y = 0.45;
     karaoke.position.x = screen.position.x;
     const chant = s.chant;
     karaoke.visible = !!chant;
@@ -350,8 +402,30 @@ export function attachXR(
       "xr-karaoke-toggle",
       "xr-team-status",
     ])
-      show(id, mode === "Onboarding");
-    text("xr-caption", s.caption || "BLUE 0-0 AMBER / SIMULATED MATCH");
+      show(
+        id,
+        mode === "Onboarding" &&
+          (!s.content.manualPractice ||
+            !["xr-team-blue", "xr-team-amber", "xr-karaoke-toggle"].includes(
+              id,
+            )),
+      );
+    text(
+      "xr-caption",
+      s.caption ||
+        (s.content.manualPractice
+          ? "SOURCE AUDIO / MANUAL SPANISH PRACTICE"
+          : "CALIBRATION CLIP / BLUE 0-0 AMBER"),
+    );
+    text("xr-media-title", s.content.title ?? "Calibration clip / 30 seconds");
+    text(
+      "xr-action-name",
+      s.content.manualPractice
+        ? "PRACTICE CONCEPT / " + s.content.phrases[0].action.toUpperCase()
+        : "THE PASS",
+    );
+    show("xr-commentary", !s.content.manualPractice);
+    show("xr-explore-commentary", !s.content.manualPractice);
     text(
       "xr-team-identity",
       `${preferences.sport === "f1" ? "F1" : "Football"} / ${theme.name}`,
@@ -368,8 +442,12 @@ export function attachXR(
         ? "Spanish commentary"
         : "English commentary",
     );
-    for (const id of ["xr-sport-football", "xr-sport-f1"])
-      show(id, mode === "Onboarding");
+    for (const sport of ["football", "f1"])
+      show(
+        `xr-sport-${sport}`,
+        mode === "Onboarding" &&
+          (!s.content.manualPractice || s.content.sport === sport),
+      );
     show(
       "xr-football-teams",
       mode === "Onboarding" && preferences.sport === "football",
@@ -417,7 +495,7 @@ export function attachXR(
     for (const id of ["xr-save-label", "xr-explore-save-label"])
       text(
         id,
-        s.snapshot.savedPhraseIds.includes("pass")
+        s.snapshot.savedPhraseIds.includes(s.content.phrases[0].id)
           ? "Saved on this device"
           : "Save phrase",
       );
@@ -441,7 +519,7 @@ export function attachXR(
           ? "Your seen and saved phrases."
           : s.message,
     );
-    const count = revealedChunks(experience.diagramProgress);
+    const count = contentChunkCount(s.content, experience.diagramProgress);
     text(
       "xr-chunks",
       s.content.phrases[0].chunks
@@ -453,28 +531,34 @@ export function attachXR(
       experience.trackLost
         ? "Hand tracking lost. Bring your selected hand back."
         : experience.diagramProgress === 1
-          ? "El jugador pasa el balón."
+          ? s.content.phrases[0].spanish
           : experience.trace.armed
             ? `Follow the ball with your ${experience.trace.hand} index finger.`
             : "Choose a hand, or select Replay action.",
     );
     if (learning.visible) {
-      drawDiagram(
+      drawContentDiagram(
         canvas,
-        s.content.diagrams[0],
-        library ? 1 : Math.min(1, Math.max(0, (s.player.position - 12) / 3)),
+        s.content,
+        library
+          ? 1
+          : s.content.manualPractice
+            ? 0
+            : Math.min(1, Math.max(0, (s.player.position - 12) / 3)),
       );
       texture.needsUpdate = true;
     }
     if (explore.visible) {
-      drawDiagram(
+      drawContentDiagram(
         traceCanvas,
-        s.content.diagrams[0],
+        s.content,
         experience.diagramProgress,
         experience.trace.armed,
       );
       traceTexture.needsUpdate = true;
     }
+    for (const [id, probe] of probes)
+      if (probe.object3D) find(id).getWorldPosition(probe.object3D.position);
   }
   render();
   world.addCleanup(() => {

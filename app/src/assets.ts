@@ -1,8 +1,10 @@
 import { AssetType, defineAssets } from "@iwsdk/core";
 import surfaces from "./features/xr/surfaces.scene-asset";
+import theater from "./scene-assets/theater.scene-asset";
 import { assetUrl } from "./features/content/model";
 export default defineAssets({
   surfaces,
+  theater,
   ...Object.fromEntries(
     ["watch-controls", "learning", "explore", "welcome", "karaoke"].map(
       (id) => [

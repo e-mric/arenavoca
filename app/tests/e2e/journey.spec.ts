@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 async function ready(page: Page) {
-  await page.goto("/");
+  await page.goto("/?sample=1");
   await expect(page.locator("#start")).toBeEnabled();
   await expect(page.locator("#xr-status")).toContainText(
     /Quest 3:|Desktop preview|VR could not initialize/,
@@ -234,7 +234,7 @@ test("failed media offers Retry; unavailable pronunciation does not block watchi
   await page.route("**/media/match.mp4", (route) =>
     route.fulfill({ status: 503, body: "offline" }),
   );
-  await page.goto("/");
+  await page.goto("/?sample=1");
   await expect(page.locator("#retry")).toBeVisible();
   await expect(page.locator("#start")).toBeDisabled();
   await page.unroute("**/media/match.mp4");

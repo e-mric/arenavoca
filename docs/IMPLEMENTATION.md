@@ -2,6 +2,16 @@
 
 12 October 2026 · Milestone A implementation prepared; actual Quest review pending.
 
+## Immersive full-match update
+
+The user corrected the browser-window approach and requested a real sports theater plus passthrough. The primary entry now launches immersive VR for **Theater**, or immersive AR for **My room** using `World.launchXR` per-launch session overrides. A procedural dark lounge surrounds a 7.2 × 4.05 m video screen. World-space practice panels use team colours and deliberate placement presets; AR removes the room and clears the background to alpha zero. No room scanning or real-object occlusion is implemented.
+
+The user supplied the Barça 2018 full match locally. Its AV1 recording was converted to H264/AAC, 1280×720 at 25 fps, 5960.79 seconds. The native `HTMLVideoElement` streams it into a Three VideoTexture without loading the entire recording into a Blob. Both user media files stay local/ignored. Manual football/F1 concept packs are separate from real event timings; the full recording keeps source audio and has on-demand Spanish phrase pronunciation, without claiming a full alternate commentary track or automatic chants.
+
+Measured emulator evidence: trusted page selection launches `immersive-vr` and `immersive-ar`; ECS reports the lounge visible in VR and hidden in AR. Actual controller-ray Start plays the full match; Explore reports MATCH PLAYING; Replay unfolds all three phrase chunks. The production full-match browser journey verifies >5900-second duration, direct video source, continuous playback through Explore/Replay/Save/Back and correct paused behavior. F1 behavior uses a clearly labelled test fixture, not a real race. [Theater capture](../app/artifacts/immersive-theater.png) and [AR emulator capture](../app/artifacts/passthrough-emulator.png) are browser emulation, not physical headset evidence.
+
+Physical Quest 3: USB was previously connected and the browser page was user-confirmed visible. The updated root route was opened over USB. The user then confirmed that My room shows the real room and floating screen on the physical Quest 3. Sustained playback, hands-only interaction, comfort/performance and upcoming glasses hardware remain unverified. Optional gaze tracking is enabled; glasses field-of-view masking is unavailable in the installed SDK schema. The original 30-second calibration remains reachable with `?sample=1`.
+
 ## Delivered
 
 - Official TypeScript IWSDK 1.0.1 scaffold in `app/`, reorganized into feature folders with colocated unit tests.
@@ -22,7 +32,7 @@
 
 ## Automated evidence
 
-`npm run typecheck`, `npm test`, `npm run build`, and `npm run test:e2e` pass. There are **127 unit tests in eighteen files** and **eighteen production browser journeys**. Future features must include tests as requested by the user.
+`npm run typecheck`, `npm test`, `npm run build`, and `npm run test:e2e` pass. There are **141 unit tests in twenty-one files** and **twenty-one production browser journeys**. Future features must include tests as requested by the user.
 
 | Feature | Evidence |
 | --- | --- |

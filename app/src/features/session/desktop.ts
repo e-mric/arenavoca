@@ -1,6 +1,10 @@
 import { element, time } from "../../shared/dom";
-import { drawDiagram, diagramPoint } from "../learning/diagram";
-import { revealedChunks } from "../learning/tracing";
+import {
+  drawContentDiagram,
+  contentDiagramPoint,
+  contentChunkCount,
+} from "../learning/content-diagram";
+
 import type { Experience } from "./experience";
 import { activeWord } from "../karaoke/karaoke";
 import { teamThemes, themeFor } from "../theme/team-theme";
@@ -98,7 +102,8 @@ export function bindDesktop(experience: Experience) {
   function sample(e: PointerEvent) {
     const r = canvas.getBoundingClientRect();
     experience.trace.sample({
-      point: diagramPoint(
+      point: contentDiagramPoint(
+        s.content,
         (e.clientX - r.left) / r.width,
         (e.clientY - r.top) / r.height,
       ),
@@ -109,6 +114,21 @@ export function bindDesktop(experience: Experience) {
     render();
   }
   function render() {
+    const phrase = s.content.phrases[0];
+    element<HTMLProgressElement>("match-progress").max = s.content.duration;
+    for (const node of document.querySelectorAll<HTMLElement>(
+      "#phrase-card h2, #library-phrase h3",
+    ))
+      text(node, phrase.spanish);
+    for (const node of document.querySelectorAll<HTMLElement>(
+      "#phrase-card .translation, #library-phrase p",
+    ))
+      text(node, phrase.english);
+    hidden(element("commentary-spanish"), !!s.content.manualPractice);
+    text(
+      element("commentary-english"),
+      s.content.manualPractice ? "Source audio" : "English",
+    );
     const mode = s.mode,
       loaded = mode !== "Loading" && mode !== "Error";
     hidden(
@@ -180,12 +200,17 @@ export function bindDesktop(experience: Experience) {
       );
     const preferences = s.snapshot.preferences;
     for (const sport of ["football", "f1"]) {
+      element<HTMLButtonElement>(`sport-${sport}`).disabled =
+        !!s.content.manualPractice && s.content.sport !== sport;
       element(`sport-${sport}`).setAttribute(
         "aria-pressed",
         String(preferences.sport === sport),
       );
       hidden(element(`${sport}-teams`), preferences.sport !== sport);
     }
+    hidden(element("team-blue"), !!s.content.manualPractice);
+    hidden(element("team-amber"), !!s.content.manualPractice);
+    hidden(element("karaoke-toggle"), !!s.content.manualPractice);
     for (const language of ["english", "spanish"])
       element(`commentary-${language}`).setAttribute(
         "aria-pressed",
@@ -237,12 +262,12 @@ export function bindDesktop(experience: Experience) {
     hidden(element("stop-audio"), !experience.audio.speaking);
     text(element("status"), s.message);
     text(element("saved-count"), String(s.snapshot.savedPhraseIds.length));
-    const saved = s.snapshot.savedPhraseIds.includes("pass");
+    const saved = s.snapshot.savedPhraseIds.includes(s.content.phrases[0].id);
     for (const id of ["save", "explore-save", "library-save"])
       text(element(id), saved ? "Saved ✓" : "Save phrase");
     for (const id of ["listen", "explore-listen", "library-listen"])
       text(element(id), experience.audio.speaking ? "Listen again" : "Listen");
-    const eligible = s.exposure.phrases.has("pass") || saved;
+    const eligible = s.exposure.phrases.has(s.content.phrases[0].id) || saved;
     hidden(element("library-empty"), eligible);
     hidden(element("library-phrase"), !eligible);
     text(
@@ -259,16 +284,20 @@ export function bindDesktop(experience: Experience) {
           ? "KEEP THE CONNECTION"
           : "WATCH & LEARN",
     );
-    const chunks = revealedChunks(experience.diagramProgress);
+    const chunks = contentChunkCount(s.content, experience.diagramProgress);
     element("chunks")
       .querySelectorAll("span")
-      .forEach((node, i) => node.classList.toggle("revealed", i < chunks));
+      .forEach((node, i) => {
+        text(node, s.content.phrases[0].chunks[i] ?? "");
+        hidden(node, i >= s.content.phrases[0].chunks.length);
+        node.classList.toggle("revealed", i < chunks);
+      });
     text(
       element("trace-instruction"),
       experience.trackLost
         ? "Hand tracking lost. Bring your selected hand back to continue."
         : experience.diagramProgress === 1
-          ? "El jugador pasa el balón. You followed the pass."
+          ? `${s.content.phrases[0].spanish} You followed the ${s.content.phrases[0].action}.`
           : experience.trace.armed
             ? "Follow the ball from player 7 to player 9."
             : experience.replaying
@@ -282,9 +311,9 @@ export function bindDesktop(experience: Experience) {
     ) {
       drawnExplore = experience.diagramProgress;
       drawnArmed = experience.trace.armed;
-      drawDiagram(
+      drawContentDiagram(
         canvas,
-        s.content.diagrams[0],
+        s.content,
         experience.diagramProgress,
         experience.trace.armed,
       );
@@ -296,9 +325,9 @@ export function bindDesktop(experience: Experience) {
       );
       if (watchProgress !== drawnWatch) {
         drawnWatch = watchProgress;
-        drawDiagram(
+        drawContentDiagram(
           element<HTMLCanvasElement>("watch-diagram"),
-          s.content.diagrams[0],
+          s.content,
           watchProgress,
         );
       }

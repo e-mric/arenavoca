@@ -20,19 +20,23 @@
         <div class="header-actions">
           <span class="prototype" id="team-identity"
             >Football · Just watching</span
-          ><span class="prototype">ORIGINAL FOOTBALL SAMPLE · 30 SECONDS</span
-          ><button id="enter-vr" disabled>Enter VR ↗</button>
+          ><span class="prototype" id="media-badge"
+            >IMMERSIVE SPORTS VIEWING</span
+          ><button id="enter-vr" disabled>Enter theater ↗</button>
+          <button id="enter-passthrough" disabled>
+            My room · Passthrough →
+          </button>
         </div>
       </header>
       <main>
         <section id="intro" class="intro">
           <p class="eyebrow">A MATCH WORTH REMEMBERING</p>
           <h1>
-            Enjoy your sport.<br />Take a little <em>Spanish</em> with you.
+            Your seat. Your sport.<br />A little <em>Spanish</em> alongside.
           </h1>
           <p class="lead">
-            Watch an original passing play. Explore the movement.<br />Connect
-            the words to the game you already know.
+            Step into your viewing lounge. Watch on a cinema-scale screen.<br />
+            Explore Spanish in floating panels beside the game.
           </p>
           <div class="intro-details">
             <span>01 &nbsp; Watch the match</span
@@ -44,7 +48,7 @@
             can be hidden. Explore leaves the match playing; pause whenever you
             choose.<br />In VR, point at a control and pinch to select it.
           </p>
-          <p class="muted">
+          <p class="muted" id="source-guidance">
             Choose your sport and team colours. The viewing sample is an
             original Blue–Amber football play.
           </p>
@@ -80,14 +84,20 @@
               Enable chant lyrics
             </button>
           </div>
-          <p class="muted">
+          <p class="muted" id="commentary-guidance">
             Start with English commentary. Switch to Spanish whenever you feel
             ready. Team chants are a text-only timing demo for Blue/Amber.
           </p>
           <div class="row">
-            <a href="./watch.html?source=barca"
-              >Watch full games with a companion ↗</a
-            >
+            <button id="enter-theater" class="primary" disabled>
+              Preparing the immersive theater…
+            </button>
+          </div>
+          <p id="media-source-label" class="muted">
+            Preparing your viewing source…
+          </p>
+          <div class="row">
+            <a href="./watch.html?source=barca">YouTube browser player ↗</a>
             <button id="start" class="primary" disabled>
               Preparing your match…</button
             ><button id="resume-saved" hidden>Resume previous session</button>
@@ -254,6 +264,7 @@
         <button id="stop-audio" hidden>Stop Spanish audio</button>
         <p id="status" role="status">Preparing your match…</p>
         <button id="retry" hidden>Retry loading</button>
+        <button id="use-sample" hidden>Use calibration clip</button>
         <p id="xr-status" class="muted">
           Preparing immersive controls… You can already watch in the browser.
         </p>

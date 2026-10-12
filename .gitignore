@@ -15,3 +15,10 @@ app/.codex/
 app/.mcp.json
 app/opencode.json
 app/CLAUDE.md
+# User-supplied sports recordings stay local to the demo.
+app/public/media/user/
+
+# Downloaded demo recordings in the workspace root remain private.
+/*.mp4
+/*.webm
+/*.mkv

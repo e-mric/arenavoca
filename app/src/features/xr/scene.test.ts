@@ -6,10 +6,17 @@ it("requires hands, disables locomotion and keeps the seated scene stationary", 
   expect(config.world.xr.features.handTracking).toEqual({ required: true });
   expect(config.world.features.locomotion).toBe(false);
   expect(config.world.features.grabbing).toBe(false);
-  expect(config.world.xr.offer).toBe("none");
+  expect(config.world.xr.offer).toBe("once");
+  expect(config.world.xr.features.gazeTracking).toBe(true);
 });
 it("registers every spatial control as a hand-ray target", () => {
-  for (const node of scene.nodes[0].children.filter((n) => "components" in n)) {
+  for (const node of scene.nodes[0].children.filter(
+    (n) =>
+      "content" in n &&
+      ["welcome", "learning", "explore", "watch-controls", "karaoke"].includes(
+        n.id,
+      ),
+  )) {
     expect(node.components).toHaveProperty("RayInteractable");
     expect(node.transform?.position?.[2]).toBeLessThan(0);
   }

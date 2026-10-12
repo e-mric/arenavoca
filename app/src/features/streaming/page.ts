@@ -2,7 +2,7 @@ import "../../styles.css";
 import "./styles.css";
 import { sourceById, youtubeUrl, type StreamSource } from "./catalog";
 import { loadYouTubeAPI, StreamPlayback, youtubeError } from "./youtube";
-import { streamLessons, drawStreamLesson } from "./lessons";
+import { streamLessons, drawStreamLesson } from "../sports/practice";
 import { StreamStore } from "./progress";
 import {
   validWatchMessage,

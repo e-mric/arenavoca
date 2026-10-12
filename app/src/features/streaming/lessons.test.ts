@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { sources, sourceById, youtubeUrl } from "./catalog";
-import { streamLessons } from "./lessons";
+import { streamLessons } from "../sports/practice";
 import { PassTrace } from "../learning/tracing";
 describe("sport content contracts", () => {
   it("labels the full match and F1 behind-the-scenes video accurately", () => {

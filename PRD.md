@@ -25,6 +25,12 @@ The user will create the Codex project. Place this file in its root as PRD.md. K
 - Prototype implementation and desktop automated checks are complete; device-dependent checklist evidence remains open. There are no learning pilot results. The user will review on Quest 3 in the morning of 12 October 2026.
 - Hackathon registration, Start membership, final eligibility, and the guided workflow's rules acknowledgment have not been verified or recorded. The local guided-workflow state file has not been initialized.
 
+### Immersive viewing correction · 12 October 2026
+
+The user rejected browser tabs as the primary VR experience and requested an immersive sports theater with floating language-learning options, then added a passthrough experience. The primary prototype must offer **Theater** (enclosed immersive VR) and **My room** (immersive AR with the real room visible). Both keep sports viewing central, optional Spanish practice beside it and explicit pause controls. The user supplied the full Barça recording locally for native video-texture playback. Keep the original sample and secondary YouTube browser path available. F1 and future sports reuse the viewing/learning loop with their own local footage, vocabulary and diagrams. Full-source practice is manual until authored event timings exist.
+
+Target the upcoming Meta VR glasses with eyes/hands interaction, using Quest 3 for current device reviews. Emulator results do not complete physical passthrough or future-glasses acceptance.
+
 ### Immediate Implementation Task
 
 Read this document and any instructions in the new project's actual directory. Inspect that repository and runtime, then execute the First Prototype checklist items. Use app/ inside the new project as the proposed application source directory, adjusting to an existing repository's structure when necessary. Do not keep using the old chat's generated folder after the handoff.

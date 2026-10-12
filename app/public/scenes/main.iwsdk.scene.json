@@ -15,6 +15,21 @@
       },
       "children": [
         {
+          "id": "theater",
+          "name": "Sports viewing lounge",
+          "content": {
+            "type": "asset",
+            "asset": "theater"
+          },
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
           "id": "surfaces",
           "name": "Viewing surfaces",
           "content": {
@@ -38,9 +53,9 @@
           },
           "transform": {
             "position": [
-              -0.65,
-              0.65,
-              -2.2
+              0,
+              0.48,
+              -3.25
             ]
           },
           "components": {
@@ -56,9 +71,9 @@
           },
           "transform": {
             "position": [
-              1.2,
-              1.24,
-              -2.05
+              3,
+              1.4,
+              -3
             ]
           },
           "components": {
@@ -74,9 +89,9 @@
           },
           "transform": {
             "position": [
-              0,
-              1.04,
-              -0.85
+              3,
+              1.4,
+              -3
             ]
           },
           "components": {
@@ -94,7 +109,7 @@
             "position": [
               0,
               1.3,
-              -1.7
+              -1.9
             ]
           },
           "components": {
@@ -110,13 +125,103 @@
           },
           "transform": {
             "position": [
-              -0.65,
-              2.62,
-              -2.2
+              0,
+              4.9,
+              -5.95
             ]
           },
           "components": {
             "RayInteractable": {}
+          }
+        },
+        {
+          "id": "house-ambient",
+          "name": "House ambient",
+          "components": {
+            "com.iwsdk.components.AmbientLight": {
+              "color": [
+                0.6,
+                0.68,
+                0.85,
+                1
+              ],
+              "intensity": 0.9
+            }
+          }
+        },
+        {
+          "id": "screen-glow",
+          "name": "Screen glow",
+          "transform": {
+            "position": [
+              0,
+              2.4,
+              -5.2
+            ]
+          },
+          "components": {
+            "com.iwsdk.components.PointLight": {
+              "color": [
+                0.5,
+                0.62,
+                0.85,
+                1
+              ],
+              "intensity": 18,
+              "distance": 10,
+              "decay": 2,
+              "castShadow": false
+            }
+          }
+        },
+        {
+          "id": "house-left",
+          "name": "House left",
+          "transform": {
+            "position": [
+              -3,
+              4.4,
+              -1
+            ]
+          },
+          "components": {
+            "com.iwsdk.components.PointLight": {
+              "color": [
+                1,
+                0.77,
+                0.52,
+                1
+              ],
+              "intensity": 12,
+              "distance": 10,
+              "decay": 2,
+              "castShadow": false
+            }
+          }
+        },
+        {
+          "id": "house-right",
+          "name": "House right",
+          "transform": {
+            "position": [
+              3,
+              4.4,
+              -1
+            ]
+          },
+          "components": {
+            "com.iwsdk.components.PointLight": {
+              "color": [
+                1,
+                0.77,
+                0.52,
+                1
+              ],
+              "intensity": 12,
+              "distance": 10,
+              "decay": 2,
+              "castShadow": false
+            }
           }
         }
       ]
@@ -135,11 +240,34 @@
         ],
         "target": [
           0,
-          1.3,
-          -2
+          1.8,
+          -5.95
         ],
-        "fov": 60
+        "fov": 74
       }
     ]
+  },
+  "components": {
+    "com.iwsdk.components.IBLGradient": {
+      "sky": [
+        0.28,
+        0.3,
+        0.38,
+        1
+      ],
+      "equator": [
+        0.16,
+        0.18,
+        0.23,
+        1
+      ],
+      "ground": [
+        0.05,
+        0.05,
+        0.06,
+        1
+      ],
+      "intensity": 0.65
+    }
   }
 }
