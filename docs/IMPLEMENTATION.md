@@ -81,3 +81,7 @@ One full-suite run exposed a cold immersive startup exceeding the old 15-second 
 Quest Browser window movement, focus behavior, hand input, comfort and readability remain unverified on physical hardware. Full-source alternate commentary is limited to whatever the publisher offers; only the original sample has prepared English/Spanish switching. Real-song cues, fluent language review, and a full-race F1 source remain later work. The morning checklist covers both browser-window and immersive paths.
 
 Final production verification: typecheck and build passed; 127 unit tests passed; all 18 browser journeys passed in 1.2 minutes after the unsupported-desktop startup correction. The managed development emulator also reached its ready state after the change. Its checked window was then closed; the HTTPS development server and HTTP production preview remain running. Actual Quest acceptance and fluent Spanish review remain pending.
+
+## Physical Quest connection · 12 October 2026
+
+A physical Quest 3 was detected with USB debugging authorized. Port 4173 was forwarded over USB, and Quest Browser was launched at `http://localhost:4173/watch.html?source=barca`. The device reports the browser as focused and visible; the user confirmed the Barça page is visible inside the headset. The available screenshot fallback returned black, so it is not visual acceptance evidence. Embedded playback, independent-window focus and movement, hand interaction, comfort, audio, persistence and immersive-session checks remain pending.

@@ -1,6 +1,6 @@
 # Morning Quest 3 prototype review
 
-Milestone A is ready for device testing, but remains unverified. Use hands and stay seated. Review the full-game browser companion first, then the original 30-second immersive sample. Keep the Mac awake and the server running.
+Milestone A is ready for device testing. On 12 October 2026, the physical Quest 3 was detected over USB, the browser was launched at `http://localhost:4173/watch.html?source=barca`, and the user confirmed that the Barça page was visible. Playback, floating-window interaction and immersive hand tests remain unverified. Use hands and stay seated. Review the full-game browser companion first, then the original 30-second immersive sample. Keep the Mac awake and the server running.
 
 ## Choose a test route
 
@@ -49,7 +49,7 @@ Open **http://localhost:4173/watch.html?source=barca** through the USB route abo
 
 | Browser-window check | Pass / Fail / Not tested | What happened |
 | --- | --- | --- |
-| Barça embedded playback / source duration | Not tested | |
+| Barça embedded playback / source duration | Not tested | Page visibility confirmed by user on physical Quest 3 over USB, 12 October 2026. Playback and duration not yet confirmed. |
 | Detached companion remains alongside playing game | Not tested | |
 | Quest window movement, readable text and hand selection | Not tested | |
 | Replay / trace / Listen never pause or seek the game | Not tested | |
