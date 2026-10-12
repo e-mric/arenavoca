@@ -2,6 +2,7 @@ import { Session } from "./session";
 import { PassTrace } from "../learning/tracing";
 import { Pronunciation, commentaryVolume } from "../audio/pronunciation";
 import type { MatchPlayer } from "../playback/player";
+import type { Commentary, CommentaryLanguage } from "../audio/commentary";
 /** Both the DOM preview and spatial controls issue commands through this coordinator. */
 export class Experience {
   trace: PassTrace;
@@ -14,6 +15,7 @@ export class Experience {
     readonly session: Session,
     readonly audio: Pronunciation,
     readonly player: MatchPlayer,
+    readonly commentary?: Commentary,
   ) {
     this.trace = new PassTrace(session.content.diagrams[0].route);
     session.onChange = () => {
@@ -25,16 +27,41 @@ export class Experience {
       this.syncAudio();
       this.onChange();
     };
+    if (commentary)
+      commentary.onError = () => {
+        session.message =
+          "Spanish commentary is unavailable. English continues; you can retry after reloading.";
+        session.setPreference("commentaryLanguage", "english");
+      };
   }
   stopAudio() {
     this.listenRequest++;
     this.audio.stop();
   }
   syncAudio() {
-    this.player.video.volume = commentaryVolume(
+    const volume = commentaryVolume(
       this.session.snapshot.preferences.muted,
       this.audio.speaking,
     );
+    const spanish =
+      this.session.snapshot.preferences.commentaryLanguage === "spanish" &&
+      this.commentary?.ready;
+    this.player.video.volume = spanish ? 0 : volume;
+    this.commentary?.sync(
+      this.player.video,
+      spanish ? "spanish" : "english",
+      volume,
+    );
+  }
+  setCommentaryLanguage(language: CommentaryLanguage) {
+    if (language === "spanish" && !this.commentary?.ready) {
+      this.session.message =
+        "Spanish commentary is unavailable. English is still available.";
+      this.onChange();
+      return;
+    }
+    this.session.message = "";
+    this.session.setPreference("commentaryLanguage", language);
   }
   async listen() {
     const phrase = this.session.phrase;
@@ -89,7 +116,7 @@ export class Experience {
     await this.session.back();
   }
   frame(delta: number) {
-    if (this.session.mode === "Watching") this.session.tick();
+    if (this.session.matchActive) this.session.tick();
     if (this.session.mode === "Exploring") {
       if (this.replaying) {
         this.diagramProgress = Math.min(

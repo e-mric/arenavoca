@@ -1,6 +1,6 @@
 # Prototype asset provenance
 
-All assets here are for the first 30-second sample; none represent a real match, club, or identifiable player. Spanish wording, translation, and pronunciation are awaiting a fluent human review. Generation is not review evidence.
+The original 30-second sample assets do not represent a real match, club, or identifiable player. The separate streaming path references publisher-hosted YouTube content, without downloading or repackaging it. Spanish wording, translation, and pronunciation are awaiting a fluent human review. Generation is not review evidence.
 
 | Asset | Original source / authoring method | Review status |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ All assets here are for the first 30-second sample; none represent a real match,
 
 - 0–6 s: Blue prepares the passing play.
 - 6–8 s: Ball moves from normalized `(0.32, 0.70)` to `(0.65, 0.35)`.
-- 6–9.53 s: English commentary is mixed into the video, starting at exactly 6 s; captions cover 6–9.6 s.
+- 6–9.53 s: English commentary is mixed into the video, starting at exactly 6 s; captions cover 6–9.85 s.
 - 12–15 s: Same pass replays from the original endpoints; the card opens at 12 s.
 - 12–20 s: Only one learning prompt, with the Spanish sentence and corresponding diagram.
 - 20–30 s: Blue retains possession; clip ends.
@@ -34,3 +34,30 @@ ffmpeg -framerate 30 -i content-source/frames/frame-%04d.png -i content-source/c
 ```
 
 Blender 5.2.2 LTS was used for authoring, with Workbench rendering at 1280×720, 30 fps. The final clip is exactly 30 s and 512,507 bytes. The generated frame sequence is excluded from Git; the editable `.blend`, script, movement data, and final MP4 are retained.
+
+## Original chant text timing demo
+
+`src/features/karaoke/karaoke.ts` authors short original draft lines for fictional Blue/Amber teams at 21–27 seconds. Words and English meanings are original prototype copy, awaiting fluent Spanish review. Highlighting uses illustrative uniform word intervals; it is not aligned to singing or detected crowd audio. The video and audio were not changed. Real-team hymns remain unimplemented; the separate YouTube path has no authored chant cues.
+
+## Alternate Spanish commentary
+
+`commentary-es.mp3` is an original ElevenLabs `eleven_multilingual_v2` recording using Lucia España (`8HiNnu4IfxM92fHB81w1`), generation `AlKV3ERcWQrcMt1zp3TF`, generated 12 October 2026. Exact script: “Un buen pase a su compañero. El equipo azul mantiene la posesión.” The take is 3.7616 seconds. `public/audio/commentary-es.mp3` is a 30.000-second, 360,847-byte MP3 with the take starting at 6 seconds and silence elsewhere. It follows the same video clock; the original video's English track is muted while Spanish is selected. Wording, translation, pronunciation and listening quality await fluent human review.
+
+Reproduce the timing export from `app/`:
+
+```sh
+ffmpeg -i content-source/commentary-es.mp3 -af 'adelay=6000|6000,apad' -t 30 -c:a libmp3lame -b:a 96k public/audio/commentary-es.mp3
+```
+
+## Team-inspired interface palettes
+
+`src/features/theme/team-theme.ts` supplies original fan-inspired palettes. Visual reference sites: [FC Barcelona](https://www.fcbarcelona.com/en/), [Real Madrid](https://www.realmadrid.com/en-US), [Ferrari](https://www.ferrari.com/en-EN/formula1), [McLaren](https://www.mclaren.com/racing/formula-1/). These are not official hexadecimal specifications or downloaded brand assets. Team logos, copyrighted song text and broadcast footage are not included. The match's Blue/Amber markers retain their original colours so changing the supporter theme cannot change the illustrated action's team identities.
+
+## Full-source viewing and F1 pronunciation
+
+- Barça full match: `WMjohb2tq7Y`, FC Barcelona, observed embedded playback and duration 5961 seconds on 12 October 2026.
+- F1 replacement: `i5EnUkFLaWs`, Oracle Red Bull Racing, “Our First Win Of 2026!!! | Behind The Charge”, observed embedded playback, duration 485 seconds. It is behind-the-scenes coverage rather than a full race. The user's supplied Miami upload (`1UsQ9eQtRyg`) returned YouTube embed error 150.
+- Videos remain on YouTube with the original player, controls and branding. No video download or proxy was made. Publisher availability may change.
+- `public/audio/overtake-es.mp3`: original script “El piloto adelanta.”; ElevenLabs `eleven_multilingual_v2`, Lucia España `8HiNnu4IfxM92fHB81w1`, generation `USLTJwwl4c6DIRRpnjRc`, 12 October 2026, 1.393197 seconds, 40,575 bytes. Human language/audio review pending.
+- Streaming football/F1 illustrations: original Canvas code in `src/features/streaming/lessons.ts`; anonymous markers and manually chosen practice concepts, not reconstructed or detected events in the recordings.
+- Mobbin screens were examined as composition references; their screenshots, logos and other assets are not included in the app. The citations and adapted hierarchy are recorded in the PRD.

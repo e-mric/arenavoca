@@ -1,0 +1,165 @@
+.stream-page {
+  min-height: 100vh;
+}
+.stream-page header {
+  flex-wrap: wrap;
+}
+.stream-page a {
+  color: #d4dfd9;
+}
+.stream-page button,
+.stream-page select {
+  min-height: 48px;
+  font-size: 16px;
+}
+.stream-page select {
+  padding: 10px;
+  background: var(--team-control);
+  color: #edf3e8;
+  border: 1px solid var(--team-stripe);
+  border-radius: 8px;
+  max-width: 100%;
+}
+.stream-page label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: #c9d5cf;
+}
+.stream-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin: 12px 0 24px;
+}
+.stream-heading .eyebrow {
+  margin-bottom: 10px;
+}
+.stream-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.5fr) minmax(330px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+#youtube-player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  min-height: 200px;
+  border: 0;
+  display: block;
+  background: #1a1a1a;
+}
+.stream-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+#stream-time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.stream-companion {
+  background: var(--team-panel);
+  border: 1px solid var(--team-stripe);
+  border-radius: 14px;
+  padding: 24px;
+}
+.stream-companion h2 {
+  font-size: 25px;
+}
+.stream-companion .companion-heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: #c9d5cf;
+  margin: 8px 0 20px;
+}
+#lesson-spanish {
+  font-size: 30px;
+  line-height: 1.25;
+  color: var(--team-accent);
+  margin: 10px 0;
+}
+.phrase-actions {
+  margin: 18px 0 24px;
+}
+#stream-diagram {
+  width: 100%;
+  display: block;
+  border-radius: 9px;
+  touch-action: none;
+}
+.stream-chunks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.stream-chunks span {
+  padding: 8px;
+  border-bottom: 3px solid #5c6a61;
+  color: #b5c9b5;
+}
+.stream-chunks span.revealed {
+  color: #edf3e8;
+  border-color: var(--team-accent);
+}
+.stream-page .muted {
+  font-size: 13px;
+}
+#stream-bookmarks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.stream-layout.detached {
+  grid-template-columns: 1fr;
+}
+.stream-layout.detached #companion-pane {
+  display: none;
+}
+.stream-page.companion-only header,
+.stream-page.companion-only #source-picker,
+.stream-page.companion-only #player-pane,
+.stream-page.companion-only footer {
+  display: none;
+}
+.stream-page.companion-only main {
+  padding: 20px;
+  max-width: 700px;
+}
+.stream-page.companion-only .stream-layout {
+  display: block;
+}
+.stream-page.companion-only .stream-heading .small-title {
+  font-size: 21px;
+}
+.stream-page[data-sport="f1"] .stream-companion,
+.stream-page[data-sport="f1"] select {
+  border-radius: 3px;
+}
+@media (max-width: 1000px) {
+  .stream-layout {
+    grid-template-columns: 1fr;
+  }
+  .stream-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 450px) {
+  .stream-page main {
+    padding: 22px 16px;
+  }
+  .stream-companion {
+    padding: 18px;
+  }
+  .stream-page .small-title {
+    font-size: 25px;
+  }
+}

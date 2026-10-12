@@ -2,6 +2,8 @@ import type { Content, MatchEvent } from "../content/model";
 import type { Playback } from "../playback/player";
 import { Exposure, timelineAt } from "../playback/timeline";
 import { emptySnapshot, ProgressStore, type Snapshot } from "../progress/store";
+import { chantAt } from "../karaoke/karaoke";
+import { teamsFor, type Sport } from "../theme/team-theme";
 export type Mode =
   | "Loading"
   | "Onboarding"
@@ -17,10 +19,10 @@ export class Session {
   exposure = new Exposure();
   snapshot: Snapshot;
   message = "Preparing your match…";
-  private priorPlaying = false;
   private pendingPlay = false;
   private command = 0;
   private lastSavedPosition = 0;
+  private finishedObserved = false;
   onChange = () => {};
   onStopAudio = () => {};
   constructor(
@@ -48,7 +50,36 @@ export class Session {
     ).event;
   }
   get caption() {
-    return timelineAt(this.content, this.player.position).caption;
+    if (this.snapshot.preferences.commentaryLanguage === "english")
+      return timelineAt(this.content, this.player.position).caption;
+    const cue = this.content.captions.find(
+      (c) => this.player.position >= c.start && this.player.position < c.end,
+    );
+    return cue?.spanish ?? "";
+  }
+  get matchActive() {
+    return ["Watching", "Exploring", "PhraseLibrary"].includes(this.mode);
+  }
+  get chant() {
+    return this.matchActive
+      ? chantAt(
+          this.player.position,
+          this.snapshot.preferences.team,
+          this.snapshot.preferences.karaokeEnabled,
+          this.content.version,
+        )
+      : undefined;
+  }
+  setSport(sport: Sport) {
+    if (sport === this.snapshot.preferences.sport) return;
+    this.snapshot.preferences = {
+      ...this.snapshot.preferences,
+      sport,
+      team: "neutral",
+    };
+    if (this.mode === "Onboarding") this.progress.write(this.snapshot);
+    this.persist();
+    this.emit();
   }
   async start(resume = false) {
     this.onStopAudio();
@@ -57,6 +88,8 @@ export class Session {
     this.pendingPlay = false;
     this.mode = "Watching";
     this.selected = undefined;
+    this.finishedObserved = false;
+    this.lastSavedPosition = 0;
     const saved = resume ? this.snapshot.resumableSession : null;
     this.exposure = new Exposure(saved?.seenEventIds, saved?.seenPhraseIds);
     if (saved) this.player.restore(saved.position);
@@ -65,7 +98,12 @@ export class Session {
     this.emit();
   }
   async play() {
-    if (this.pendingPlay || this.mode !== "Watching") return;
+    if (
+      this.pendingPlay ||
+      !this.matchActive ||
+      this.player.position >= this.content.duration - 0.04
+    )
+      return;
     const token = ++this.command;
     this.pendingPlay = true;
     try {
@@ -82,7 +120,7 @@ export class Session {
     }
   }
   async togglePlayback() {
-    if (this.mode !== "Watching") return;
+    if (!this.matchActive) return;
     if (this.player.playing || this.pendingPlay) {
       this.halt();
       this.persist();
@@ -95,19 +133,25 @@ export class Session {
     this.player.pause();
   }
   tick() {
-    if (this.mode !== "Watching") return;
-    const prompt = this.prompt;
-    if (prompt) {
-      this.selected = prompt;
-      this.exposure.display(prompt);
-    } else if (this.selected) {
-      this.selected = undefined;
-      this.onStopAudio();
+    if (!this.matchActive) return;
+    if (this.mode === "Watching") {
+      const prompt = this.prompt;
+      if (prompt) {
+        this.selected = prompt;
+        this.exposure.display(prompt);
+      } else if (this.selected) {
+        this.selected = undefined;
+        this.onStopAudio();
+      }
     }
     if (this.player.position >= this.content.duration - 0.04) {
+      if (this.finishedObserved) return;
+      this.finishedObserved = true;
       this.halt();
-      this.mode = "Completed";
-      this.onStopAudio();
+      if (this.mode === "Watching") {
+        this.mode = "Completed";
+        this.onStopAudio();
+      }
       this.persist();
     } else if (this.player.position - this.lastSavedPosition >= 2) {
       this.persist();
@@ -122,8 +166,6 @@ export class Session {
     )
       return;
     this.selected = event;
-    this.priorPlaying = this.player.playing || this.pendingPlay;
-    this.halt();
     this.onStopAudio();
     this.mode = "Exploring";
     this.persist();
@@ -131,8 +173,6 @@ export class Session {
   }
   library() {
     if (!["Watching", "Completed"].includes(this.mode)) return;
-    this.priorPlaying = this.player.playing || this.pendingPlay;
-    this.halt();
     this.onStopAudio();
     this.mode = "PhraseLibrary";
     this.selected = this.content.events.find(
@@ -150,9 +190,6 @@ export class Session {
         ? "Completed"
         : "Watching";
     this.selected = undefined;
-    const resume = this.priorPlaying;
-    this.priorPlaying = false;
-    if (resume && this.mode === "Watching") await this.play();
     this.emit();
   }
   suspend() {
@@ -160,7 +197,6 @@ export class Session {
       return;
     this.halt();
     this.onStopAudio();
-    this.priorPlaying = false;
     this.mode = "Suspended";
     this.persist();
     this.message = "Match paused. Resume when you are ready.";
@@ -183,9 +219,9 @@ export class Session {
     this.player.restart();
     this.exposure.restart();
     this.selected = undefined;
-    this.priorPlaying = false;
     this.snapshot.resumableSession = null;
     this.lastSavedPosition = 0;
+    this.finishedObserved = false;
     this.mode = "Watching";
     this.message = "";
     this.persist();
@@ -208,7 +244,17 @@ export class Session {
     key: K,
     value: Snapshot["preferences"][K],
   ) {
+    if (
+      key === "team" &&
+      value !== "neutral" &&
+      !teamsFor(this.snapshot.preferences.sport).includes(
+        value as import("../theme/team-theme").Team,
+      )
+    )
+      return;
     this.snapshot.preferences = { ...this.snapshot.preferences, [key]: value };
+    if (this.mode === "Onboarding" && !this.progress.write(this.snapshot))
+      this.message = "Display preferences could not be stored on this device.";
     if (key === "promptsHidden" && value && this.mode === "Watching") {
       this.selected = undefined;
       this.onStopAudio();

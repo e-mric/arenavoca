@@ -2,9 +2,21 @@ import { element, time } from "../../shared/dom";
 import { drawDiagram, diagramPoint } from "../learning/diagram";
 import { revealedChunks } from "../learning/tracing";
 import type { Experience } from "./experience";
+import { activeWord } from "../karaoke/karaoke";
+import { teamThemes, themeFor } from "../theme/team-theme";
+// Keep stable text nodes across frames. Replacing unchanged text forces layout
+// work throughout the companion even after an animation has finished.
+function text(node: HTMLElement, value: string) {
+  if (node.textContent !== value) node.textContent = value;
+}
+function hidden(node: HTMLElement, value: boolean) {
+  if (node.hidden !== value) node.hidden = value;
+}
 export function bindDesktop(experience: Experience) {
   const s = experience.session;
   element("video-mount").append(experience.player.video);
+  const companion = element("companion");
+  companion.append(element("explore-view"), element("library-view"));
   const handlers: Record<string, () => unknown> = {
     start: () => s.start(),
     "resume-saved": () => s.start(true),
@@ -30,6 +42,35 @@ export function bindDesktop(experience: Experience) {
     mute: () => s.setPreference("muted", !s.snapshot.preferences.muted),
     "hide-prompts": () =>
       s.setPreference("promptsHidden", !s.snapshot.preferences.promptsHidden),
+    "panel-side": () =>
+      s.setPreference(
+        "panelSide",
+        s.snapshot.preferences.panelSide === "right" ? "left" : "right",
+      ),
+    "panel-distance": () =>
+      s.setPreference(
+        "panelDistance",
+        s.snapshot.preferences.panelDistance === "near" ? "far" : "near",
+      ),
+    "panel-height": () =>
+      s.setPreference(
+        "panelHeight",
+        s.snapshot.preferences.panelHeight === "low" ? "high" : "low",
+      ),
+    "team-blue": () => s.setPreference("team", "blue"),
+    "team-amber": () => s.setPreference("team", "amber"),
+    "team-neutral": () => s.setPreference("team", "neutral"),
+    "karaoke-toggle": () =>
+      s.setPreference("karaokeEnabled", !s.snapshot.preferences.karaokeEnabled),
+    "karaoke-hide": () => s.setPreference("karaokeEnabled", false),
+    "sport-football": () => s.setSport("football"),
+    "sport-f1": () => s.setSport("f1"),
+    "team-barcelona": () => s.setPreference("team", "barcelona"),
+    "team-madrid": () => s.setPreference("team", "madrid"),
+    "team-ferrari": () => s.setPreference("team", "ferrari"),
+    "team-mclaren": () => s.setPreference("team", "mclaren"),
+    "commentary-english": () => experience.setCommentaryLanguage("english"),
+    "commentary-spanish": () => experience.setCommentaryLanguage("spanish"),
   };
   for (const [id, action] of Object.entries(handlers))
     element(id).addEventListener("click", () => void action());
@@ -47,6 +88,10 @@ export function bindDesktop(experience: Experience) {
   const release = () => {
     pointer = undefined;
   };
+  let appliedTheme = "",
+    drawnExplore = -1,
+    drawnArmed = false,
+    drawnWatch = -1;
   canvas.addEventListener("pointerup", release);
   canvas.addEventListener("pointercancel", release);
   canvas.addEventListener("lostpointercapture", release);
@@ -66,91 +111,198 @@ export function bindDesktop(experience: Experience) {
   function render() {
     const mode = s.mode,
       loaded = mode !== "Loading" && mode !== "Error";
-    element("intro").hidden =
-      mode !== "Onboarding" && mode !== "Loading" && mode !== "Error";
-    element("experience").hidden = !loaded || mode === "Onboarding";
-    element<HTMLButtonElement>("start").disabled = !loaded;
-    element("start").textContent = loaded
-      ? "Start match →"
-      : "Preparing your match…";
-    element("resume-saved").hidden =
-      !s.snapshot.resumableSession || s.snapshot.resumableSession.completed;
-    element("watch-layout").hidden = ["PhraseLibrary", "Suspended"].includes(
-      mode,
+    hidden(
+      element("intro"),
+      mode !== "Onboarding" && mode !== "Loading" && mode !== "Error",
     );
-    element("watch-layout").classList.toggle("dimmed", mode === "Exploring");
+    hidden(element("experience"), !loaded || mode === "Onboarding");
+    element<HTMLButtonElement>("start").disabled = !loaded;
+    text(element("start"), loaded ? "Start match →" : "Preparing your match…");
+    hidden(
+      element("resume-saved"),
+      !s.snapshot.resumableSession || s.snapshot.resumableSession.completed,
+    );
+    hidden(element("watch-layout"), mode === "Suspended");
+    const companionOpen = mode === "Exploring" || mode === "PhraseLibrary";
+    element("watch-layout").classList.toggle("companion-open", companionOpen);
     element("watch-layout").classList.toggle(
       "left",
       s.snapshot.preferences.panelSide === "left",
     );
-    element("explore-view").hidden = mode !== "Exploring";
-    element("library-view").hidden = mode !== "PhraseLibrary";
-    element("completed").hidden = mode !== "Completed";
-    element("suspended").hidden = mode !== "Suspended";
-    element("waiting").hidden = !!s.prompt;
-    element("phrase-card").hidden = !s.prompt;
-    element("time").textContent =
-      `${time(experience.player.position)} / ${time(s.content.duration)}`;
+    hidden(element("explore-view"), mode !== "Exploring");
+    hidden(element("library-view"), mode !== "PhraseLibrary");
+    hidden(element("completed"), mode !== "Completed");
+    hidden(element("suspended"), mode !== "Suspended");
+    hidden(element("waiting"), companionOpen || !!s.prompt || !!s.chant);
+    hidden(element("phrase-card"), companionOpen || !s.prompt);
+    text(
+      element("time"),
+      `${time(experience.player.position)} / ${time(s.content.duration)}`,
+    );
     element<HTMLProgressElement>("match-progress").value =
       experience.player.position;
-    element("caption").textContent = s.caption;
-    element("play").textContent = experience.player.playing ? "Pause" : "Play";
-    element("mute").textContent = s.snapshot.preferences.muted
-      ? "Unmute"
-      : "Mute";
-    element("hide-prompts").textContent = s.snapshot.preferences.promptsHidden
-      ? "Show prompts"
-      : "Hide prompts";
-    element("stop-audio").hidden = !experience.audio.speaking;
-    element("status").textContent = s.message;
-    element("saved-count").textContent = String(
-      s.snapshot.savedPhraseIds.length,
+    text(element("caption"), s.caption);
+    text(element("play"), experience.player.playing ? "Pause" : "Play");
+    element("play").setAttribute(
+      "aria-label",
+      experience.player.playing ? "Pause match" : "Play match",
     );
+    text(
+      element("explore-playback-status"),
+      experience.player.position >= s.content.duration - 0.04
+        ? "MATCH FINISHED · KEEP EXPLORING"
+        : experience.player.playing
+          ? "MATCH PLAYING · EXPLORE THE PASS"
+          : "MATCH PAUSED BY YOU · EXPLORE THE PASS",
+    );
+    text(
+      element("panel-side"),
+      s.snapshot.preferences.panelSide === "right"
+        ? "Panel left"
+        : "Panel right",
+    );
+    text(
+      element("panel-distance"),
+      s.snapshot.preferences.panelDistance === "near"
+        ? "Panel farther"
+        : "Panel nearer",
+    );
+    text(
+      element("panel-height"),
+      s.snapshot.preferences.panelHeight === "low"
+        ? "Panel higher"
+        : "Panel lower",
+    );
+    for (const team of Object.keys(teamThemes))
+      element(`team-${team}`).setAttribute(
+        "aria-pressed",
+        String(s.snapshot.preferences.team === team),
+      );
+    const preferences = s.snapshot.preferences;
+    for (const sport of ["football", "f1"]) {
+      element(`sport-${sport}`).setAttribute(
+        "aria-pressed",
+        String(preferences.sport === sport),
+      );
+      hidden(element(`${sport}-teams`), preferences.sport !== sport);
+    }
+    for (const language of ["english", "spanish"])
+      element(`commentary-${language}`).setAttribute(
+        "aria-pressed",
+        String(preferences.commentaryLanguage === language),
+      );
+    const themeKey = `${preferences.team}/${preferences.sport}`;
+    if (themeKey !== appliedTheme) {
+      const theme = themeFor(preferences.team, preferences.sport);
+      const surface = element("desktop");
+      surface.dataset.sport = preferences.sport;
+      surface.dataset.team = preferences.team;
+      for (const [key, value] of Object.entries(theme))
+        if (key !== "name" && key !== "sport")
+          surface.style.setProperty(`--team-${key}`, value);
+      text(
+        element("team-identity"),
+        `${preferences.sport === "f1" ? "F1" : "Football"} · ${theme.name}`,
+      );
+      appliedTheme = themeKey;
+    }
+    element("karaoke-toggle").setAttribute(
+      "aria-pressed",
+      String(s.snapshot.preferences.karaokeEnabled),
+    );
+    text(
+      element("karaoke-toggle"),
+      s.snapshot.preferences.karaokeEnabled
+        ? "Chant lyrics on"
+        : "Enable chant lyrics",
+    );
+    const chant = s.chant;
+    hidden(element("karaoke-card"), !chant);
+    if (chant) {
+      const word = activeWord(chant, s.player.position);
+      element("karaoke-lyrics")
+        .querySelectorAll("span")
+        .forEach((node, i) => {
+          text(node, chant.words[i] ?? "");
+          hidden(node, i >= chant.words.length);
+          node.classList.toggle("current-word", i === word);
+        });
+      text(element("karaoke-translation"), chant.translation);
+    }
+    text(element("mute"), s.snapshot.preferences.muted ? "Unmute" : "Mute");
+    text(
+      element("hide-prompts"),
+      s.snapshot.preferences.promptsHidden ? "Show prompts" : "Hide prompts",
+    );
+    hidden(element("stop-audio"), !experience.audio.speaking);
+    text(element("status"), s.message);
+    text(element("saved-count"), String(s.snapshot.savedPhraseIds.length));
     const saved = s.snapshot.savedPhraseIds.includes("pass");
     for (const id of ["save", "explore-save", "library-save"])
-      element(id).textContent = saved ? "Saved ✓" : "Save phrase";
+      text(element(id), saved ? "Saved ✓" : "Save phrase");
     for (const id of ["listen", "explore-listen", "library-listen"])
-      element(id).textContent = experience.audio.speaking
-        ? "Listen again"
-        : "Listen";
+      text(element(id), experience.audio.speaking ? "Listen again" : "Listen");
     const eligible = s.exposure.phrases.has("pass") || saved;
-    element("library-empty").hidden = eligible;
-    element("library-phrase").hidden = !eligible;
-    element("library-status").textContent = saved
-      ? "Saved on this device."
-      : "Seen this session. Select Save phrase to keep it.";
-    element("mode-label").textContent =
+    hidden(element("library-empty"), eligible);
+    hidden(element("library-phrase"), !eligible);
+    text(
+      element("library-status"),
+      saved
+        ? "Saved on this device."
+        : "Seen this session. Select Save phrase to keep it.",
+    );
+    text(
+      element("mode-label"),
       mode === "Exploring"
         ? "EXPLORE & CONNECT"
         : mode === "PhraseLibrary"
           ? "KEEP THE CONNECTION"
-          : "WATCH & LEARN";
+          : "WATCH & LEARN",
+    );
     const chunks = revealedChunks(experience.diagramProgress);
     element("chunks")
       .querySelectorAll("span")
       .forEach((node, i) => node.classList.toggle("revealed", i < chunks));
-    element("trace-instruction").textContent = experience.trackLost
-      ? "Hand tracking lost. Bring your selected hand back to continue."
-      : experience.diagramProgress === 1
-        ? "El jugador pasa el balón. You followed the pass."
-        : experience.trace.armed
-          ? "Follow the ball from player 7 to player 9."
-          : experience.replaying
-            ? "Watch the pass unfold."
-            : "Choose Start trace, then follow the ball from player 7 to player 9.";
-    if (mode === "Exploring")
+    text(
+      element("trace-instruction"),
+      experience.trackLost
+        ? "Hand tracking lost. Bring your selected hand back to continue."
+        : experience.diagramProgress === 1
+          ? "El jugador pasa el balón. You followed the pass."
+          : experience.trace.armed
+            ? "Follow the ball from player 7 to player 9."
+            : experience.replaying
+              ? "Watch the pass unfold."
+              : "Choose Start trace, then follow the ball from player 7 to player 9.",
+    );
+    if (
+      mode === "Exploring" &&
+      (drawnExplore !== experience.diagramProgress ||
+        drawnArmed !== experience.trace.armed)
+    ) {
+      drawnExplore = experience.diagramProgress;
+      drawnArmed = experience.trace.armed;
       drawDiagram(
         canvas,
         s.content.diagrams[0],
         experience.diagramProgress,
         experience.trace.armed,
       );
-    if (s.prompt)
-      drawDiagram(
-        element<HTMLCanvasElement>("watch-diagram"),
-        s.content.diagrams[0],
-        Math.min(1, (s.player.position - s.prompt.promptStart) / 3),
+    }
+    if (s.prompt) {
+      const watchProgress = Math.min(
+        1,
+        (s.player.position - s.prompt.promptStart) / 3,
       );
+      if (watchProgress !== drawnWatch) {
+        drawnWatch = watchProgress;
+        drawDiagram(
+          element<HTMLCanvasElement>("watch-diagram"),
+          s.content.diagrams[0],
+          watchProgress,
+        );
+      }
+    }
   }
   render();
   return render;

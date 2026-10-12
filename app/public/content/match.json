@@ -73,13 +73,15 @@
   "captions": [
     {
       "start": 6,
-      "end": 9.6,
-      "text": "A lovely pass to his teammate. Blue keep possession."
+      "end": 9.85,
+      "text": "A lovely pass to his teammate. Blue keep possession.",
+      "spanish": "Un buen pase a su compañero. El equipo azul mantiene la posesión."
     },
     {
       "start": 12,
       "end": 15,
-      "text": "Replay · The pass between the blue teammates."
+      "text": "Replay · The pass between the blue teammates.",
+      "spanish": "Repetición · El pase entre los compañeros del equipo azul."
     }
   ]
 }

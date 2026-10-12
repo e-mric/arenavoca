@@ -15,7 +15,7 @@ it("registers every spatial control as a hand-ray target", () => {
   }
 });
 it("has real UIKitML controls for every essential action", () => {
-  const markup = ["watch-controls", "learning", "explore", "welcome"]
+  const markup = ["watch-controls", "learning", "explore", "welcome", "karaoke"]
     .map((id) =>
       fs.readFileSync(
         new URL(`../../../public/ui/${id}.uikitml`, import.meta.url),
@@ -35,6 +35,14 @@ it("has real UIKitML controls for every essential action", () => {
     "xr-back",
     "xr-resume",
     "xr-exit",
+    "xr-panel-distance",
+    "xr-panel-height",
+    "xr-explore-play",
+    "xr-team-blue",
+    "xr-team-amber",
+    "xr-team-neutral",
+    "xr-karaoke-toggle",
+    "xr-karaoke-hide",
   ])
     expect(markup).toContain(`id="${id}"`);
   expect(markup).toContain("../fonts/AtkinsonHyperlegible-Regular.ttf");

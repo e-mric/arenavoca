@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#101917" />
     <link rel="icon" href="data:," />
-    <title>Football Spanish Companion</title>
+    <title>Sports Spanish Companion</title>
   </head>
   <body>
     <div id="scene-container"></div>
@@ -14,11 +14,13 @@
         <a class="brand" href="./"
           ><span class="brand-mark">↗</span
           ><span
-            >Football <b>Spanish</b><small>LEARN FROM THE ACTION</small></span
+            >Sports <b>Spanish</b><small>LEARN FROM THE ACTION</small></span
           ></a
         >
         <div class="header-actions">
-          <span class="prototype">FIRST PLAY · 30 SECONDS</span
+          <span class="prototype" id="team-identity"
+            >Football · Just watching</span
+          ><span class="prototype">ORIGINAL FOOTBALL SAMPLE · 30 SECONDS</span
           ><button id="enter-vr" disabled>Enter VR ↗</button>
         </div>
       </header>
@@ -26,7 +28,7 @@
         <section id="intro" class="intro">
           <p class="eyebrow">A MATCH WORTH REMEMBERING</p>
           <h1>
-            Enjoy the football.<br />Take a little <em>Spanish</em> with you.
+            Enjoy your sport.<br />Take a little <em>Spanish</em> with you.
           </h1>
           <p class="lead">
             Watch an original passing play. Explore the movement.<br />Connect
@@ -39,10 +41,53 @@
           </div>
           <p class="muted">
             Spanish audio plays only when you choose Listen. Learning prompts
-            can be hidden.<br />In VR, point at a control and pinch to select
-            it.
+            can be hidden. Explore leaves the match playing; pause whenever you
+            choose.<br />In VR, point at a control and pinch to select it.
+          </p>
+          <p class="muted">
+            Choose your sport and team colours. The viewing sample is an
+            original Blue–Amber football play.
+          </p>
+          <div class="row" aria-label="Sport theme">
+            <button id="sport-football" aria-pressed="true">Football</button
+            ><button id="sport-f1" aria-pressed="false">F1</button>
+          </div>
+          <div
+            id="football-teams"
+            class="row team-choices"
+            aria-label="Football team"
+          >
+            <button id="team-barcelona" aria-pressed="false">
+              FC Barcelona</button
+            ><button id="team-madrid" aria-pressed="false">Real Madrid</button
+            ><button id="team-blue" aria-pressed="false">Blue demo team</button
+            ><button id="team-amber" aria-pressed="false">
+              Amber demo team
+            </button>
+          </div>
+          <div
+            id="f1-teams"
+            class="row team-choices"
+            aria-label="F1 team"
+            hidden
+          >
+            <button id="team-ferrari" aria-pressed="false">Ferrari</button
+            ><button id="team-mclaren" aria-pressed="false">McLaren</button>
+          </div>
+          <div class="row team-choices">
+            <button id="team-neutral" aria-pressed="true">Just watching</button
+            ><button id="karaoke-toggle" aria-pressed="false">
+              Enable chant lyrics
+            </button>
+          </div>
+          <p class="muted">
+            Start with English commentary. Switch to Spanish whenever you feel
+            ready. Team chants are a text-only timing demo for Blue/Amber.
           </p>
           <div class="row">
+            <a href="./watch.html?source=barca"
+              >Watch full games with a companion ↗</a
+            >
             <button id="start" class="primary" disabled>
               Preparing your match…</button
             ><button id="resume-saved" hidden>Resume previous session</button>
@@ -59,7 +104,10 @@
             <div class="row">
               <button id="library">
                 Your phrases <span id="saved-count">0</span></button
-              ><button id="hide-prompts">Hide prompts</button>
+              ><button id="hide-prompts">Hide prompts</button
+              ><button id="panel-side">Panel left</button
+              ><button id="panel-distance">Panel farther</button
+              ><button id="panel-height">Panel higher</button>
             </div>
           </div>
           <div class="watch-layout" id="watch-layout">
@@ -80,11 +128,31 @@
                   value="0"
                   aria-label="Match progress"
                 ></progress
+                ><button id="commentary-english" aria-pressed="true">
+                  English</button
+                ><button id="commentary-spanish" aria-pressed="false">
+                  Español</button
                 ><button id="mute">Mute</button
                 ><button id="restart">Restart</button>
               </div>
             </section>
-            <aside class="learning-card">
+            <aside class="learning-card" id="companion">
+              <section
+                id="karaoke-card"
+                class="karaoke-card"
+                hidden
+                aria-label="Team chant lyrics"
+              >
+                <p class="eyebrow">TEAM CHANT · ORIGINAL TEXT DEMO</p>
+                <div id="karaoke-lyrics" class="karaoke-lyrics">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <p id="karaoke-translation" class="translation"></p>
+                <p class="muted">
+                  Timing illustration · No chant audio · Spanish review pending
+                </p>
+                <button id="karaoke-hide">Hide chant lyrics</button>
+              </section>
               <div id="waiting">
                 <p class="eyebrow">THE LEARNING COMPANION</p>
                 <h2>Follow the play.</h2>
@@ -116,7 +184,9 @@
             </aside>
           </div>
           <section id="explore-view" class="explore-card" hidden>
-            <p class="eyebrow">MATCH PAUSED · EXPLORE THE PASS</p>
+            <p class="eyebrow" id="explore-playback-status">
+              MATCH PLAYING · EXPLORE THE PASS
+            </p>
             <h2>Let the movement tell the story.</h2>
             <div id="chunks" class="chunks">
               <span>El jugador</span><span>pasa</span><span>el balón</span>
@@ -137,7 +207,7 @@
               ><button id="replay">Replay action</button
               ><button id="explore-listen">Listen</button
               ><button id="explore-save">Save phrase</button
-              ><button id="back">Back to match →</button>
+              ><button id="back">Close companion →</button>
             </div>
           </section>
           <section id="library-view" class="library-card" hidden>
@@ -155,7 +225,7 @@
                 ><button id="library-save">Save phrase</button>
               </div>
             </div>
-            <button id="library-back">Back to match →</button>
+            <button id="library-back">Close companion →</button>
           </section>
           <section id="completed" class="completion" hidden>
             <p class="eyebrow">FULL TIME · FIRST PLAY</p>
@@ -184,10 +254,12 @@
         <button id="stop-audio" hidden>Stop Spanish audio</button>
         <p id="status" role="status">Preparing your match…</p>
         <button id="retry" hidden>Retry loading</button>
-        <p id="xr-status" class="muted"></p>
+        <p id="xr-status" class="muted">
+          Preparing immersive controls… You can already watch in the browser.
+        </p>
       </main>
       <footer>
-        <span>FOOTBALL SPANISH COMPANION</span
+        <span>SPORTS SPANISH COMPANION</span
         ><span
           >Original simulation · Device-local progress · Prototype audio
           awaiting review</span

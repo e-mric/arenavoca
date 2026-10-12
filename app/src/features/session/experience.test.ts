@@ -56,7 +56,19 @@ it("Replay completes and remains readable on subsequent frames", async () => {
   e.frame(0.1);
   expect(e.diagramProgress).toBe(1);
   expect(player.position).toBe(13);
-  expect(player.playing).toBe(false);
+  expect(player.playing).toBe(true);
+});
+it("match advancement and prompt expiry never replace the selected explanation", async () => {
+  const { e, player, session } = await setup();
+  e.explore();
+  e.replay();
+  player.position = 22;
+  e.frame(1);
+  expect(session.mode).toBe("Exploring");
+  expect(session.phrase?.id).toBe("pass");
+  expect(e.diagramProgress).toBeGreaterThan(0);
+  expect(session.snapshot.resumableSession?.position).toBe(22);
+  expect(player.playing).toBe(true);
 });
 it("starting trace resets Replay and selects a hand", async () => {
   const { e } = await setup();

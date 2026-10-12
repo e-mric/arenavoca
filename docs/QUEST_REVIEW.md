@@ -1,6 +1,6 @@
 # Morning Quest 3 prototype review
 
-Milestone A is ready for device testing, but remains unverified. Use hands, stay seated, and test the 30-second sample before extending content. Keep the Mac awake and the server running.
+Milestone A is ready for device testing, but remains unverified. Use hands and stay seated. Review the full-game browser companion first, then the original 30-second immersive sample. Keep the Mac awake and the server running.
 
 ## Choose a test route
 
@@ -35,16 +35,43 @@ Put the Quest and Mac on the same Wi-Fi network. Open one of the **HTTPS network
 
 A published stable HTTPS origin is still a later hosting decision. Device-local progress belongs to an origin: `localhost:4173` and the Wi-Fi URL have different progress stores. Pick one route when checking reopening.
 
+## Full match and F1 browser-window review
+
+Open **http://localhost:4173/watch.html?source=barca** through the USB route above, or `/watch.html?source=barca` on the HTTPS network origin. This page uses Quest Browser windows; **do not select Enter VR** for this path.
+
+1. Start the Barça player using its own Play control. It should report 99:21. Choose Barça or Madrid colours.
+2. Select **Open companion window** and arrange it with Quest’s window controls. Confirm the match continues when you focus the companion.
+3. Try Listen, Replay action, Start trace, Save phrase and Save this game moment. They must leave the match running. The practice diagram is an original concept, not a reconstruction or detection of the current footage.
+4. Deliberately pause using the companion. Learning must remain usable while the game stays paused. Return the companion to the game window; playback must not resume or jump.
+5. Select the F1 Behind the Charge source, choose Ferrari or McLaren colours, and repeat. This verified embeddable behind-the-scenes video is **8:05**, not a full race; the supplied Miami replay blocks embedding. Confirm the overtake illustration and phrase replace the football practice.
+6. Reopen the same origin and source. Team preference, saved phrase and bookmarked positions should persist. Bookmark jumps are explicit and made from the game window.
+7. Inspect YouTube’s audio settings. This prototype cannot add an alternate commentary track to the publisher’s recording. Use the original immersive sample below to review the implemented English/Spanish switch.
+
+| Browser-window check | Pass / Fail / Not tested | What happened |
+| --- | --- | --- |
+| Barça embedded playback / source duration | Not tested | |
+| Detached companion remains alongside playing game | Not tested | |
+| Quest window movement, readable text and hand selection | Not tested | |
+| Replay / trace / Listen never pause or seek the game | Not tested | |
+| Explicit pause remains paused after returning companion | Not tested | |
+| F1 behind-the-scenes video playback and sport-specific practice | Not tested | |
+| Theme, phrase and moment persistence | Not tested | |
+
 ## About five minutes of hands-only checks
 
 1. Select **Enter VR**, then **Start match** using hand pointing and pinch. The original simulation should play with English commentary. Watch one complete run without using the learning card.
 2. Restart. At **12 seconds**, the pass card appears beside the match, through 20 seconds. Check that it does not overlap the video and that “balón” displays its accent.
-3. Select **Explore action**. The match and commentary pause. Choose **Trace right hand** or **Trace left hand**, then move that index fingertip to the start of the pass route and follow the ball. The sentence unfolds in three chunks. Resting hands should not start tracing.
+3. Select **Explore action**. The match and commentary must keep playing, at normal brightness. The separate explanation stays pinned after 20 seconds. Choose **Trace right hand** or **Trace left hand**, then move that index fingertip to the start of the pass route and follow the ball. The sentence unfolds in three chunks. Resting hands should not start tracing.
 4. Lower the tracing hand out of tracking. Progress should freeze. Bring it back, or select **Replay action**. Replay must finish with the complete sentence still visible.
-5. Select **Listen**, then **Save phrase**. Spanish must only play on request. Repeated Listen restarts one voice. Back stops it and returns to the paused video position. A previously playing match resumes.
-6. Repeat Explore after you deliberately **Pause** the match. **Back to match** must leave it paused. Check the left/right panel setting and Recenter from the welcome/suspended screen.
+5. Select **Listen**, then **Save phrase**. Spanish must only play on request. Repeated Listen restarts one voice. Close companion stops pronunciation without seeking or pausing the match. It must remain usable if the 30-second clip ends while you are exploring.
+6. Repeat Explore after you deliberately **Pause** the match. **Close companion** must leave it paused. Try Panel left/right, nearer/farther, and higher/lower while exploring. Check for overlap, readable text, and comfortable reach; use Replay if the diagram is out of fingertip reach. Check Recenter from the welcome/suspended screen.
 7. Remove the headset or exit VR, then return. The app must offer **Resume match** or **Restart**. Close and reopen the same URL, then check **Resume previous** and **Your phrases**. Restart keeps the saved phrase.
 8. After loading, disable the network and finish the clip. Confirm video, already loaded pronunciation, captions, and saving still work. Reopening offline is outside this checkpoint.
+
+9. Before starting another run, select Blue or Amber and enable chant lyrics. At 21–27 seconds, only that team’s original draft text should appear, with a word highlight and English meaning below. Hide lyrics leaves playback running. “Just watching” shows no team chant. This is a text-timing demo; there is no supporter audio yet. Check the new lyric panel for clipping or overlap in the headset.
+
+10. Try a football club theme and an F1 team theme before starting. Colours and panel shape should follow your choice; the sample footage remains football. Confirm the theme and text stay readable.
+11. During the spoken pass at 6–9.85 seconds, switch English → Spanish → English. The match must not jump or pause, only one commentary track should be audible, and captions should follow the selected language. Check Mute and Listen while Spanish is selected. Spanish speech needs fluent review.
 
 The first pass is a rough original animation with provisional AI speech. Please prioritize whether the interaction works and feels comfortable over decorative polish.
 
@@ -63,7 +90,9 @@ Date/time: ______ · Route/origin: ______ · Quest Browser version: ______
 | Tracking loss freezes progress | Not tested | |
 | Replay reveals and retains all chunks | Not tested | |
 | Listen only on request; no overlap | Not tested | |
-| Back restores time and playback intent | Not tested | |
+| Explore runs alongside the match; closing never seeks/resumes | Not tested | |
+| Team theme / commentary switching / alternate audio sync | Not tested | |
+| Optional team-filtered lyric panel readability | Not tested | |
 | Saved phrase survives browser reopening | Not tested | |
 | Suspension requires deliberate Resume | Not tested | |
 | Loaded-session playback without network | Not tested | |

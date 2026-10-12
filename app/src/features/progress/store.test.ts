@@ -1,7 +1,12 @@
 import { it, expect } from "vitest";
 import raw from "../../../public/content/match.json";
 import { validateContent } from "../content/model";
-import { emptySnapshot, ProgressStore, PROGRESS_KEY } from "./store";
+import {
+  emptySnapshot,
+  ProgressStore,
+  PROGRESS_KEY,
+  validateSnapshot,
+} from "./store";
 const content = validateContent(raw);
 const memory = () => {
   const values = new Map<string, string>();
@@ -65,6 +70,9 @@ it("persists a paused session with review eligibility and preferences", () => {
     p = new ProgressStore(() => storage);
   const snapshot = emptySnapshot(content.version);
   snapshot.preferences.muted = true;
+  snapshot.preferences.panelSide = "left";
+  snapshot.preferences.panelDistance = "far";
+  snapshot.preferences.panelHeight = "high";
   snapshot.resumableSession = {
     position: 15,
     seenEventIds: ["pass-01"],
@@ -73,4 +81,36 @@ it("persists a paused session with review eligibility and preferences", () => {
   };
   expect(p.write(snapshot)).toBe(true);
   expect(p.read(content).snapshot).toEqual(snapshot);
+});
+it("migrates existing progress without dropping saved phrases", () => {
+  const old = {
+    ...emptySnapshot(content.version),
+    savedPhraseIds: ["pass"],
+    preferences: { muted: false, promptsHidden: false, panelSide: "left" },
+  };
+  const migrated = validateSnapshot(old, content)!;
+  expect(migrated.savedPhraseIds).toEqual(["pass"]);
+  expect(migrated.preferences).toMatchObject({
+    panelSide: "left",
+    panelDistance: "far",
+    panelHeight: "high",
+  });
+});
+it.each([
+  { panelDistance: "invalid" },
+  { panelHeight: 20 },
+  { team: "constructor" },
+  { team: "ferrari", sport: "football" },
+  { commentaryLanguage: "invalid" },
+])("rejects invalid positioning preferences", (preferences) => {
+  const snapshot = emptySnapshot(content.version);
+  expect(
+    validateSnapshot(
+      {
+        ...snapshot,
+        preferences: { ...snapshot.preferences, ...preferences },
+      },
+      content,
+    ),
+  ).toBeNull();
 });

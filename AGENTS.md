@@ -4,8 +4,8 @@ Read PRD.md before changing product behavior. Application code lives in app/.
 
 - Organize product code by feature under app/src/features/. Keep tests alongside each feature; every new or changed behavior needs a meaningful automated test or a documented Quest-only verification case.
 - Follow the generated app/AGENTS.md and its scoped IWSDK instructions for the XR runtime, scene, and spatial UI.
-- Keep one match playback authority: the video position drives prompts and captions. Preserve previous play/pause intent when returning from exploration.
-- Preserve the first Quest milestone pause. Do not expand to the full six-minute match before actual Quest 3 evidence and user feedback.
+- Keep one match playback authority: the video position drives prompts and captions. Opening or closing Explore or the phrase library must not pause, seek, dim, or resume the match. Pause is an explicit playback choice; the selected learning item stays pinned while playback advances.
+- Preserve the original sample for the first immersive Quest checkpoint. The user additionally authorized full YouTube football/F1 playback with a separate browser-window companion; keep its evidence separate from the original immersive sample.
 - The product vision covers multiple sports, including F1; football remains the first implemented pack. Keep shared learning behavior separate from sport-specific action vocabulary and illustrations when adding a second pack.
 - Do not mark device acceptance complete using browser emulation. Identify prototype audio as awaiting fluent Spanish review.
 - Run typecheck, unit tests, production build, and affected browser tests before finishing changes.

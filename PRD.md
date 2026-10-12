@@ -1,6 +1,6 @@
 # Football Spanish Companion PRD
 
-Version 3 · Consolidated project handoff · 12 October 2026
+Version 4 · Consolidated project handoff · 12 October 2026
 
 ## Project Handoff And Current State
 
@@ -47,7 +47,7 @@ The current scope and first milestone are sufficiently defined to begin. Exact p
 
 The broader product helps English-speaking sports fans learn useful Spanish phrases through sporting actions they already understand. Football Spanish Companion is its first implemented content pack and working prototype name. A virtual viewing screen remains the centre of attention. At selected moments, a sport-specific illustration reconstructs an action and connects it to a Spanish phrase with an English explanation. The viewer chooses whether to listen, explore, or save the phrase.
 
-The first release demonstrates this experience through one original, unbranded, six-minute match simulation and an optional one-minute review. It tests whether contextual learning can improve phrase recall without reducing viewing enjoyment. Support for real broadcasts is a future product direction, rather than a dependency of this demo.
+The first release demonstrates this experience through one original, unbranded, six-minute match simulation and an optional one-minute review. It tests whether contextual learning can improve phrase recall without reducing viewing enjoyment. The user additionally authorized real YouTube source playback with a separate browser-window companion; this is a parallel prototype path alongside the original immersive demo.
 
 The broader product promise is: **Enjoy your sport and leave with Spanish phrases you can remember.** The football pack expresses this as enjoying the match. It does not promise fluency or effortless language acquisition.
 
@@ -55,7 +55,7 @@ The broader product promise is: **Enjoy your sport and leave with Spanish phrase
 
 The user broadened the concept beyond football to other sports, explicitly naming F1. The product should support sport-specific content packs around one shared learning loop: Watch → Explore → Hear → Save → Recall. Each pack supplies original viewing content, authored action timings, language material, and an illustration suited to that sport.
 
-The football sample remains the first Quest 3 verification checkpoint. This direction does not replace the current prototype or establish that other sports are already implemented. F1 is a concrete candidate for a subsequent pack; a change to the first release's football scope still needs an explicit scope decision.
+The football sample remains the first Quest 3 verification checkpoint. The original immersive sample remains available alongside the newer browser-window path. The user subsequently authorized an F1 viewing source and overtake practice alongside full football playback. The original six-minute authored pack remains a later milestone.
 
 | Sport | Familiar action | Spatial explanation and interaction |
 | --- | --- | --- |
@@ -64,11 +64,46 @@ The football sample remains the first Quest 3 verification checkpoint. This dire
 | Tennis | A serve or return | Court diagram; follow the ball's path and connect its movement to the phrase. |
 | Basketball | A pass or shot | Court diagram; replay the route between players or towards the basket. |
 
-For an F1-style original demonstration, a first learning target could be **El piloto adelanta.** / **The driver overtakes.** Other draft targets could cover braking and entering the pits. These are proposed content examples, not reviewed or implemented language assets. Use fictional drivers and original racing footage for a prepared prototype, consistent with the existing content-production approach.
+For an F1-style original demonstration, a first learning target could be **El piloto adelanta.** / **The driver overtakes.** Other draft targets could cover braking and entering the pits. The overtake phrase, illustration, tracing and pronunciation are now implemented as manual practice; braking and pit-stop phrases remain proposed. All language assets await fluent review. Use fictional drivers and original racing footage for a prepared prototype, consistent with the existing content-production approach.
 
 The illustration should teach the sporting action through movement rather than reuse a football pitch with different labels. An overtake can use route tracing; a pit-stop explanation may instead show a short sequence of stages. Replay remains a complete alternative to any tracing interaction. Whether each interaction improves understanding and preserves viewing enjoyment must be tested separately.
 
-The shared product should own playback timing, pause/resume, pronunciation, saving, progress, review, and hand-operated navigation. Each sport should own its action vocabulary, diagram geometry, and explanation behavior. When a second pack is implemented, introduce explicit pack/sport identity, scope persisted progress by content pack, and test switching packs without leaking events, phrases, or saved positions. These are future implementation requirements; the current sample validator still intentionally covers the football passing slice.
+The shared product should own playback timing, pause/resume, pronunciation, saving, progress, review, and hand-operated navigation. Each sport should own its action vocabulary, diagram geometry, and explanation behavior. When a second pack is implemented, introduce explicit pack/sport identity, scope persisted progress by content pack, and test switching packs without leaking events, phrases, or saved positions. The streaming feature now scopes themes, practice and saved moments by source. The original sample validator still covers only the authored football passing slice.
+
+### Parallel Companion And Team Chants · 12 October 2026
+
+The user clarified that learning should happen alongside an uninterrupted match or race. Opening, replaying, tracing, listening, saving, or closing a companion window must not pause, seek, dim, or automatically resume the sporting event. Pause remains an explicit playback control. Session suspension still pauses media and requires an explicit resume. A selected explanation stays pinned when its original prompt expires; newer prompts cannot replace it or count as seen while it occupies the companion. If the match ends while learning, the explanation stays open until closed.
+
+The floating learning window supports deliberate left/right, near/far, and height presets, stored on the device. It stays in world space rather than following the user's head. Default layout and fingertip reach still require Quest 3 testing; Replay supports diagrams positioned beyond fingertip reach. Free dragging and arbitrary rotation are not implemented in this sample.
+
+Before a match, offer a team preference and a neutral “just watching” option. Team chants are an optional companion: show only the selected team's authored chant, highlight its current word, and put a translation directly underneath. Switching or hiding lyrics must never affect match playback. Real chants should use the chant's original language, with English support for this audience; do not relabel Catalan or other languages as Spanish. Do not require microphone access or record singing.
+
+The prototype demonstrates this with fictional Blue/Amber selection and original draft Spanish text at 21–27 seconds. The interface identifies this as a text-timing illustration with no chant audio. Actual song alignment, supporter audio, fluent translation review, and real-team lyrics are still content work; no live chant recognition is implemented. Future recordings should use reviewed word/line cue times from the chosen recording rather than distributing words evenly as the demo does.
+
+Candidate real-match sources supplied by the user:
+
+- [Barça 5–1 Madrid (2018)](https://www.youtube.com/watch?v=WMjohb2tq7Y), uploader FC Barcelona.
+- [F1 2026 Miami GP FULL RACE | Replay HD](https://www.youtube.com/watch?v=1UsQ9eQtRyg), uploader Free F1 Replays. This is a candidate reference, not verified official F1 footage.
+
+YouTube metadata was checked on 12 October 2026. The Barça source is now integrated through YouTube’s public iframe player and was observed playing in the browser with a duration of 99:21. The supplied Miami upload disables embedding. The user approved a different embeddable F1 video; the replacement is [Oracle Red Bull Racing’s Behind the Charge video](https://www.youtube.com/watch?v=i5EnUkFLaWs), duration 8:05, observed playing embedded. It is behind-the-scenes coverage, not a full race. No source video was downloaded. Event/chant timings and Quest playback remain unverified. The browser-window integration is separate from the direct-video Three.js sample.
+
+### Team Identity And Commentary Progression · 12 October 2026
+
+The user requested a visual identity representing the chosen team in both football and F1. The prototype offers FC Barcelona and Real Madrid inspired football palettes, Ferrari and McLaren inspired racing palettes, fictional Blue/Amber demo themes, and a neutral option. These use original colour treatments and typography, not official logos or an endorsement. Football surfaces are softer; F1 controls are sharper with compact technical timing labels. Keep text and controls readable against every palette. Changing sport resets the team to neutral; persist the sport and compatible team preference on the device. Theme choice does not replace the original football viewing content with a real match or race.
+
+The user also clarified the learning progression: start the event in the viewer's native language, then switch commentary to Spanish when they feel ready. Keep the choice explicit and reversible; do not infer readiness from tracing or saving a phrase. Changing commentary must preserve match position and play/pause state, respect mute and pronunciation ducking, and switch the accompanying captions. For the current audience and prototype, the supported native-language track is English. Other native languages require additional prepared audio and reviewed captions. Interface explanations and translations remain English.
+
+The original sample includes an English track in its video and a separate prepared 30-second Spanish commentary track with its cue at 6 seconds. Both use the video as the sole timeline. The Spanish script, voice and captions await fluent human review. Failure of the alternate audio returns to English without blocking the match. This functionality does not imply alternate-language tracks exist for either supplied YouTube source.
+
+### Full Sports Viewing Prototype And Design References · 12 October 2026
+
+The user explicitly requested full YouTube football playback followed by F1, with learning in a floating window. `app/watch.html` embeds the full Barça match and the verified F1 behind-the-scenes video alternative. Opening the companion creates a second same-origin browser window with its own layout; Quest Browser controls its position and size. This path uses ordinary browser windows rather than an immersive WebXR scene. Its real headset behavior must be checked separately.
+
+The game’s YouTube clock remains the sole playback authority. Replay and Trace animate an original practice illustration; Listen plays one prepared Spanish phrase; Save phrase stores it on-device. These actions never pause, seek or resume the game. Saving a moment uses the current source position; jumping back is explicit and available in the game window. A detached companion shares the clock, team preference and save status. Returning it closes that window and restores the inline panel without changing playback. Publisher failure leaves practice usable and provides the source link.
+
+Practice cards are manual concepts rather than reconstructions of the currently visible action. No automatic event detection, real-song lyrics or timing, transcription, dubbing, or alternate commentary for these recordings has been implemented. YouTube audio-language availability depends on the uploader; the original 30-second sample retains its working English/Spanish switch.
+
+Mobbin research suggests combining [Frame.io’s large-player/context-panel composition](https://mobbin.com/screens/39416f38-9246-4a6d-bc30-79874a268b5e), [Speak’s prominent phrase and subordinate translation](https://mobbin.com/screens/cef4ab1d-b8b0-4080-96b3-616f466e86ac), and [theScore’s team selection pattern](https://mobbin.com/screens/77b0fb1d-b4d1-40f3-9e6c-6a9f5f5711c9). The implemented browser layout borrows the composition and hierarchy with original code and assets. Team accents personalize a restrained dark background. A future synchronized lyric panel can follow [Loom’s timed transcript hierarchy](https://mobbin.com/screens/208932bc-b2f9-4671-ac57-67868cf2d47e), with lyrics and translation outside the YouTube player.
 
 ### Confirmed Product Decisions
 
@@ -78,7 +113,9 @@ The shared product should own playback timing, pause/resume, pronunciation, savi
 | First implemented pack and device checkpoint | Football passing prototype |
 | Match viewing | A virtual screen inside the headset |
 | Demo content | An original, unbranded match simulation |
-| Commentary and explanations | English |
+| Commentary | English initially, optional Spanish at the same video position |
+| Explanations and chant translations | English |
+| Team identity | Original football/F1 palettes tied to the chosen team |
 | Learning language | Spanish |
 | Action visual | An illustrated tactical diagram with animated players and arrows |
 | Spanish speech | Plays only when the viewer chooses to hear it |
@@ -144,8 +181,8 @@ The product must distinguish exposure from learning. Seeing or saving a phrase i
 2. **Start watching.** They select Start Match. English commentary accompanies the original match simulation. The learning area sits beside the screen and does not cover the action.
 3. **Notice a phrase.** After a selected action, during its scheduled replay or stoppage, a small card shows the Spanish phrase and English meaning. A short tactical animation explains the corresponding play. Spanish audio stays silent.
 4. **Choose their level of involvement.** They can ignore the card, hear the phrase, save it, or select Explore Action. Ignoring learning content never blocks the match.
-5. **Explore deliberately.** Explore Action pauses the match and commentary. The illustrated diagram enlarges beside the screen. The viewer can replay it and, for the passing example, trace the route to connect the phrase to the movement.
-6. **Return to the match.** Back to Match restores the viewing layout and previous playback intent at the paused moment. The viewer can also pause, hide learning prompts, or reposition the learning area.
+5. **Explore deliberately.** Explore Action leaves match playback unchanged. The illustrated diagram opens in a separate floating companion window. The viewer can replay it and, for the passing example, trace the route to connect the phrase to the movement.
+6. **Return to the match.** Closing the companion restores the viewing layout without changing playback position or play/pause state. The viewer can also pause, hide learning prompts, or reposition the learning area.
 7. **Review optionally.** At the end, the viewer may answer three short questions based on phrases displayed during the session, inspect their saved phrases, replay the match, or exit.
 8. **Return later.** Saved phrases, completed review results, and learning-display preferences remain available on the same device. An interrupted session can resume from its saved position.
 
@@ -209,12 +246,12 @@ Acceptance criteria:
 
 Acceptance criteria:
 
-- Selecting Explore Action pauses match playback and English commentary and opens the larger diagram.
+- Selecting Explore Action opens the larger floating diagram without changing match playback or commentary. Explicit Pause and Play remain available.
 - The diagram reproduces the relevant action with consistent team colours, player positions, ball movement, and arrows.
 - Replay Action restarts the explanation without moving the main match position.
 - In the passing example, tracing along the route advances the ball and reveals the sentence in chunks: El jugador / pasa / el balón.
 - The route tolerates an imprecise hand path. A Replay Action control offers the complete explanation without tracing.
-- Back to Match restores the previous layout at the paused position; no match action is skipped. It resumes only if the match was playing before exploration. A previously paused match remains paused.
+- Closing the companion changes only the learning layout. A playing match keeps advancing; a manually paused match remains paused. Closing must never seek or resume playback.
 
 **Story S05 — Hear Spanish when requested.** As a viewer, I want control over pronunciation playback so that it does not compete with commentary.
 
@@ -222,7 +259,7 @@ Acceptance criteria:
 
 - Listen plays only the phrase associated with the selected card.
 - In Watch mode, Listen temporarily reduces English commentary volume and then restores it. The match continues.
-- In Explore mode, match commentary remains paused while the phrase plays.
+- In Explore mode, Listen also ducks commentary while the match continues; a manually paused match stays paused.
 - Repeated Listen selections restart the selected phrase without overlapping voices.
 - Stop, closing the card, or exiting stops the Spanish audio and restores the appropriate commentary state.
 - The viewer can replay pronunciation from saved phrases after the match.
@@ -259,7 +296,7 @@ Acceptance criteria:
 Acceptance criteria:
 
 - The match screen is central, with the learning area initially to the right.
-- The viewer can move the learning area to the left or right, choose between two readable text sizes, and recenter the whole layout.
+- The viewer can move the learning area left or right, choose near/far and low/high presets, choose between two readable text sizes, and recenter the whole layout. Text sizing remains later release work.
 - Repositioning cannot place an opaque learning panel over the match image.
 - All required controls are reachable while seated without standing, turning around, or making large movements.
 - Hide Learning removes prompts without interrupting playback. Show Learning restores future prompts without playing audio.
@@ -291,10 +328,10 @@ Acceptance criteria:
 | Situation | Required Behaviour |
 | --- | --- |
 | A shot is immediately followed by a save | Each target uses a separate scheduled replay segment; cards do not compete or stack. |
-| The viewer opens an explanation as a prompt expires | The selected explanation remains open and playback pauses until they return. |
+| The viewer opens an explanation as a prompt expires | The selected explanation remains pinned while the match continues; newer prompts never replace it. |
 | The viewer hides prompts after seeing a phrase | Future prompts stop; the previously seen phrase remains in the session list. |
 | The viewer seeks or restarts | Seeking is outside the first release. Restart resets the current session's seen list and review but preserves saved phrases and past completed results. |
-| The viewer wants review before the match ends | Early review is outside the first release. They can inspect seen and saved phrases at any time by explicitly pausing the match. |
+| The viewer wants review before the match ends | Early review is outside the first release. They can inspect seen and saved phrases alongside the playing match; pausing is optional. |
 | The viewer moves the panel or changes text size while exploring | The selected phrase and replay state remain intact. |
 | The viewer never chooses Listen | The entire session and review remain usable through text and illustrations. |
 | Commentary was already muted before Listen | It remains muted afterwards; audio restoration respects the viewer's setting. |
@@ -320,9 +357,9 @@ Protect pass tracing for the first passing example: the user selected it as the 
 ## Non Goals
 
 - **Live broadcast ingestion or synchronisation:** broadcast integration and content access introduce dependencies that are unnecessary to test the learning loop.
-- **Real clubs, identifiable professional players, broadcast footage, and copied commentary:** the demo uses original content and fictional identities.
+- **Club logos, identifiable professional players, broadcast footage, and copied commentary:** the viewing content uses fictional identities. User-selected club/team names and original fan-inspired interface colours are supported.
 - **Automatic event detection or generated live explanations:** authored events make it possible to verify that every learning moment is correct.
-- **Multiple native or learning languages:** the first release focuses on English support and Spanish learning so content can be reviewed thoroughly.
+- **Additional native languages beyond English:** the prototype supports English and Spanish commentary; further native-language audio and captions need separate content production and review.
 - **Full 3D match reconstruction:** the chosen visual is an illustrated tactical diagram with animated markers and arrows.
 - **Social viewing, multiplayer, accounts, subscriptions, and cloud syncing:** a single viewer can complete the experience without them.
 - **Speech assessment or an open-ended AI tutor:** these add a separate learning experience and evaluation burden.
@@ -374,7 +411,7 @@ These requirements turn the proposed stack into a verifiable product. The numeri
 
 | ID | Requirement | Acceptance Evidence |
 | --- | --- | --- |
-| R01 | One match timeline governs video, English commentary, captions, and learning prompts. | Pause, explore, restart, and resume produce no duplicated prompts; returning from exploration preserves position within 100 ms. |
+| R01 | One match timeline governs video, English commentary, captions, and learning prompts. | Pause, explore, restart, and resume produce no duplicated prompts; opening and closing exploration never seek or change play/pause state. |
 | R02 | The essential experience works with hand pointing and pinch selection. | Start, navigation, playback, listening, saving, review, and exit are completed without a controller on Quest 3. Trace has an alternative Replay control. |
 | R03 | The environment stays stationary, with world-space panels and deliberate recentering. | Seated testers can read and operate the interface without large movements or continuously holding their arms up. |
 | R04 | Text remains readable on the actual headset. | English and Spanish accents render correctly; at least three testers can read the six target phrases in the normal layout. Large text does not clip controls. |
@@ -407,7 +444,7 @@ These are proposed pilot decision thresholds, not measured results or promises o
 - Each of the six targets refers to the correct visible action.
 - No Spanish speech plays without an explicit Listen action.
 - Ignoring learning content never blocks viewing.
-- Explore and Back preserve the match position, and saved phrases survive reopening.
+- Explore and closing leave playback uninterrupted or respect a deliberate pause; saved phrases survive reopening.
 - A complete match and optional review fit within ten minutes, excluding time the viewer voluntarily spends exploring.
 
 ### Learning And Enjoyment Pilot
@@ -501,7 +538,7 @@ Implements all PRD epics and R09.
 
 Use these modes: Loading, Onboarding, Watching, Exploring, PhraseLibrary, Reviewing, Completed, Suspended, and Error. Pause is a playback property, not a competing app mode.
 
-Opening Explore or PhraseLibrary records the match position and whether playback was running, then pauses it. Returning restores that previous playback intent. Leaving XR or receiving hidden session visibility pauses media and pronunciation and enters Suspended. Returning requires an explicit Resume or Restart action.
+Opening Explore or PhraseLibrary pins the selected learning item and leaves playback unchanged. The match timeline continues ticking in both modes. Closing leaves current playback intent and position untouched. Leaving XR or receiving hidden session visibility pauses media and pronunciation and enters Suspended. Returning requires an explicit Resume or Restart action.
 
 Keep phrase visibility, selected phrase, prompt hiding, panel side, text size, commentary mute, current session, and review state in the store. Derived state such as commentary ducking must respect mute settings even if the user changes them during pronunciation.
 
@@ -509,7 +546,7 @@ Keep phrase visibility, selected phrase, prompt hiding, panel side, text size, c
 
 Implements PRD S04 and R02.
 
-Draw a flat illustrated pitch in world space with original player markers, ball, arrows, and labels. The selected event supplies normalized positions and keyframes; a local replay clock runs only this explanation while the main match is paused.
+Draw a flat illustrated pitch in world space with original player markers, ball, arrows, and labels. The selected event supplies normalized positions and keyframes; a local replay clock runs only this explanation independently of the playing or manually paused match.
 
 For the passing example, project the active fingertip onto the diagram plane and compare its position with the path. A deliberate Start Trace control selects the tracing hand; merely resting or moving a hand near the diagram must not advance it. Progress follows a continuous corridor along the route and freezes on tracking loss. Tune tolerance on Quest rather than treating it as an exact-pose challenge. Replay Action remains the complete alternative.
 
@@ -519,9 +556,9 @@ Use one event source for the diagram and simulation authoring so the explanation
 
 Implements PRD S05 and R05.
 
-Preload six reviewed pronunciation clips. Listen explicitly starts or restarts the selected clip, without overlapping voices. Temporarily reduce the commentary volume in Watch mode, restoring the user's current volume and mute preference when playback ends or stops. Exploration already pauses commentary. No microphone permission is needed.
+Preload six reviewed pronunciation clips. Listen explicitly starts or restarts the selected clip, without overlapping voices. Temporarily reduce the commentary volume in Watch mode, restoring the user's current volume and mute preference when playback ends or stops. Listen ducks commentary in exploration too, without pausing the match. No microphone permission is needed. The optional Spanish commentary track follows the video clock, replaces rather than overlaps English, and obeys the same mute and ducking settings.
 
-English commentary captions use authored timed cues and appear inside the XR scene; ordinary browser DOM overlays are not a substitute for captions visible in VR. Caption timing follows the match player. Release font assets must include Spanish accented characters.
+English and Spanish commentary captions use authored timed cues and appear inside the XR scene; ordinary browser DOM overlays are not a substitute for captions visible in VR. Caption timing follows the match player. Release font assets must include Spanish accented characters.
 
 #### Progress Store
 
@@ -589,7 +626,7 @@ README.md contains reproducible commands. docs/QUEST_REVIEW.md holds the physica
 1. Load and validate versioned content, media, fonts, and pronunciation assets; restore valid progress.
 2. A user action starts XR and, separately, the match. The match player's position selects the current prompt and caption.
 3. Displaying a prompt adds its event and phrase to the session's seen sets.
-4. Explore pauses playback and selects the corresponding diagram. Listen plays the chosen audio. Save updates the persisted phrase set and then its visible success state.
+4. Explore leaves playback running and pins the corresponding diagram in the companion. Listen plays the chosen audio. Save updates the persisted phrase set and then its visible success state.
 5. Back restores playback intent. Ending the match supplies seen phrases to the review engine. A completed review becomes a persisted result.
 
 ### Match Content Production
@@ -627,7 +664,7 @@ Before full content production, verify a 30-second sample, one illustrated pass,
 
 #### Content And State Checks
 
-Automated tests should cover defects that could spoil learning: wrong event-to-phrase pairing; overlapping prompts; duplicate cues after pause or resume; stale seen sets after restart; duplicate saved phrases; storage failure falsely reporting success; and reviews including unseen phrases. Test the previous paused-versus-playing intent on return from exploration.
+Automated tests should cover defects that could spoil learning: wrong event-to-phrase pairing; overlapping prompts; duplicate cues after pause or resume; stale seen sets after restart; duplicate saved phrases; storage failure falsely reporting success; and reviews including unseen phrases. Test continued playback, an explicit pause during exploration, pinned content after prompt expiry, full time while learning, and closing without seeking or resuming.
 
 #### Headset Acceptance
 
@@ -687,7 +724,7 @@ The twelve items are delivery milestones. During implementation, split each into
 
 - [ ] **4. Implement the pass tracing moment**
   Spec ref: Technical Specification > Diagram Renderer And Trace Interaction > Application State.
-  What to build: Open the illustrated pitch, pause the match, deliberately start tracing, and reveal El jugador / pasa / el balón as the ball follows the route. Add Replay Action and Back to Match.
+  What to build: Open the separate illustrated pitch while the match keeps playing, deliberately start tracing, and reveal El jugador / pasa / el balón as the ball follows the route. Add Replay Action and Back to Match.
   Acceptance: PRD S04 works; resting hands do not trigger progress, tracking loss freezes tracing, and Back preserves both match position and previous playback intent.
   Verify: Inspect hand-input mapping in emulation, test a previously paused match, and record the tolerance settings for on-device tuning.
 
@@ -761,7 +798,9 @@ A large match screen is visually dominant, with a smaller learning panel to the 
 
 ### Explore
 
-The match pauses and dims while the illustrated pitch moves into comfortable reach. A fingertip traces the passing route and advances the ball. The phrase unfolds in three chunks: El jugador / pasa / el balón. Replay action is the alternative and Back to match restores playback intent. The conceptual hand in the image is not evidence of implemented tracking.
+The original handoff image is historical: its paused/dimmed match does not represent the updated parallel-viewing behavior.
+
+The match stays playing at full brightness while the illustrated pitch opens separately beside it. A fingertip traces the passing route and advances the ball. The phrase unfolds in three chunks: El jugador / pasa / el balón. Replay action is the alternative and closing the companion leaves playback intent unchanged. The conceptual hand in the image is not evidence of implemented tracking.
 
 ### Review
 
@@ -790,7 +829,7 @@ Scene/backdrop: Each view is a calm, spacious dark virtual viewing environment w
 
 WATCH view: A large landscape match screen fills roughly the left two thirds of the view. It shows an original stylized football match simulation with simplified anonymous players on a correctly marked green pitch, two fictional blue and amber teams, and a clear passing action. Do not show a real televised match, club branding, sponsor signage or identifiable footballers. The scoreboard reads exactly "BLUE 0–0 AMBER". A discreet badge reads exactly "SIMULATED MATCH". Below the match is a spacious short playback bar with play/pause icon, time "02:15 / 06:00", and an English commentary caption "A lovely pass to his teammate." The match remains visually dominant. Separate from and beside the match, on its right, is a smaller learning panel with the header "THE PASS". It contains a clean flat illustrated tactical pitch, two blue player markers, one amber opponent, a small ball, and an arrow clearly showing a pass between the blue teammates. Under the diagram, large exact Spanish text "El jugador pasa el balón." Then smaller exact English text "The player passes the ball." Three distinct large buttons read "Listen", "Save phrase", and "Explore action". Include a small speaker icon with Listen, but no waveform or any indication that Spanish audio is automatically playing. The learning panel never overlaps or obscures the match. At the top of the board, a restrained title reads "Football Spanish Companion".
 
-EXPLORE view: Another first-person scene using the same environment and exact same visual design. The match screen is now smaller and softly dimmed in the background with the exact status label "MATCH PAUSED". In the foreground, a comfortably reachable large flat illustrated pitch panel shows the same two blue player markers and pass arrow. One simple semi-transparent hand reaches from the bottom edge and traces along the route with its index fingertip, advancing a small ball. Avoid controller hardware. Above the diagram, the Spanish sentence is split into three readable chunks "El jugador" / "pasa" / "el balón". Below it, two large controls read "Replay action" and "Back to match". Show a small exact instruction "Trace the pass". Keep the illustrated field flat and diagrammatic, not a miniature 3D stadium.
+EXPLORE view: Another first-person scene using the same environment and exact same visual design. The match screen remains bright and plays independently beside the learning window with the exact status label "MATCH PLAYING". In the foreground, a comfortably reachable large flat illustrated pitch panel shows the same two blue player markers and pass arrow. One simple semi-transparent hand reaches from the bottom edge and traces along the route with its index fingertip, advancing a small ball. Avoid controller hardware. Above the diagram, the Spanish sentence is split into three readable chunks "El jugador" / "pasa" / "el balón". Below it, two large controls read "Replay action" and "Back to match". Show a small exact instruction "Trace the pass". Keep the illustrated field flat and diagrammatic, not a miniature 3D stadium.
 
 REVIEW view: Same quiet virtual setting and panels. An uncluttered review panel reads "QUICK REVIEW" and "1 / 3". The large question sentence is exactly "El jugador pasa el balón." Below it a small "Listen" control. Three clearly distinct illustrated action choices labelled only "A", "B", and "C": A shows a ball passing between teammates; B shows a shot towards goal; C shows a goalkeeper stopping the ball. Do not print English action labels or reveal the correct answer. An unobtrusive "Skip review" button below. Do not show results or success animation before the user answers.
 
@@ -799,7 +838,7 @@ Style: High-fidelity product design, clean typographic hierarchy, thoughtfully s
 
 ## Implementation Update · 12 October 2026
 
-The first 30-second prototype now has Watch, Explore, selected-hand tracing, Replay, on-demand Listen, explicit Stop, Save, library, and pause/resume. Exact versions, source provenance, test evidence, and outstanding requirements are in docs/IMPLEMENTATION.md. Development checks include 70 unit tests and six production browser journeys. These establish desktop behavior only.
+The first 30-second prototype now has Watch, Explore, selected-hand tracing, Replay, on-demand Listen, explicit Stop, Save, library, and pause/resume. Exact versions, source provenance, test evidence, and outstanding requirements are in docs/IMPLEMENTATION.md. Updated automated evidence is maintained in docs/IMPLEMENTATION.md. These establish desktop behavior only.
 
 The sample MP4 is 1280×720 at 30 fps, exactly 30 seconds, and 512,507 bytes. Speech uses ElevenLabs multilingual v2 with George for English and Lucia España for Spanish, exported before viewing. Both are provisional pending human review. There is no runtime speech API or account dependency.
 

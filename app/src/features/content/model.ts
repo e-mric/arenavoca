@@ -27,6 +27,7 @@ export interface Caption {
   start: number;
   end: number;
   text: string;
+  spanish?: string;
 }
 export interface Content {
   version: string;
@@ -152,7 +153,8 @@ export function validateContent(raw: unknown): Content {
         c.start >= 0 &&
         c.start < c.end &&
         c.end <= data.duration &&
-        text(c.text),
+        text(c.text) &&
+        (c.spanish === undefined || text(c.spanish)),
       "invalid caption",
     );
   return data;
