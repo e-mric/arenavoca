@@ -261,6 +261,144 @@
           "components": {
             "RayInteractable": {}
           }
+        },
+        {
+          "id": "match-lab",
+          "name": "match-lab",
+          "content": {
+            "type": "asset",
+            "asset": "match-lab"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {}
+          }
+        },
+        {
+          "id": "lab-board",
+          "name": "lab-board",
+          "content": {
+            "type": "asset",
+            "asset": "labBoard"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          }
+        },
+        {
+          "id": "lab-ball",
+          "name": "lab-ball",
+          "content": {
+            "type": "asset",
+            "asset": "labBall"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {},
+            "MatchLabTarget": {
+              "index": -1
+            }
+          }
+        },
+        {
+          "id": "lab-player-0",
+          "name": "lab-player-0",
+          "content": {
+            "type": "asset",
+            "asset": "labPawn"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {},
+            "MatchLabTarget": {
+              "index": 0
+            }
+          }
+        },
+        {
+          "id": "lab-player-1",
+          "name": "lab-player-1",
+          "content": {
+            "type": "asset",
+            "asset": "labPawn"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {},
+            "MatchLabTarget": {
+              "index": 1
+            }
+          }
+        },
+        {
+          "id": "lab-player-2",
+          "name": "lab-player-2",
+          "content": {
+            "type": "asset",
+            "asset": "labPawn"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {},
+            "MatchLabTarget": {
+              "index": 2
+            }
+          }
+        },
+        {
+          "id": "lab-replay-screen",
+          "name": "lab-replay-screen",
+          "content": {
+            "type": "asset",
+            "asset": "labReplay"
+          },
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "components": {
+            "RayInteractable": {},
+            "MatchLabTarget": {
+              "index": -3
+            }
+          }
         }
       ]
     }

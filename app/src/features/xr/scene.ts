@@ -1,3 +1,4 @@
+import { attachMatchLab } from "../match-lab/spatial";
 import { UIKitMLAsset, VisibilityState, type World } from "@iwsdk/core";
 import {
   CanvasTexture,
@@ -30,6 +31,7 @@ export function attachXR(
   getViewingMode: () => ViewingMode = () => "theater",
 ) {
   const s = experience.session;
+  const renderLab = attachMatchLab(world, experience, fontFamilies);
   world.scene.background = new Color("#160e16");
   const layout = world.requireSceneObject<Group>("viewing-space");
   attachArenaReveal(
@@ -64,7 +66,7 @@ export function attachXR(
     welcome = panel("welcome"),
     karaoke = panel("karaoke"),
     coachPanel = panel("coach");
-  watch.document.setTargetDimensions(1.95, 0.57);
+  watch.document.setTargetDimensions(1.95, 0.71);
   learning.document.setTargetDimensions(1.05, 1.435);
   explore.document.setTargetDimensions(1.12, 1.12);
   welcome.document.setTargetDimensions(1.3, 1.17);
@@ -113,6 +115,7 @@ export function attachXR(
   const probes = new Map<string, ReturnType<World["createTransformEntity"]>>();
   if (import.meta.env.DEV) {
     for (const id of [
+      "xr-lab-open",
       "xr-coach-open",
       "xr-coach-close",
       "xr-start",
@@ -126,6 +129,7 @@ export function attachXR(
     }
   }
   const actions: Record<string, () => unknown> = {
+    "xr-lab-open": () => experience.openLab(),
     "xr-coach-open": () => experience.openCoach(),
     "xr-coach-close": () => experience.coach?.close(),
     "xr-coach-end": () => experience.coach?.stop(),
@@ -182,7 +186,10 @@ export function attachXR(
     "xr-resume-saved": () => s.start(true),
     "xr-resume": () => s.resume(),
     "xr-watch-again": () => s.restart(),
-    "xr-library": () => s.library(),
+    "xr-library": () => {
+      experience.closeLab();
+      s.library();
+    },
     "xr-library-back": () => experience.back(),
     "xr-phrase-close": () => experience.back(),
     "xr-team-blue": () => s.setPreference("team", "blue"),
@@ -303,6 +310,8 @@ export function attachXR(
   const traceOffset = new Vector3();
   const learningOrigin = new Vector3();
   function render() {
+    renderLab();
+    show("xr-lab-open", experience.labAvailable);
     const viewingMode = getViewingMode();
     const mode = s.mode;
     const watching = [
@@ -319,7 +328,7 @@ export function attachXR(
       (mode === "Watching" && !!s.prompt) || (library && !!s.phrase);
     const coach = experience.coach;
     coachPanel.visible = !!coach?.open && watching;
-    learning.visible &&= !coachPanel.visible;
+    learning.visible &&= !coachPanel.visible && !experience.lab.open;
     if (coach) {
       text("xr-coach-status", coach.status);
       text("xr-coach-phrase", coach.context?.phrase ?? "");
@@ -353,7 +362,8 @@ export function attachXR(
       );
     }
     diagram.visible = learning.visible;
-    explore.visible = mode === "Exploring" && !coachPanel.visible;
+    explore.visible =
+      mode === "Exploring" && !coachPanel.visible && !experience.lab.open;
     tracePlane.visible = explore.visible;
     welcome.visible = [
       "Onboarding",

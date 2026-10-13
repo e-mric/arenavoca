@@ -1,4 +1,5 @@
 import { it, expect, vi } from "vitest";
+import moments from "../stories/content/barca-2018-opening.json";
 import raw from "../../../public/content/match.json";
 const capture = vi.hoisted(() =>
   vi.fn(async () => ({ Example: { normal: { chars: [] } } })),
@@ -11,6 +12,8 @@ vi.mock("@pmndrs/uikit", () => ({
 import { SPATIAL_CHARSET, loadCompanionFont } from "./font";
 it("covers every character in Spanish, captions, and dynamic punctuation", () => {
   for (const text of [
+    ...moments.cards.map((card) => card.spanish),
+    ...moments.stories.flatMap((story) => story.sceneSpanish),
     raw.phrases[0].spanish,
     ...raw.captions.map((c) => c.text),
     "BLUE 0-0 AMBER | …",

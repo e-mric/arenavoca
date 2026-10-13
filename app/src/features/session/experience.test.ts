@@ -25,7 +25,7 @@ async function setup() {
     },
   };
   const session = new Session(
-    validateContent(raw),
+    validateContent(structuredClone(raw)),
     player,
     new ProgressStore(() => ({ getItem: () => null, setItem: () => {} })),
   );
@@ -167,4 +167,83 @@ it("opening and closing coach never resumes an explicitly paused match", async (
   e.coach!.close();
   expect(player.playing).toBe(false);
   expect(player.position).toBe(13);
+});
+
+it.each([true, false])(
+  "Match Lab preserves match intent (%s), position and volume throughout its learning loop",
+  async (playing) => {
+    const { e, player, session } = await setup();
+    session.content.version = "theater-barca-2018-full-football";
+    session.content.duration = 6000;
+    vi.stubGlobal("localStorage", { getItem: () => null, setItem: vi.fn() });
+    player.playing = playing;
+    player.position = 814;
+    const volume = player.video.volume;
+    e.openLab();
+    expect(e.lab.open).toBe(true);
+    e.changeLabCard("flip");
+    e.changeLabCard("next");
+    e.changeLabCard("story");
+    e.labPrimary();
+    e.lab.pickBall();
+    e.lab.choose(0);
+    for (let i = 0; i < 10; i++) e.frame(0.1);
+    e.labPrimary();
+    e.saveLab();
+    e.closeLab();
+    expect(player.playing).toBe(playing);
+    expect(player.position).toBe(814);
+    expect(player.video.volume).toBe(volume);
+    vi.unstubAllGlobals();
+  },
+);
+it("the lab is unavailable for unrelated sources and the original sample", async () => {
+  const { e } = await setup();
+  e.openLab();
+  expect(e.lab.open).toBe(false);
+});
+it("changing cards during a pronunciation fetch prevents a stale phrase from speaking", async () => {
+  const { e, session, audio } = await setup();
+  session.content.version = "theater-barca-2018-full-football";
+  session.content.duration = 6000;
+  vi.stubGlobal("localStorage", { getItem: () => null, setItem: vi.fn() });
+  e.openLab();
+  audio.has = () => false;
+  let resolve!: () => void;
+  audio.preload.mockImplementation(
+    () =>
+      new Promise<void>((r) => {
+        resolve = r;
+      }),
+  );
+  const p = e.listenLab();
+  e.changeLabCard("next");
+  resolve();
+  await p;
+  expect(audio.listen).not.toHaveBeenCalled();
+  vi.unstubAllGlobals();
+});
+
+it("Match Lab reports failed saving and pronunciation, then clears the notice on navigation", async () => {
+  const { e, session, audio } = await setup();
+  session.content.version = "theater-barca-2018-full-football";
+  vi.stubGlobal("localStorage", {
+    getItem: () => null,
+    setItem: () => {
+      throw new Error("Storage full");
+    },
+  });
+  e.openLab();
+  e.saveLab();
+  expect(e.lab.saved).toBe(false);
+  expect(e.lab.notice).toContain("Could not save");
+  e.changeLabCard("next");
+  expect(e.lab.notice).toBe("");
+  audio.has = () => false;
+  audio.preload.mockRejectedValueOnce(new Error("Offline"));
+  await e.listenLab();
+  expect(e.lab.notice).toContain("audio unavailable");
+  e.changeLabCard("flip");
+  expect(e.lab.notice).toBe("");
+  vi.unstubAllGlobals();
 });

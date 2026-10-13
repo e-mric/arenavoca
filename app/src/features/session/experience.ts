@@ -1,3 +1,6 @@
+import { MatchLab, cutback } from "../match-lab/lab";
+import { LabReplay } from "../match-lab/replay";
+import { readLabSave, saveLabPhrase } from "../match-lab/progress";
 import type { Coach } from "../coach/coach";
 import { Session } from "./session";
 import { PassTrace } from "../learning/tracing";
@@ -7,6 +10,12 @@ import type { Commentary, CommentaryLanguage } from "../audio/commentary";
 /** Both the DOM preview and spatial controls issue commands through this coordinator. */
 export class Experience {
   coach?: Coach;
+  readonly lab = new MatchLab();
+  labReplay?: LabReplay;
+  private labListening = false;
+  get labAvailable() {
+    return this.session.content.version === "theater-barca-2018-full-football";
+  }
   trace: PassTrace;
   replaying = false;
   diagramProgress = 0;
@@ -19,6 +28,14 @@ export class Experience {
     readonly player: MatchPlayer,
     readonly commentary?: Commentary,
   ) {
+    this.lab.onClose = () => {
+      this.labReplay?.stop();
+      if (this.labListening) {
+        this.listenRequest++;
+        this.audio.stop();
+        this.labListening = false;
+      }
+    };
     this.trace = new PassTrace(session.content.diagrams[0].route);
     session.onChange = () => {
       this.syncAudio();
@@ -36,6 +53,90 @@ export class Experience {
         session.setPreference("commentaryLanguage", "english");
       };
   }
+  openLab() {
+    if (!this.labAvailable || !this.session.matchActive) return;
+    this.stopAudio();
+    this.coach?.close();
+    this.trace.reset();
+    this.replaying = false;
+    this.lab.saved = readLabSave(localStorage, this.lab.cards.card.id);
+    this.lab.show();
+    this.onChange();
+  }
+  closeLab() {
+    this.lab.close();
+    this.onChange();
+  }
+  replayLab() {
+    if (!this.lab.open) return;
+    this.labReplay ??= new LabReplay(document.createElement("video"));
+    void this.labReplay.play(
+      this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id,
+    );
+    this.onChange();
+  }
+  labPrimary() {
+    this.labReplay?.stop();
+    if (this.lab.view === "cards") {
+      this.lab.saved = readLabSave(localStorage, cutback.id);
+      this.lab.round = 0;
+      this.lab.begin();
+    } else if (this.lab.phase === "complete") this.lab.reset();
+    else if (
+      this.lab.phase === "feedback" &&
+      this.lab.correct &&
+      !this.lab.demonstration
+    )
+      this.lab.next();
+    else this.lab.begin();
+    this.onChange();
+  }
+  changeLabCard(action: "next" | "previous" | "flip" | "story" | "browse") {
+    if (!this.lab.open) return;
+    this.labReplay?.stop();
+    this.lab.notice = "";
+    this.listenRequest++;
+    this.audio.stop();
+    this.labListening = false;
+    if (action === "next" || action === "previous")
+      this.lab.cards.move(action === "next" ? 1 : -1);
+    else if (action === "flip") this.lab.cards.flip();
+    else if (action === "story") this.lab.cards.toggleStory();
+    else this.lab.browse();
+    this.lab.saved = readLabSave(localStorage, this.lab.cards.card.id);
+    this.onChange();
+  }
+  saveLab() {
+    if (!this.lab.open) return;
+    this.lab.saved = saveLabPhrase(
+      localStorage,
+      this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id,
+    );
+    this.lab.notice = this.lab.saved
+      ? "Phrase saved in Match Lab on this device."
+      : "Could not save on this device. Try again.";
+    this.onChange();
+  }
+  async listenLab() {
+    if (!this.lab.open) return;
+    this.coach?.stop();
+    this.lab.notice = "";
+    this.labListening = true;
+    const request = ++this.listenRequest;
+    const cardId =
+      this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id;
+    try {
+      if (!this.audio.has(cardId))
+        await this.audio.preload(cardId, `audio/${cardId}-es.mp3`);
+      if (request !== this.listenRequest || !this.lab.open) return;
+      await this.audio.listen(cardId);
+    } catch {
+      if (request === this.listenRequest)
+        this.lab.notice =
+          "Spanish audio unavailable. Read the phrase and try the board.";
+    }
+    this.onChange();
+  }
   attachCoach(coach: Coach) {
     this.coach = coach;
     coach.beforeStart = () => {
@@ -48,6 +149,7 @@ export class Experience {
     };
   }
   openCoach() {
+    this.lab.close();
     const phrase = this.session.phrase ?? this.session.content.phrases[0];
     const { sport, team } = this.session.snapshot.preferences;
     this.coach?.show({
@@ -58,6 +160,9 @@ export class Experience {
     });
   }
   stopAudio() {
+    this.labReplay?.stop();
+    this.lab.armed = false;
+    this.labListening = false;
     this.coach?.stop();
     this.listenRequest++;
     this.audio.stop();
@@ -120,6 +225,7 @@ export class Experience {
     this.onChange();
   }
   explore() {
+    this.lab.close();
     this.trace.reset();
     this.diagramProgress = 0;
     this.replaying = false;
@@ -148,6 +254,8 @@ export class Experience {
     await this.session.back();
   }
   frame(delta: number) {
+    if (!this.session.matchActive) this.lab.close();
+    this.lab.frame(delta);
     if (this.session.matchActive) this.session.tick();
     if (this.session.mode === "Exploring") {
       if (this.replaying) {

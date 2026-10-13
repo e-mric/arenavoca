@@ -1,2 +1,3 @@
 import { defineComponents } from "@iwsdk/core";
-export default defineComponents([]);
+import { MatchLabTarget } from "./features/match-lab/components";
+export default defineComponents([MatchLabTarget]);

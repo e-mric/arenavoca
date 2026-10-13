@@ -157,3 +157,20 @@ Refresh the prototype to begin at the welcome screen, then enter Theater before 
 Learning experiment: lean slightly left and right while looking at the settled arena. Its seating tiers should show depth while the logo stays anchored in the scene. Compare that with a flat image. Report whether it reads as an arena and whether the height is comfortable from your seat. This observation has not yet been collected.
 
 With the browser/device reduced-motion preference enabled, the final shape should appear immediately without tilting or unfolding. This preference path is automated-test verified; device propagation still needs checking. Returning to an already-started match must not display the welcome animation over playback.
+
+
+## Match Lab: Alba’s cutback and moment cards
+
+Pending physical Quest 3 acceptance. Desktop controller emulation is not device acceptance.
+
+1. Reload the local ArenaVoca page with the private Barcelona recording configured. Enter Theater, then Start/Resume. Select **Match Lab / Alba** below the match controls.
+2. The cutback card starts in Spanish. Point and pinch the illustration (or **Flip card**) to show English; flip back. **Next/Previous** visits six prepared moments and resets the translation. **Read story** connects the current moment to one of two three-part stories. Confirm the main match advances while the selected card stays pinned.
+3. **Watch moment** plays the actual selected excerpt silently. **Hear phrase** plays the short Spanish phrase (even on a story page). Switching cards or closing must stop the excerpt. Missing media must give a recovery message, with the board still available.
+4. Choose **Practise cutback**. Select the white ball, then a blue teammate. Round 1 attacks right; send the ball back to A. Try a wrong teammate first and check that the explanation helps. **Show movement** demonstrates without completing the answer.
+5. After the successful pass, choose **New arrangement**. The attack now goes left. Select the ball and send it to B, then **Finish**. Check readability of Spanish, arrows, letters and feedback; no translation should be revealed before an answer in either fresh round.
+6. Try **Near/far**, **Other side**, and **Higher/lower** while seated. Confirm the full board and controls are readable and the match is unobscured. The lab stays in the room when you turn your head. It is not a physical-surface anchor and does not require room scanning.
+7. **Save phrase**, close, reopen and confirm saved state. Saves belong to this browser’s Match Lab; no mobile synchronization or existing phrase-library export is implied.
+8. Pause the main match explicitly, then repeat opening, flipping, replay, closing and reopening. It must remain paused at that position. Background/exit during an excerpt; returning must never restart that excerpt by itself.
+9. Exit immersive mode and repeat steps 1–8 in **My room · Passthrough**. Confirm the real room stays visible behind the same cards and board. Stop if placement, tracking or two simultaneous videos are uncomfortable.
+
+Record: hand vs controller input, theater vs passthrough, chosen placement, readability, missed selections, video smoothness, and whether you can explain `hacia atrás` in the changed arrangement without English. Spanish and synthetic speech still need fluent review. The main footage and six silent derivatives are private local demo assets; run `python3 src/features/match-lab/prepare-media.py` from `app/` on the authoring Mac to regenerate them and the provisional speech.

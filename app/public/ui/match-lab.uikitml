@@ -1,0 +1,22 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+.lab { font-family: 'Atkinson'; font-weight: 400; flex-direction: column; background-color: #281922; border-radius: 26px; padding: 24px; gap: 12px; width: 1000px; height: 1460px; }
+.title { font-size: 36px; color: #fff4ed; }
+.copy { font-size: 30px; color: #efd7d4; }
+.row { flex-direction: row; gap: 14px; justify-content: center; }
+.action { background-color: #432c36; min-height: 64px; border-radius: 20px; padding: 12px; }
+.label { font-size: 32px; color: #fff4ed; }
+</style>
+<div class="lab">
+<span class="title">MATCH LAB / MATCH MOMENTS</span>
+<span id="lab-step" class="copy">1 / WATCH THE MOMENT</span>
+<span id="lab-phrase" class="title" style="height: 130px">Alba pasa el balón hacia atrás.</span>
+<span id="lab-translation" class="copy">Alba passes the ball back.</span>
+<span id="lab-direction" class="copy">Prepared moment / match clock 10:27-10:30</span>
+<div id="lab-board-area" style="height: 500px"></div>
+<div id="lab-feedback" style="background-color: #432c36; border-radius: 16px; padding: 12px; min-height: 90px"><span id="lab-message" class="copy">Watch the cutback, or go straight to the board.</span></div>
+<div id="lab-card-nav" class="row"><Button id="lab-previous" class="action"><ButtonLabel class="label">Previous</ButtonLabel></Button><Button id="lab-flip" class="action"><ButtonLabel id="lab-flip-label" class="label">Flip card</ButtonLabel></Button><Button id="lab-next" class="action"><ButtonLabel class="label">Next</ButtonLabel></Button><Button id="lab-story" class="action"><ButtonLabel id="lab-story-label" class="label">Read story</ButtonLabel></Button></div>
+<div class="row"><Button id="lab-replay" class="action"><ButtonLabel class="label">Watch moment</ButtonLabel></Button><Button id="lab-listen" class="action"><ButtonLabel class="label">Hear phrase</ButtonLabel></Button><Button id="lab-primary" class="action"><ButtonLabel id="lab-primary-label" class="label">Try the pass</ButtonLabel></Button></div>
+<div class="row"><Button id="lab-browse" class="action"><ButtonLabel class="label">Moment cards</ButtonLabel></Button><Button id="lab-demo" class="action"><ButtonLabel class="label">Show movement</ButtonLabel></Button><Button id="lab-save" class="action"><ButtonLabel id="lab-save-label" class="label">Save phrase</ButtonLabel></Button><Button id="lab-close" class="action"><ButtonLabel class="label">Close lab</ButtonLabel></Button></div>
+<div class="row"><Button id="lab-side" class="action"><ButtonLabel class="label">Other side</ButtonLabel></Button><Button id="lab-distance" class="action"><ButtonLabel class="label">Near / far</ButtonLabel></Button><Button id="lab-height" class="action"><ButtonLabel class="label">Higher / lower</ButtonLabel></Button></div>
+</div>

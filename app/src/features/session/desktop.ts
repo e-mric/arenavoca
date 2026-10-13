@@ -1,3 +1,4 @@
+import { bindLabDesktop } from "../match-lab/desktop";
 import { element, time } from "../../shared/dom";
 import {
   drawContentDiagram,
@@ -22,6 +23,7 @@ export function bindDesktop(experience: Experience) {
   element("video-mount").append(experience.player.video);
   const companion = element("companion");
   companion.append(element("explore-view"), element("library-view"));
+  const renderLab = bindLabDesktop(experience);
   const handlers: Record<string, () => unknown> = {
     "coach-open": () => experience.openCoach(),
     "coach-voice": () => experience.coach?.start("voice"),
@@ -46,7 +48,10 @@ export function bindDesktop(experience: Experience) {
     "trace-start": () => experience.startTrace(),
     replay: () => experience.replay(),
     back: () => experience.back(),
-    library: () => s.library(),
+    library: () => {
+      experience.closeLab();
+      s.library();
+    },
     "library-back": () => experience.back(),
     "library-listen": () => experience.listen(),
     "library-save": () => s.save(),
@@ -145,6 +150,7 @@ export function bindDesktop(experience: Experience) {
     render();
   }
   function render() {
+    renderLab();
     const phrase = s.content.phrases[0];
     element<HTMLProgressElement>("match-progress").max = s.content.duration;
     for (const node of document.querySelectorAll<HTMLElement>(
@@ -175,8 +181,8 @@ export function bindDesktop(experience: Experience) {
     );
     hidden(element("watch-layout"), mode === "Suspended");
     const coach = experience.coach;
-    const coaching = !!coach?.open;
-    hidden(element("coach-card"), !coaching);
+    const coaching = !!coach?.open || experience.lab.open;
+    hidden(element("coach-card"), !coach?.open || experience.lab.open);
     if (coach) {
       text(element("coach-phrase"), coach.context?.phrase ?? "");
       text(element("coach-status"), coach.status);

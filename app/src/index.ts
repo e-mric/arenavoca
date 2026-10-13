@@ -176,6 +176,7 @@ async function boot() {
       import.meta.hot.dispose(() => {
         active = false;
         experience.coach?.close();
+        experience.labReplay?.destroy();
         world?.destroy();
         player.destroy();
         audio.destroy();

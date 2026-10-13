@@ -67,6 +67,18 @@ Mobbin MCP research is complete: Apple TV sports browsing, Duolingo picture answ
 
 The first implementation includes illustrated football/F1 example heroes, illustrated saved phrases and three visual answer choices derived from the existing sport vocabulary. Selection requires explicit confirmation; switching to text answers preserves the selection. English descriptions support screen readers. Generated hero and action artwork, with their exact prompts, live under `app/src/features/recap/artwork/`. Six simple action illustrations now share a palette and visual style across sports; both native platforms use the same assets. Collections use an adaptive card grid and compact save controls, with practice above the cards. No mobile pronunciation button, fabricated match history or automatic media analysis is implied by the concept images. Exact motion polish, team selection on mobile and a full navigation redesign remain follow-up work.
 
+### Match Lab and floating moment cards · 13 October 2026
+
+The user authorized a meaningful spatial learning activity around Alba’s cutback, in Theater and My room, then requested floating replay cards that flip to reveal translation and stories from the match. This extends the existing viewing loop; the match remains its own playback authority.
+
+The first lab is available only for the configured `barca-2018-full` football source. It opens on the cutback card and offers six prepared source-backed moments and two three-part stories from the existing match pack. Point and pinch the illustration, or use Flip card, to reveal English; moving to a different moment hides the translation again. Story mode connects each moment to its corresponding Spanish/English narrative. The selected card remains pinned as the main match advances. These are an offline prepared batch, not live event generation or automatic whole-match analysis.
+
+Practise cutback opens an original spatial tactical board. Select the ball, then a teammate to demonstrate `hacia atrás`, relative to the marked direction of attack. A second arrangement reverses the attack direction and changes the correct teammate. Translation is hidden during a fresh attempt; explanatory feedback follows a selection. Show movement is a complete animation fallback and does not count as answering. This is point-and-pinch / controller selection, not unrestricted grabbing or an exact 3D reconstruction. Placement offers the existing deliberate left/right, near/far and height presets.
+
+Watch moment explicitly plays a separate, silent, bounded local excerpt for the selected card. Changing cards, switching to the board, closing, backgrounding or leaving the immersive session stops the excerpt. No lab action pauses, seeks, dims or resumes the main match. Hear phrase explicitly plays prepared Spanish audio; it uses the existing temporary commentary ducking and mute policy. Native speech is provisional macOS Mónica, awaiting fluent Spanish/audio review. Missing replay or speech leaves a readable recovery path to the board.
+
+Save phrase persists the selected moment within Match Lab on this browser/device. It does not yet join the older one-phrase export library or sync to the mobile companion. Original illustrations are reused from the mobile match pack with their existing provenance. Private replay derivatives remain outside Git. Physical Quest hand usability, comfortable placement, dual-video performance and passthrough acceptance require the user’s review.
+
 ### What Exists
 
 - Product requirements, a twelve-milestone checklist, the original design reference, and a runnable first prototype in app/. See README.md for commands and docs/IMPLEMENTATION.md for evidence.
