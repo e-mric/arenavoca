@@ -6,6 +6,7 @@ android {
     buildFeatures { compose = true }
     sourceSets["main"].res.srcDir("../../src/features/recap/artwork/res")
     sourceSets["main"].res.srcDir("../../src/features/stories/artwork/res")
+    sourceSets["debug"].res.srcDir("../local-media/res")
     sourceSets["main"].kotlin.srcDir("../../src/features/recap/native/androidMain")
     sourceSets["main"].kotlin.srcDir("../../src/features/stories/native/androidMain")
     sourceSets["androidTest"].kotlin.srcDir("../../src/features/recap/native/androidTest")

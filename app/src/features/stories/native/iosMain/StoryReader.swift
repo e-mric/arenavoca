@@ -27,13 +27,14 @@ struct StoryReader: View {
     @Environment(\.dismiss) private var dismiss
     @State private var lesson: StoryLesson
     @State private var revision = 0
+    @State private var activeReplay: String?
     @State private var translated = false
     @State private var selected = ""
     @State private var answer = ""
     init(story: SportStory) { _lesson = State(initialValue: StoryLesson(story: story)) }
     private var story: SportStory { lesson.story }
     private func update(_ action: () -> Void) { action(); revision += 1 }
-    private func advance() { update { _ = lesson.advance() }; translated = false; selected = ""; answer = "" }
+    private func advance() { activeReplay = nil; update { _ = lesson.advance() }; translated = false; selected = ""; answer = "" }
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -59,7 +60,9 @@ struct StoryReader: View {
         switch lesson.stage {
         case .read:
             Text("Read · Scene \(lesson.panelIndex + 1) of 3").font(.subheadline.bold())
-            SportArtwork(name: lesson.panel.artwork)
+            if let evidence = lesson.panel.evidence {
+                MatchReplayView(evidence: evidence, artwork: lesson.panel.artwork, active: $activeReplay)
+            } else { SportArtwork(name: lesson.panel.artwork) }
             Text(lesson.panel.title).font(.headline)
             Text(lesson.panel.spanish).font(.title2)
             if let evidence = lesson.panel.evidence { MatchEvidenceDetails(evidence: evidence) }
@@ -68,7 +71,7 @@ struct StoryReader: View {
             if lesson.panelIndex == 0 { Text("Notice these phrases:\n\(story.targets.joined(separator: " · "))").font(.callout) }
             action(lesson.panelIndex == 2 ? "Try the activities" : "Next scene") { advance() }
             if lesson.panelIndex > 0 {
-                Button("Previous scene") { update { _ = lesson.previousPanel() }; translated = false }.frame(minHeight: 44)
+                Button("Previous scene") { activeReplay = nil; update { _ = lesson.previousPanel() }; translated = false }.frame(minHeight: 44)
             }
         case .recognise:
             Text("1 · Recognise").font(.headline)

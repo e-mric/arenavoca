@@ -38,6 +38,7 @@ import com.arenavoca.stories.*
     val pack = remember { MatchCatalog.pack }
     var revealed by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(pack.stories.first().id) }
+    var activeReplay by remember(selected) { mutableStateOf<String?>(null) }
     var lesson by remember { mutableStateOf<SportStory?>(null) }
     if (lesson != null) { StoryReader(lesson!!) { lesson = null }; return }
     val scroll = rememberScrollState()
@@ -60,12 +61,12 @@ import com.arenavoca.stories.*
                         FilterChip(selected == story.id, { selected = story.id }, { Text(story.title) })
                     }
                     val story = pack.stories.single { it.id == selected }
-                    Button(onClick = { lesson = pack.lesson(selected) }, modifier = Modifier.fillMaxWidth().heightIn(min = 54.dp)) { Text("Practise this moment") }
+                    Button(onClick = { activeReplay = null; lesson = pack.lesson(selected) }, modifier = Modifier.fillMaxWidth().heightIn(min = 54.dp)) { Text("Practise this moment") }
                     story.cardIds.forEach { id ->
                         val card = pack.cards.single { it.id == id }
                         OutlinedCard(Modifier.fillMaxWidth()) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                SportArtwork(card.artwork)
+                                MatchReplayView(card.evidence, card.artwork, activeReplay == card.id) { activeReplay = if (it) card.id else null }
                                 Text(card.spanish, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                                 Text(card.english)
                                 Text(card.hint, style = MaterialTheme.typography.bodySmall)

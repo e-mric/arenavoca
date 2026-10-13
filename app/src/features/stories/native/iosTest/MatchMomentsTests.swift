@@ -30,11 +30,33 @@ final class MatchMomentsTests: XCTestCase {
         XCTAssertTrue(app.buttons["Reveal match moments"].exists)
         XCTAssertFalse(app.staticTexts["Coutinho marca el primer gol."].exists)
     }
+    func testReplayPlaysAndStopsAcrossCardsAndStoryScenes() {
+        let app = XCUIApplication(); app.launch()
+        tap("Explore match moments", in: app); tap("Reveal match moments", in: app)
+        tap("watch-match_640_646", in: app)
+        XCTAssertTrue(app.staticTexts["Playing match moment"].waitForExistence(timeout: 8))
+        tap("Pause replay", in: app)
+        XCTAssertTrue(app.staticTexts["Replay paused"].waitForExistence(timeout: 3))
+        tap("Play replay", in: app)
+        XCTAssertTrue(app.staticTexts["Playing match moment"].waitForExistence(timeout: 3))
+        tap("watch-match_646_648", in: app)
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "label == %@", "Show illustration")).count, 1)
+        XCTAssertTrue(app.staticTexts["Replay finished"].waitForExistence(timeout: 8))
+        tap("Replay again", in: app)
+        XCTAssertTrue(app.staticTexts["Playing match moment"].waitForExistence(timeout: 3))
+        tap("Practise this moment", in: app)
+        XCTAssertFalse(app.staticTexts["Playing match moment"].exists)
+        tap("watch-match_640_646", in: app)
+        XCTAssertTrue(app.staticTexts["Playing match moment"].waitForExistence(timeout: 8))
+        tap("Next scene", in: app)
+        XCTAssertFalse(app.staticTexts["Playing match moment"].exists)
+        XCTAssertTrue(app.buttons["watch-match_646_648"].exists)
+    }
     private func capture(_ name: String, in app: XCUIApplication) {
         let image = XCTAttachment(screenshot: app.screenshot()); image.name = name; image.lifetime = .keepAlways; add(image)
     }
     private func tap(_ label: String, in app: XCUIApplication) {
-        let button = app.buttons[label].firstMatch; scrollTo(button, in: app); XCTAssertTrue(button.exists, label); button.tap()
+        let button = app.buttons.matching(identifier: label).allElementsBoundByIndex.last ?? app.buttons[label].firstMatch; scrollTo(button, in: app); XCTAssertTrue(button.exists, label); button.tap()
     }
     private func scrollTo(_ element: XCUIElement, in app: XCUIApplication) {
         for _ in 0..<12 { if element.isHittable { return }; app.swipeUp() }

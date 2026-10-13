@@ -44,7 +44,12 @@ import com.arenavoca.stories.*
                 when (lesson.stage) {
                     StoryStage.READ -> {
                         Text("Read · Scene ${lesson.panelIndex + 1} of 3", style = MaterialTheme.typography.labelLarge)
-                        SportArtwork(lesson.panel.artwork)
+                        val evidence = lesson.panel.evidence
+                        if (evidence == null) SportArtwork(lesson.panel.artwork)
+                        else key(lesson.panelIndex) {
+                            var replay by remember { mutableStateOf(false) }
+                            MatchReplayView(evidence, lesson.panel.artwork, replay) { replay = it }
+                        }
                         Text(lesson.panel.title, style = MaterialTheme.typography.titleMedium)
                         Text(lesson.panel.spanish, style = MaterialTheme.typography.titleLarge)
                         lesson.panel.evidence?.let { MatchEvidenceDetails(it) }

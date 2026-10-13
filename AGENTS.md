@@ -10,3 +10,5 @@ Read PRD.md before changing product behavior. Application code lives in app/.
 - Do not mark device acceptance complete using browser emulation. Identify prototype audio as awaiting fluent Spanish review.
 - Run typecheck, unit tests, production build, and affected browser tests before finishing changes.
 - Keep assets original and source-controlled. Do not include generated frame sequences, secrets, node_modules, or dist.
+
+- Use emulators for Android UI inspection and instrumentation. Do not install or run the Android CLI instrumentation server on the user's physical phone; the user wants to avoid its battery cost. Installing the ArenaVoca app on the phone remains authorized.

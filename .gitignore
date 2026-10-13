@@ -38,3 +38,6 @@ app/native/local.properties
 app/native/**/xcuserdata/
 app/src/features/recap/artwork/schematic-preview/
 app/native/iosApp/ArenaVoca.xcodeproj/
+
+# Private excerpts included only in local mobile demo builds.
+app/native/local-media/

@@ -36,6 +36,7 @@ struct MatchMomentsReader: View {
     private let pack = MatchCatalog.shared.pack
     @State private var revealed = false
     @State private var selected = MatchCatalog.shared.pack.stories[0].id
+    @State private var activeReplay: String?
     @State private var lesson: StoryPresentation?
     var body: some View {
         ScrollViewReader { proxy in
@@ -52,17 +53,17 @@ struct MatchMomentsReader: View {
                     } else {
                         Text("AI-prepared selection · 6 cards · 2 stories").font(.caption)
                         ForEach(pack.stories, id: \.id) { story in
-                            Button { selected = story.id } label: {
+                            Button { activeReplay = nil; selected = story.id } label: {
                                 Text(selected == story.id ? "✓ \(story.title)" : story.title).frame(minHeight: 44)
                             }.buttonStyle(.bordered).accessibilityIdentifier(story.id)
                                 .accessibilityAddTraits(selected == story.id ? .isSelected : [])
                         }
-                        action("Practise this moment") { if let story = pack.lesson(storyId: selected) { lesson = StoryPresentation(story: story) } }
+                        action("Practise this moment") { activeReplay = nil; if let story = pack.lesson(storyId: selected) { lesson = StoryPresentation(story: story) } }
                         if let story = pack.stories.first(where: { $0.id == selected }) {
                             ForEach(story.cardIds, id: \.self) { id in
                                 if let card = pack.cards.first(where: { $0.id == id }) {
                                     VStack(alignment: .leading, spacing: 10) {
-                                        SportArtwork(name: card.artwork)
+                                        MatchReplayView(evidence: card.evidence, artwork: card.artwork, active: $activeReplay)
                                         Text(card.spanish).font(.title2.bold())
                                         Text(card.english)
                                         Text(card.hint).font(.caption)
