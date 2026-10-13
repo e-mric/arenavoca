@@ -25,7 +25,9 @@ Proposed narrative: **Building a place to learn Spanish—and learning VR along 
 
 The user also wants to discuss Rick Rubin's [The Way of Code](https://www.thewayofcode.com/) and a hybrid creative/engineering approach. Use it as an explicitly attributed creative reference, then explain our application: describe the intended experience, build a small experiment with AI, try it on the target device, critique it, and verify the resulting behavior with tests and source evidence. The user's product judgment remains central. AI-generated implementation is not evidence that the user understands it. A useful concrete example is adding a match replay to a Spanish card, then catching and fixing unintended background playback with a lifecycle test. Do not claim the project was originally inspired by this reference; it was introduced after the prototype existed.
 
-Suggested five-minute story, adjustable to the actual slot:
+The prepared [five-minute English demo script](docs/DEMO_STORY.md) follows the format selected by the user. It includes timed actions, the actual-match mobile replay, a concrete regression-test example, rehearsal questions and a short fallback. Its current sequence supersedes the initial outline below.
+
+Initial presentation outline:
 
 1. Explain the motivation: enjoy a match while learning useful Spanish, with optional practice alongside uninterrupted viewing.
 2. Show the turning point: the first browser-window approach did not feel immersive to the user. Their headset feedback led to the theater and passthrough experience.
