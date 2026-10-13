@@ -41,3 +41,7 @@ app/native/iosApp/ArenaVoca.xcodeproj/
 
 # Private excerpts included only in local mobile demo builds.
 app/native/local-media/
+
+# Presentation intermediates and private demo deck containing local footage.
+docs/demo/.build/
+docs/demo/output/

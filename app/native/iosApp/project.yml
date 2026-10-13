@@ -17,8 +17,11 @@ targets:
       - path: ../local-media/res/raw
         buildPhase: resources
         optional: true
+      - path: ../../src/features/branding/ios/Assets.xcassets
+        buildPhase: resources
     settings:
       base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         PRODUCT_BUNDLE_IDENTIFIER: com.arenavoca.mobile
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES

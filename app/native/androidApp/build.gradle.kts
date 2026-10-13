@@ -5,6 +5,7 @@ android {
     defaultConfig { applicationId = "com.arenavoca.mobile"; minSdk = 29; targetSdk = 36; versionCode = 1; versionName = "0.1.0"; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" }
     buildFeatures { compose = true }
     sourceSets["main"].res.srcDir("../../src/features/recap/artwork/res")
+    sourceSets["main"].res.srcDir("../../src/features/branding/android/res")
     sourceSets["main"].res.srcDir("../../src/features/stories/artwork/res")
     sourceSets["debug"].res.srcDir("../local-media/res")
     sourceSets["main"].kotlin.srcDir("../../src/features/recap/native/androidMain")
