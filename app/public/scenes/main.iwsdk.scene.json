@@ -30,6 +30,26 @@
           }
         },
         {
+          "id": "arena-brand",
+          "name": "ArenaVoca welcome arena",
+          "content": {
+            "type": "asset",
+            "asset": "arena"
+          },
+          "transform": {
+            "position": [
+              0,
+              2.35,
+              -2.1
+            ],
+            "scale": [
+              0.65,
+              0.65,
+              0.65
+            ]
+          }
+        },
+        {
           "id": "surfaces",
           "name": "Viewing surfaces",
           "content": {

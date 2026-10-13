@@ -22,6 +22,7 @@ import { applyViewingMode, type ViewingMode } from "./theater";
 import { companionPlacement } from "./placement";
 import { activeWord } from "../karaoke/karaoke";
 import { teamThemes, themeFor, type Team } from "../theme/team-theme";
+import { attachArenaReveal } from "../branding/arena-reveal";
 export function attachXR(
   world: World,
   experience: Experience,
@@ -31,6 +32,11 @@ export function attachXR(
   const s = experience.session;
   world.scene.background = new Color("#160e16");
   const layout = world.requireSceneObject<Group>("viewing-space");
+  attachArenaReveal(
+    world,
+    world.requireSceneObject<Group>("arena-brand"),
+    () => s.mode === "Onboarding",
+  );
   const stage = world.requireSceneObject<Group>("surfaces");
   const room = world.requireSceneObject<Group>("theater");
   const accents: Mesh<PlaneGeometry, MeshBasicMaterial>[] = [];

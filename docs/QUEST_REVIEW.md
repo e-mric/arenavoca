@@ -149,3 +149,11 @@ This review has not been performed on physical phones or Quest. Automated Androi
 - On a phone, review Playmaker home, collection and picture quiz in football and F1, including large accessibility text. Select an answer, change the selection, then Check answer. Only confirmation should score. Try Show text answers and a screen reader, then retry a mistake.
 - Confirm the diagrams clearly distinguish pass/shot/save and overtake/brake/pit entry. If an action is ambiguous, use the text option and flag the illustration for revision. The diagram quiz has not been validated as a learning assessment.
 - Spanish and prototype pronunciation audio still await fluent review.
+
+## Continuous arena welcome animation (pending device review)
+
+Refresh the prototype to begin at the welcome screen, then enter Theater before selecting Start match. Over four seconds, the logo should reveal a stepped arena with the coral play symbol above its floor. It should settle, remain above the welcome controls, and disappear as soon as Start match is selected. Repeat in My room to check the real-room background remains visible. No logo sound or camera movement should occur.
+
+Learning experiment: lean slightly left and right while looking at the settled arena. Its seating tiers should show depth while the logo stays anchored in the scene. Compare that with a flat image. Report whether it reads as an arena and whether the height is comfortable from your seat. This observation has not yet been collected.
+
+With the browser/device reduced-motion preference enabled, the final shape should appear immediately without tilting or unfolding. This preference path is automated-test verified; device propagation still needs checking. Returning to an already-started match must not display the welcome animation over playback.

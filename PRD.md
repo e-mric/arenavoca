@@ -81,6 +81,10 @@ The user rejected browser tabs as the primary VR experience and requested an imm
 
 Target the upcoming Meta VR glasses with eyes/hands interaction, using Quest 3 for current device reviews. Emulator results do not complete physical passthrough or future-glasses acceptance.
 
+### ArenaVoca identity in VR · 13 October 2026
+
+The selected continuous arena icon gains a short, original 3D welcome animation: its oval becomes a stepped arena bowl and the coral play symbol rises above the floor. Show it only during immersive onboarding, above the welcome panel, in theater and passthrough. It settles after four seconds and disappears when the user starts the match. It never changes camera pose or playback. Respect reduced-motion preference with a static completed form. Physical Quest comfort and recognizability remain pending review.
+
 ### Immediate Implementation Task
 
 Read this document and any instructions in the new project's actual directory. Inspect that repository and runtime, then execute the First Prototype checklist items. Use app/ inside the new project as the proposed application source directory, adjusting to an existing repository's structure when necessary. Do not keep using the old chat's generated folder after the handoff.
