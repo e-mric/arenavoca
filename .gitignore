@@ -6,6 +6,8 @@ app/test-results/
 app/playwright-report/
 app/coverage/
 app/content-source/frames/
+app/content-source/match-analysis/
+app/src/features/stories/authoring/__pycache__/
 app/content-source/*.log
 app/content-source/*.blend1
 app/.claude/
@@ -27,3 +29,12 @@ app/public/media/user/
 .env*
 app/.env*
 !app/.env.example
+
+# Native KMP build outputs and machine-local configuration
+app/native/**/build/
+app/native/.gradle/
+app/native/.kotlin/
+app/native/local.properties
+app/native/**/xcuserdata/
+app/src/features/recap/artwork/schematic-preview/
+app/native/iosApp/ArenaVoca.xcodeproj/

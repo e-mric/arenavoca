@@ -6,8 +6,8 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #ecf1e9;
-  background: #101917;
+  color: #fff4ed;
+  background: #160e16;
   font-synthesis: none;
 }
 * {
@@ -23,9 +23,9 @@ canvas {
 }
 button {
   font: inherit;
-  color: #e7ece5;
+  color: #fff4ed;
   border: 1px solid #405049;
-  background: #24322c;
+  background: #432c36;
   border-radius: 8px;
   padding: 12px 17px;
   cursor: pointer;
@@ -39,7 +39,7 @@ button:hover {
 }
 button:focus-visible,
 canvas:focus-visible {
-  outline: 3px solid #aadbb9;
+  outline: 3px solid #ffb59e;
   outline-offset: 4px;
 }
 button:disabled {
@@ -47,13 +47,13 @@ button:disabled {
   cursor: default;
 }
 button.primary {
-  background: #a8d4ad;
-  border-color: #a8d4ad;
-  color: #14281c;
+  background: #ffb59e;
+  border-color: #ffb59e;
+  color: #31151b;
   font-weight: 650;
 }
 button.primary:hover {
-  background: #c0e7c5;
+  background: #ffd3c1;
 }
 [hidden] {
   display: none !important;
@@ -69,9 +69,9 @@ button.primary:hover {
   z-index: 1;
   background: radial-gradient(
     ellipse at 60% 38%,
-    #263a2b 0,
-    #14211b 35%,
-    #101917 70%
+    #39202d 0,
+    #21141d 35%,
+    #160e16 70%
   );
 }
 header {
@@ -210,7 +210,7 @@ h1 em {
 .learning-card,
 .explore-card,
 .library-card {
-  background: #1c2821;
+  background: #281922;
   border: 1px solid #3b4b3e;
   border-radius: 14px;
   overflow: hidden;
@@ -267,7 +267,7 @@ video {
   font-size: 13px;
   color: #e3e9df;
   padding: 5px 16px;
-  background: #16231c;
+  background: #21141d;
 }
 .playback {
   display: flex;
@@ -288,7 +288,7 @@ video {
 progress {
   width: 100%;
   height: 4px;
-  accent-color: #a8d4ad;
+  accent-color: #ffb59e;
   border: 0;
 }
 progress::-webkit-progress-bar {
@@ -296,7 +296,7 @@ progress::-webkit-progress-bar {
   border-radius: 4px;
 }
 progress::-webkit-progress-value {
-  background: #a8d4ad;
+  background: #ffb59e;
   border-radius: 4px;
 }
 .learning-card {
@@ -525,7 +525,7 @@ body.immersive #scene-container {
 }
 
 button[aria-pressed="true"] {
-  border-color: #a8d4ad;
+  border-color: #ffb59e;
   background: #304d38;
 }
 .karaoke-card {
@@ -543,26 +543,26 @@ button[aria-pressed="true"] {
   padding: 0 4px;
 }
 .karaoke-lyrics .current-word {
-  background: #a8d4ad;
-  color: #14281c;
+  background: #ffb59e;
+  color: #31151b;
   border-radius: 4px;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
 #desktop {
-  --team-background: #101917;
-  --team-panel: #1c2821;
-  --team-control: #304537;
-  --team-accent: #a8d4ad;
-  --team-accentInk: #14281c;
-  --team-stripe: #476a51;
+  --team-background: #160e16;
+  --team-panel: #281922;
+  --team-control: #432c36;
+  --team-accent: #ffb59e;
+  --team-accentInk: #31151b;
+  --team-stripe: #963a50;
   background: radial-gradient(
     ellipse at 60% 38%,
     color-mix(in srgb, var(--team-panel), var(--team-stripe) 12%),
     var(--team-background) 70%
   );
-  color: #edf3e8;
+  color: #fff4ed;
 }
 #desktop header {
   border-top: 6px solid var(--team-stripe);
@@ -596,7 +596,7 @@ button[aria-pressed="true"] {
 }
 #desktop .chunks span.revealed {
   background: var(--team-control);
-  color: #edf3e8;
+  color: #fff4ed;
   border-color: var(--team-accent);
 }
 #desktop progress {
@@ -645,10 +645,60 @@ button[aria-pressed="true"] {
   min-width: 60px;
 }
 
-#coach-card { text-align: left; }
-#coach-card .row { flex-wrap: wrap; gap: 8px; }
-#coach-reply { padding: 18px; border-left: 3px solid var(--team-accent); background: var(--team-control); line-height: 1.5; min-height: 80px; white-space: pre-wrap; }
-#coach-status { color: var(--team-accent); }
-#coach-form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-#coach-form label { width: 100%; }
-#coach-question { min-width: 0; flex: 1; font: inherit; border: 1px solid #60786a; border-radius: 8px; padding: 12px; background: #111b18; color: #edf3e8; }
+#coach-card {
+  text-align: left;
+}
+#coach-card .row {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#coach-reply {
+  padding: 18px;
+  border-left: 3px solid var(--team-accent);
+  background: var(--team-control);
+  line-height: 1.5;
+  min-height: 80px;
+  white-space: pre-wrap;
+}
+#coach-status {
+  color: var(--team-accent);
+}
+#coach-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+#coach-form label {
+  width: 100%;
+}
+#coach-question {
+  min-width: 0;
+  flex: 1;
+  font: inherit;
+  border: 1px solid #60786a;
+  border-radius: 8px;
+  padding: 12px;
+  background: #111b18;
+  color: #fff4ed;
+}
+
+/* Matchday: calm tonal surfaces; team accents remain the runtime authority. */
+button {
+  border-radius: 18px;
+}
+button.primary {
+  border-radius: 999px;
+}
+.brand b {
+  color: var(--team-accent, #ffb59e);
+}
+h1,
+h2 {
+  font-weight: 750;
+}
+.translation,
+.learning-card p:not(.eyebrow),
+.explore-card p:not(.eyebrow) {
+  color: #d8c1c9;
+}

@@ -29,7 +29,7 @@ export function attachXR(
   getViewingMode: () => ViewingMode = () => "theater",
 ) {
   const s = experience.session;
-  world.scene.background = new Color("#101917");
+  world.scene.background = new Color("#160e16");
   const layout = world.requireSceneObject<Group>("viewing-space");
   const stage = world.requireSceneObject<Group>("surfaces");
   const room = world.requireSceneObject<Group>("theater");
@@ -376,12 +376,12 @@ export function attachXR(
       for (const root of roots)
         root.document.rootElement.setProperties({
           backgroundColor: theme.panel,
-          borderRadius: preferences.sport === "f1" ? 4 : 18,
+          borderRadius: preferences.sport === "f1" ? 16 : 26,
         });
       for (const id of Object.keys(actions))
         find(id).setProperties({
           backgroundColor: theme.control,
-          borderRadius: preferences.sport === "f1" ? 3 : 10,
+          borderRadius: preferences.sport === "f1" ? 14 : 22,
           borderColor: theme.stripe,
           borderWidth: 1,
         });
@@ -392,12 +392,14 @@ export function attachXR(
             teamId === preferences.team ? theme.accent : theme.control,
         });
         find(`xr-team-${teamId}-label`).setProperties({
-          color: teamId === preferences.team ? theme.accentInk : "#edf3e8",
+          color: teamId === preferences.team ? theme.accentInk : "#fff4ed",
         });
       }
       appliedTheme = themeKey;
-      find("xr-start").setProperties({ backgroundColor: theme.accent });
-      find("xr-start-label").setProperties({ color: theme.accentInk });
+      for (const id of ["xr-start", "xr-save", "xr-explore-save"]) {
+        find(id).setProperties({ backgroundColor: theme.accent });
+        find(`${id}-label`).setProperties({ color: theme.accentInk });
+      }
     }
     const key = `${side}/${s.snapshot.preferences.panelDistance}/${s.snapshot.preferences.panelHeight}`;
     if (key !== placementKey) {
@@ -438,8 +440,8 @@ export function attachXR(
       for (let i = 0; i < 4; i++) {
         text(`xr-word-${i}`, chant.words[i] ?? "");
         find(`xr-word-${i}`).setProperties({
-          backgroundColor: i === word ? "#a8d4ad" : "#1c2821",
-          color: i === word ? "#14281c" : "#edf3e8",
+          backgroundColor: i === word ? theme.accent : theme.panel,
+          color: i === word ? theme.accentInk : "#fff4ed",
         });
       }
       text("xr-chant-translation", chant.translation);

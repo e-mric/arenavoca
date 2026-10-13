@@ -11,16 +11,16 @@ export interface TeamTheme {
   accentInk: string;
   stripe: string;
 }
-/** Fan-inspired palettes, not official brand assets or team endorsements. */
+/** Matchday surfaces with fan-inspired accents; no official team assets or endorsements. */
 export const teamThemes: Record<Team, TeamTheme> = {
   neutral: {
     name: "Just watching",
-    background: "#101917",
-    panel: "#1c2821",
-    control: "#304537",
-    accent: "#a8d4ad",
-    accentInk: "#14281c",
-    stripe: "#476a51",
+    background: "#160e16",
+    panel: "#281922",
+    control: "#432c36",
+    accent: "#ffb59e",
+    accentInk: "#31151b",
+    stripe: "#963a50",
   },
   blue: {
     name: "Blue demo team",
@@ -45,10 +45,10 @@ export const teamThemes: Record<Team, TeamTheme> = {
   barcelona: {
     name: "FC Barcelona",
     sport: "football",
-    background: "#10152c",
-    panel: "#1d2444",
-    control: "#303757",
-    accent: "#f8d05c",
+    background: "#100f1d",
+    panel: "#271a2c",
+    control: "#292d49",
+    accent: "#ffd18a",
     accentInk: "#1c1b29",
     stripe: "#bc244a",
   },
@@ -65,9 +65,9 @@ export const teamThemes: Record<Team, TeamTheme> = {
   ferrari: {
     name: "Ferrari",
     sport: "f1",
-    background: "#211214",
-    panel: "#341c20",
-    control: "#4c292d",
+    background: "#180c12",
+    panel: "#2c1620",
+    control: "#482331",
     accent: "#ff777c",
     accentInk: "#2b1014",
     stripe: "#cc2233",

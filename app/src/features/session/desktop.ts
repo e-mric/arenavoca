@@ -8,6 +8,7 @@ import {
 import type { Experience } from "./experience";
 import { activeWord } from "../karaoke/karaoke";
 import { teamThemes, themeFor } from "../theme/team-theme";
+import { downloadRecap } from "../recap/download";
 // Keep stable text nodes across frames. Replacing unchanged text forces layout
 // work throughout the companion even after an animation has finished.
 function text(node: HTMLElement, value: string) {
@@ -49,6 +50,20 @@ export function bindDesktop(experience: Experience) {
     "library-back": () => experience.back(),
     "library-listen": () => experience.listen(),
     "library-save": () => s.save(),
+    "recap-export": () => {
+      try {
+        downloadRecap(s.content, s.snapshot.savedPhraseIds);
+        text(
+          element("recap-export-status"),
+          "Recap download requested. Move the file to your phone, then choose Import saved phrases in ArenaVoca.",
+        );
+      } catch {
+        text(
+          element("recap-export-status"),
+          "Could not export this recap. Save a phrase and try again.",
+        );
+      }
+    },
     "completed-library": () => s.library(),
     "completed-restart": () => s.restart(),
     resume: () => s.resume(),
@@ -304,6 +319,8 @@ export function bindDesktop(experience: Experience) {
     hidden(element("stop-audio"), !experience.audio.speaking);
     text(element("status"), s.message);
     text(element("saved-count"), String(s.snapshot.savedPhraseIds.length));
+    element<HTMLButtonElement>("recap-export").disabled =
+      !s.snapshot.savedPhraseIds.length;
     const saved = s.snapshot.savedPhraseIds.includes(s.content.phrases[0].id);
     for (const id of ["save", "explore-save", "library-save"])
       text(element(id), saved ? "Saved ✓" : "Save phrase");

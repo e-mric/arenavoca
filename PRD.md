@@ -12,10 +12,56 @@ The user will create the Codex project. Place this file in its root as PRD.md. K
 
 - The user owns a Meta Quest 3, is working alone almost full time, and has no stated Unity or web development background.
 - The user selected TypeScript + Meta IWSDK + Three.js and will rely heavily on Codex for implementation.
-- Codex should plan and build autonomously, provide concise progress updates, and pause at major milestones for the user to test on Quest 3.
+- Codex should build with the user as a learning partner: explain one relevant VR concept before a meaningful change, connect it to the actual implementation, and offer a small hands-on experiment on Quest 3. Continue routine implementation autonomously, provide concise progress updates, and use major milestones for device testing and reflection.
 - The selected standout moment is tracing a pass while the Spanish phrase unfolds.
 - English commentary and Spanish pronunciation will be AI-generated, prepared in advance, and reviewed before release. The authoring provider and final voices are still to be selected.
 - Human Spanish coaching is a future feature, not a dependency of the individual MVP.
+
+### Learning And Community Demo · 13 October 2026
+
+The user plans to demonstrate ArenaVoca at [DevDay Exchange Community: Brussels](https://luma.com/my26sz4n) and wants to share their learning process as someone new to VR development. The event includes community discussion, Q&A and demos; an individual presentation length has not been confirmed.
+
+Proposed narrative: **Building a place to learn Spanish—and learning VR along the way.** Show the user's decisions, experiments and discoveries alongside the prototype. Do not imply that implementation by Codex establishes the user's understanding; use hands-on experiments and the user's own explanations as evidence of learning.
+
+Suggested five-minute story, adjustable to the actual slot:
+
+1. Explain the motivation: enjoy a match while learning useful Spanish, with optional practice alongside uninterrupted viewing.
+2. Show the turning point: the first browser-window approach did not feel immersive to the user. Their headset feedback led to the theater and passthrough experience.
+3. Demonstrate the match, a floating phrase panel, deliberate placement, and passthrough. Explain one discovery: panels positioned in the virtual world stay in place as the viewer turns their head.
+4. Describe one technical constraint and the decision it caused: the YouTube iframe could not supply the video texture for the immersive screen, so the prototype uses the user's local recording.
+5. Close with what the builder has learned and the next experiment. Include the AI coach only after a successful physical Quest rehearsal; keep a short local recording of the prototype as a presentation fallback.
+
+Working cadence for subsequent features:
+
+- Explain one concept in plain language and identify the relevant feature file.
+- Offer one small experiment or decision the user can own, such as changing a panel's position and predicting how it will feel.
+- Implement and test the change, explaining the important tradeoff without narrating every code edit.
+- Invite a focused Quest observation, then record the assumption, experiment, actual observation, decision and next question in existing implementation notes.
+- Continue independent work while awaiting device feedback. Do not record an offered exercise as completed learning or browser checks as physical device acceptance.
+
+First proposed learning exercise: world-space versus head-relative panels, using the existing placement presets to compare comfort and visibility. The prototype supports deliberate placement presets, not free dragging. Explain the coordinate system before inviting changes.
+
+Demo evidence must remain precise: the user has confirmed passthrough with their room and floating screen visible. Physical AI coach acceptance remains pending. Full-match practice is manual; the coach does not hear or understand the broadcast. Spanish audio awaits fluent review, and language-learning effectiveness has not been validated.
+
+### Kotlin Multiplatform Companion And Match Recap · 13 October 2026
+
+The user selected Kotlin Multiplatform (KMP), explicitly including iOS, and proposed language games and quizzes based on the sport watched. The initial native slice shares learning and progress rules across Android and iOS. It lives in `app/native/`, with feature code and tests under `app/src/features/recap/native/`. Existing TypeScript/WebXR viewing remains the playable immersive prototype for the event.
+
+The recap loop is: name a match/race → manually save relevant phrases → select an illustrated sporting action for a Spanish phrase → explicitly check the answer → receive an explanation → review the score → retry missed phrases. A text-answer option remains available. Football and F1 vocabulary stay separate. No timer, lost lives, inferred fluency, live match recognition or automatic broadcast transcription. Example sessions are explicitly labelled and must not be presented as actual viewing history. Language content awaits fluent review.
+
+The native companion has platform-native mobile views (Jetpack Compose on Android, SwiftUI on iOS), shared Kotlin rules and versioned local progress. Saved phrases can be exported from the viewing app's browser phrase library as a small recap file and imported using the phone's file picker. The user moves the file between devices; this is not account synchronization. Closing an unfinished recap abandons that attempt without recording a result; saved phrases and completed results persist locally. Mobile review does not control the match.
+
+Confirmed platform decision: retain IWSDK/WebXR for the immersive experience and KMP for the iOS/Android companion. No Meta Spatial SDK migration is planned. Keep shared Kotlin learning rules independent of headset APIs. The web app and Kotlin companion exchange versioned data; they do not currently share executable quiz code. Quest 3 remains the primary device and hackathon target. Vision Pro and Steam Frame require separate browser, input, media and feature checks; WebXR support does not guarantee equivalent passthrough or room understanding. KMP iOS compilation does not establish native visionOS compatibility.
+
+Hackathon focus: retain a complete, hands-first immersive viewing/learning loop; mobile extends the experience and must not be required to finish the headset demo. On 13 October, after the Devpost connector failed, the user explicitly authorized reading the official rules in the browser. Section 4 provides an IWSDK/WebXR hosted-link route and an APK route for Unity, Unreal, Godot, Native/Android or another engine; it does not mandate Meta Spatial SDK. This technology check does not confirm personal eligibility or record agreement to the rules.
+
+Recap transfer v1 includes a source identity, title, sport, saved phrase IDs and explicit sample status. It contains no video, file paths, account credentials or playback commands. Imports validate the complete document before mutation, reject unsupported versions/phrases and mixed-sport selections, and merge repeated imports without losing existing saves or results. The current full-match packs each export their single implemented phrase; the mobile quiz uses that actual count. File export is a browser control after leaving immersive mode, not a spatial download dialog. Leaving XR retains its existing suspension behavior; export itself never pauses, seeks or resumes playback.
+
+Next steps: physical Quest-to-phone file-transfer review; authenticatable account sync; a headset recap surface; then richer exercises such as matching an action to a phrase and rebuilding a sentence. Pronunciation games require a validated assessment method. Do not add unrelated mobile features before confirming the watch-to-practice loop.
+
+Mobbin MCP research is complete: Apple TV sports browsing, Duolingo picture answers and Nibble matching/illustrated learning screens informed the visual exploration. The user selected **Playmaker for mobile** and **Matchday for VR** from generated concepts. Mobile uses warm ivory, cobalt, coral/lavender tonal cards, original sports illustrations, prominent rounded actions and picture-based practice inspired by Material 3 Expressive. VR uses calm dark burgundy surfaces, warm high-contrast text and existing team accents; Matchday changes presentation without moving panels or controlling playback. Android retains Compose Material 3 and iOS retains SwiftUI; this is a shared design direction, not a claim that both use the same UI toolkit.
+
+The first implementation includes illustrated football/F1 example heroes, illustrated saved phrases and three visual answer choices derived from the existing sport vocabulary. Selection requires explicit confirmation; switching to text answers preserves the selection. English descriptions support screen readers. Generated hero and action artwork, with their exact prompts, live under `app/src/features/recap/artwork/`. Six simple action illustrations now share a palette and visual style across sports; both native platforms use the same assets. Collections use an adaptive card grid and compact save controls, with practice above the cards. No mobile pronunciation button, fabricated match history or automatic media analysis is implied by the concept images. Exact motion polish, team selection on mobile and a full navigation redesign remain follow-up work.
 
 ### What Exists
 
@@ -128,7 +174,7 @@ Mobbin research suggests combining [Frame.io’s large-player/context-panel comp
 | Test device | The user's Meta Quest 3 |
 | Development stack | TypeScript + Meta IWSDK + Three.js |
 | Builder context | Solo, almost full time, relying heavily on Codex |
-| Implementation approach | Codex plans and builds autonomously, with major milestones for Quest testing |
+| Implementation approach | Build with Codex while learning VR through short explanations, hands-on experiments and Quest review; routine implementation proceeds autonomously |
 | Standout interaction | Trace a pass while the Spanish phrase unfolds |
 | Speech production | AI-generated English commentary and Spanish pronunciation, reviewed before release |
 
@@ -407,6 +453,26 @@ The first AI coach is an optional floating panel in Theater and My room, with a 
 - More sports and languages, shared viewing, and handoff to the human coaching experience below.
 
 Acceptance remains evidence-driven: keep the sports experience enjoyable, verify phrase recall separately, and never use browser emulation as proof of physical headset microphone performance.
+
+### Match-grounded Generative Cards · 13 October 2026
+
+The user clarified that the product goal is to generate learning cards from the actual game watched. The fixed football/F1 vocabulary remains available as examples. The mobile companion now also includes a first AI-prepared batch from the local Barcelona–Madrid recording: six cards and two stories derived from English commentary and inspected frame sequences. This is an offline, selected batch, not unattended full-match or live understanding. Generated cards retain the simple Playmaker illustration style.
+
+The user also proposed football and F1 stories to connect viewing with broader Spanish practice. [Learning Spanish through football and F1](docs/SPANISH_THROUGH_SPORT_RESEARCH.md) reviews relevant research, proposes an optional watch → story → recall → use sequence, provides two original fictional lessons, and specifies three participant-study plans. Stories can reuse match vocabulary between fixtures and introduce sequencing, reasons and everyday language. The first two fictional stories are now implemented in the KMP mobile companion; the participant studies remain proposals, with no measured learning outcomes. Any in-match story remains learner-invoked and must preserve playback and the pinned learning item.
+
+The mobile **Stories between matches** entry follows the selected football/F1 sport and is also available inside its collection. Each story has three ordered illustrated scenes, optional English support, an explicitly checked comprehension choice, a typed missing word with an optional hint, and an open Spanish response followed by a model answer and learner reflection. Recognition, assisted/unassisted recall and personal use remain separate; open answers receive no automatic correctness or proficiency score. Stories are labelled fictional practice, never generated from the recording. This first slice keeps story attempts in memory and explicitly says they are not saved; existing saved phrases and recap results are untouched. Retrying starts a fresh attempt. There is no new headset panel or playback connection. The authored story catalog and shared lesson rules live under `app/src/features/stories/`; both native platforms use the existing original Playmaker art. Spanish wording still awaits fluent review.
+
+Implemented first batch: **A chance over the bar** (recording 10:40–10:55) and **The run, the pass, the goal** (13:28–13:42). The analysis covers commentary from 03:07–16:40 of the local 99-minute recording. Whisper small runs locally; Codex inspects sequential frames and authors the Spanish adaptation. The source SHA-256, recording ranges, displayed match clocks, commentary ranges/summaries, visual observations, frame positions and review status are bundled with the content. Full transcripts, source audio and extracted broadcast frames stay local and ignored by Git. Six new original illustrations are included, clearly separate from evidence.
+
+The mobile home offers **Explore match moments** for football. The user explicitly reveals the selected passages before seeing their outcomes; no watch progress is inferred. Cards expose **Why this card?** and each real-match story carries its source/evidence through the existing recognise → recall → use loop. This prepared pack does not alter playback, the fixed-ID recap import contract or saved-phrase storage. Spanish awaits fluent review. Story attempts remain temporary; generated-card saving, automatic synchronization and a spatial story surface remain follow-up work.
+
+Recommended first experiment: prepare 5–10 reviewed cards from a short portion of one recorded match. Use existing speech and vision models; do not start by training a foundation model. Transcribe commentary with media-relative timestamps, propose events from the transcript, and inspect a short sequence of nearby frames plus available match metadata to resolve ambiguous actions. Commentary can refer to earlier action or a replay. A single still cannot reliably establish a pass, overtake or braking event. Skip uncertain events rather than inventing identities or outcomes.
+
+Each candidate card needs a source recording ID, media time range, supporting transcript/frame references, event description, Spanish phrase, native-language translation, learner level, illustration description and review status. Validate both structure and factual/linguistic content before publication. The image illustrates the verified event; it is not evidence that the event occurred. Keep match-clock time distinct from recording position and suppress spoilers beyond the viewer's position.
+
+Generate artwork in the background with a shared style brief and reference assets; cache approved cards. AI delays and failures must never pause or seek playback. The selected card remains pinned as the video advances. Keep provider calls and credentials in a backend; mobile and XR consume a versioned card contract, with their existing local examples as a fallback. The current fixed-ID recap-transfer format will need an explicit versioned extension for generated content.
+
+Evaluate event correctness, timestamp alignment, Spanish quality, visual clarity, latency and cost on reviewed football and F1 examples. Consider task-specific fine-tuning only after repeated measurable errors remain despite improved context and prompts, and a suitably licensed annotated dataset exists. Near-live generation and custom action detection are later experiments, not implemented features or hackathon-demo claims.
 
 ### Future Human Spanish Coaching
 

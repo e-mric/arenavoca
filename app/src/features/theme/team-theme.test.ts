@@ -29,7 +29,7 @@ it.each(Object.keys(teamThemes) as (keyof typeof teamThemes)[])(
   (team) => {
     const t = teamThemes[team];
     expect(contrast(t.accent, t.accentInk)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast("#edf3e8", t.panel)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast("#b5c9b5", t.panel)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#fff4ed", t.panel)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#d8c1c9", t.panel)).toBeGreaterThanOrEqual(4.5);
   },
 );

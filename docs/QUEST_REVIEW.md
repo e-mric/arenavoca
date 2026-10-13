@@ -128,3 +128,24 @@ Reload the production page on Quest after the build. Start the full match, then 
 7. Repeat in passthrough. Record device/browser version, perception of latency, pinch accuracy, speech recognition, echo, readability and comfort. Browser emulation does not establish these results.
 
 Provider settings verified: no stored call audio; one-day transcript retention; 60-second silence cutoff; five-minute session cap; 30 calls/day and two concurrent calls. No application transcript history is persisted. The local demo agent is public and its ID is kept in ignored local configuration; authenticated server credentials are required before public deployment.
+
+## Continue on mobile (pending physical-device review)
+
+1. In the immersive match, save the phrase, then deliberately leave XR. The existing suspension behavior may pause playback at this point. In the browser, resume only if desired, open **Your phrases** and choose **Export saved phrases**. Verify a recap file downloads and exporting does not change the current play/pause state.
+2. Move `arenavoca-recap.json` to an iPhone or Android phone using your preferred file-transfer method. The recording is not needed on the phone.
+3. Open the native ArenaVoca companion, choose **Import saved phrases**, and select the file. Check the correct match title, sport and saved phrase. A calibration export must stay labelled as an example.
+4. Start the recap. A current full-match export has one question, not three invented saved phrases. Answer, inspect feedback and finish. Try an incorrect answer and use **Practise missed phrases**.
+5. Relaunch the mobile app and re-import the same file. Check that the session is not duplicated and saved phrases remain. Import the other sport separately; vocabulary must not leak across sessions.
+6. Cancel the picker, then try an invalid or oversized file. Existing progress must remain intact and errors must offer a retry. Check large text and narrow portrait layouts on both mobile platforms.
+
+This review has not been performed on physical phones or Quest. Automated Android import tests replace only the system file picker's selection, and the shared rules are tested on JVM and iOS simulator; neither proves cross-device transfer. No account sync or direct headset-to-phone pairing is claimed.
+
+
+## Playmaker / Matchday design acceptance — pending physical review
+
+- In Theater, confirm Matchday's warm text and team accent controls stay readable against the dark panels. Open Explore and save a phrase while watching; the match should continue. Panel positions are deliberately unchanged.
+- In My room, check the same contrast against a bright real room. Switching between theater and passthrough must still remove/restore the enclosure correctly.
+- Small learning experiment: compare a near and far placement preset while looking between the action and the phrase. Notice that the panel stays in the world as your head turns. Report which placement feels comfortable; no result is recorded yet.
+- On a phone, review Playmaker home, collection and picture quiz in football and F1, including large accessibility text. Select an answer, change the selection, then Check answer. Only confirmation should score. Try Show text answers and a screen reader, then retry a mistake.
+- Confirm the diagrams clearly distinguish pass/shot/save and overtake/brake/pit entry. If an action is ambiguous, use the text option and flag the illustration for revision. The diagram quiz has not been validated as a learning assessment.
+- Spanish and prototype pronunciation audio still await fluent review.

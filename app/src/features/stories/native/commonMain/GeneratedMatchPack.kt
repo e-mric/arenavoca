@@ -1,0 +1,266 @@
+// Generated from content/barca-2018-opening.json. Run authoring/generate-pack.mjs.
+package com.arenavoca.stories
+
+internal val matchPackJson = """
+{
+  "version": 1,
+  "source": {
+    "id": "barca-2018-full",
+    "title": "Barcelona v Madrid · 2018",
+    "youtubeUrl": "https://youtu.be/WMjohb2tq7Y",
+    "durationSeconds": 5961,
+    "sha256": "16450bd54c298888f4506383ac98e5b09fc4dd96a736b733ca47e0401b37b638"
+  },
+  "analysis": {
+    "speechModel": "mlx-community/whisper-small-mlx / mlx-whisper 0.4.3",
+    "language": "en",
+    "analyzedStartSeconds": 187,
+    "analyzedEndSeconds": 1000,
+    "method": "Local Whisper transcript plus Codex inspection of sequential recording frames; AI-authored Spanish adaptation. These six cards are a selected batch, not whole-match analysis.",
+    "limitations": [
+      "Spanish awaits fluent review.",
+      "Player names use the commentary, not automated face recognition.",
+      "Raw ASR misrecognizes names and describes a left-footed volley as left-handed; lesson wording avoids that error.",
+      "The initial crowd-only language detection said Latin; that output was rejected and the English commentary was transcribed with language=en.",
+      "Live action and subsequent replays/commentary are distinguished. Recording timestamps differ from the displayed match clock.",
+      "Illustrations are generated teaching aids, not evidence or exact reconstructions."
+    ]
+  },
+  "cards": [
+    {
+      "id": "bale-run",
+      "title": "Down the left",
+      "spanish": "Bale avanza por la izquierda.",
+      "english": "Bale advances down the left.",
+      "hint": "Por la izquierda tells you which side.",
+      "artwork": "match_bale_run",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 640,
+        "endSeconds": 646,
+        "commentarySummary": "The commentator identifies a run by Gareth Bale with Piqué chasing back.",
+        "visualObservation": "An attacker in white advances down the near left flank with a blue-and-red defender chasing; the camera follows his run.",
+        "frameSeconds": [
+          640,
+          642,
+          644,
+          646
+        ],
+        "matchClock": "07:33–07:39",
+        "commentaryStartSeconds": 643,
+        "commentaryEndSeconds": 647,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    },
+    {
+      "id": "bale-cross",
+      "title": "Into the area",
+      "spanish": "Bale centra el balón.",
+      "english": "Bale crosses the ball.",
+      "hint": "Centra means sends a cross into the penalty area.",
+      "artwork": "match_cross",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 646,
+        "endSeconds": 648,
+        "commentarySummary": "The commentator describes Bale crossing to Benzema inside the box.",
+        "visualObservation": "The wide view follows the ball from the left flank toward the white attacker in the penalty area.",
+        "frameSeconds": [
+          646,
+          647,
+          648
+        ],
+        "matchClock": "07:39–07:41",
+        "commentaryStartSeconds": 646,
+        "commentaryEndSeconds": 651,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    },
+    {
+      "id": "benzema-volley",
+      "title": "A chance goes high",
+      "spanish": "Benzema remata de volea.",
+      "english": "Benzema volleys the ball.",
+      "hint": "De volea describes hitting the ball before it bounces.",
+      "artwork": "match_volley",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 648,
+        "endSeconds": 655,
+        "commentarySummary": "The commentator identifies a Benzema volley and then says it goes high over the crossbar.",
+        "visualObservation": "The white attacker finishes the move toward goal; the broadcast cuts to Benzema and then Bale. The score remains 0–0. The high miss is described by commentary.",
+        "frameSeconds": [
+          648,
+          649,
+          650,
+          651,
+          652,
+          654
+        ],
+        "matchClock": "07:41–07:48",
+        "commentaryStartSeconds": 646,
+        "commentaryEndSeconds": 666,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    },
+    {
+      "id": "alba-run",
+      "title": "Behind the defence",
+      "spanish": "Jordi Alba corre al espacio.",
+      "english": "Jordi Alba runs into space.",
+      "hint": "Al espacio means into open space.",
+      "artwork": "match_run",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 808,
+        "endSeconds": 814,
+        "commentarySummary": "The commentator names Jordi Alba and describes him getting behind the defence.",
+        "visualObservation": "A blue-and-red runner receives the forward ball down the left and advances into the penalty area, beyond the retreating white defenders.",
+        "frameSeconds": [
+          808,
+          810,
+          812,
+          813,
+          814
+        ],
+        "matchClock": "10:21–10:27",
+        "commentaryStartSeconds": 809,
+        "commentaryEndSeconds": 814,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    },
+    {
+      "id": "alba-cutback",
+      "title": "The pass back",
+      "spanish": "Alba pasa el balón hacia atrás.",
+      "english": "Alba passes the ball back.",
+      "hint": "Hacia atrás means backwards; here the pass goes back toward a teammate.",
+      "artwork": "match_cutback",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 814,
+        "endSeconds": 817,
+        "commentarySummary": "The live call connects Alba with Coutinho; the following analysis explicitly describes Alba passing back to him.",
+        "visualObservation": "From near the left byline, the blue-and-red player sends the ball diagonally back into the area toward the arriving teammate.",
+        "frameSeconds": [
+          814,
+          815,
+          816,
+          817
+        ],
+        "matchClock": "10:27–10:30",
+        "commentaryStartSeconds": 813,
+        "commentaryEndSeconds": 854,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    },
+    {
+      "id": "coutinho-goal",
+      "title": "The opening goal",
+      "spanish": "Coutinho marca el primer gol.",
+      "english": "Coutinho scores the opening goal.",
+      "hint": "Marca un gol means scores a goal. Primero becomes primer before gol.",
+      "artwork": "match_goal",
+      "evidence": {
+        "sourceId": "barca-2018-full",
+        "startSeconds": 816,
+        "endSeconds": 822,
+        "commentarySummary": "The commentator announces a Barcelona goal and identifies Coutinho as the scorer.",
+        "visualObservation": "The arriving blue-and-red attacker finishes from inside the box; the keeper drops across goal as the ball reaches the goal, followed by the scorer turning away.",
+        "frameSeconds": [
+          816,
+          817,
+          818,
+          819
+        ],
+        "matchClock": "10:29–10:35",
+        "commentaryStartSeconds": 816,
+        "commentaryEndSeconds": 842,
+        "reviewStatus": "AI checked · Spanish review pending"
+      }
+    }
+  ],
+  "stories": [
+    {
+      "id": "madrid-first-chance",
+      "title": "A chance over the bar",
+      "cardIds": [
+        "bale-run",
+        "bale-cross",
+        "benzema-volley"
+      ],
+      "targets": [
+        "por la izquierda",
+        "centra el balón",
+        "remata de volea"
+      ],
+      "sceneSpanish": [
+        "Bale avanza por la izquierda. Un defensor lo persigue. Madrid tiene una oportunidad.",
+        "Bale centra el balón al área. Benzema está dentro del área.",
+        "Benzema remata de volea. El disparo sale alto. El marcador sigue 0–0."
+      ],
+      "sceneEnglish": [
+        "Bale advances down the left. A defender chases him. Madrid have a chance.",
+        "Bale crosses the ball into the penalty area. Benzema is inside the area.",
+        "Benzema volleys the ball. The shot goes high. The score stays 0–0."
+      ],
+      "recognitionPrompt": "¿Cómo termina la jugada?",
+      "recognitionHelp": "How does the move end?",
+      "choices": [
+        "Con un gol.",
+        "Con un disparo alto.",
+        "Con un penalti."
+      ],
+      "recognitionAnswer": "Con un disparo alto.",
+      "recognitionExplanation": "Benzema shoots over the crossbar. This chance does not change the score.",
+      "recallPrompt": "Bale centra el ___ al área.",
+      "recallAnswer": "balón",
+      "recallHint": "The ball. Remember the accent on ó.",
+      "usePrompt": "¿Prefieres pasar o disparar?",
+      "useHelp": "Do you prefer to pass or shoot? Write your own preference in Spanish.",
+      "modelAnswer": "Prefiero pasar el balón.",
+      "transfer": "Beyond sport: Prefiero esperar. — I prefer to wait."
+    },
+    {
+      "id": "barca-opening-goal",
+      "title": "The run, the pass, the goal",
+      "cardIds": [
+        "alba-run",
+        "alba-cutback",
+        "coutinho-goal"
+      ],
+      "targets": [
+        "corre al espacio",
+        "hacia atrás",
+        "marca el primer gol"
+      ],
+      "sceneSpanish": [
+        "Jordi Alba corre al espacio. Recibe el balón por la izquierda y entra en el área.",
+        "Alba pasa el balón hacia atrás. Coutinho llega al área para recibir el pase.",
+        "Coutinho dispara y marca el primer gol. Barcelona se pone por delante."
+      ],
+      "sceneEnglish": [
+        "Jordi Alba runs into space. He receives the ball on the left and enters the penalty area.",
+        "Alba passes the ball back. Coutinho arrives in the area to receive the pass.",
+        "Coutinho shoots and scores the opening goal. Barcelona take the lead."
+      ],
+      "recognitionPrompt": "¿Quién da el pase a Coutinho?",
+      "recognitionHelp": "Who passes to Coutinho?",
+      "choices": [
+        "Benzema.",
+        "Alba.",
+        "El portero."
+      ],
+      "recognitionAnswer": "Alba.",
+      "recognitionExplanation": "Alba runs down the left and passes back to Coutinho, who finishes the move.",
+      "recallPrompt": "Alba pasa el balón hacia ___.",
+      "recallAnswer": "atrás",
+      "recallHint": "Backwards. It starts with a and has an accent on á.",
+      "usePrompt": "¿Qué parte de la jugada te gusta?",
+      "useHelp": "Which part of the move do you like? Write a short answer in Spanish.",
+      "modelAnswer": "Me gusta el pase de Alba.",
+      "transfer": "Beyond sport: Me gusta esta idea. — I like this idea."
+    }
+  ]
+}
+""".trimIndent()

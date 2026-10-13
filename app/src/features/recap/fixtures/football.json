@@ -1,0 +1,9 @@
+{
+  "kind": "arenavoca-recap",
+  "version": 1,
+  "sourceId": "theater-football-demo-football",
+  "title": "Football demo",
+  "sport": "football",
+  "phraseIds": ["pass"],
+  "example": false
+}
