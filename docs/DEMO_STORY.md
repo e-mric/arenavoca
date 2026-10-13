@@ -30,11 +30,13 @@ I could judge the experience before I understood all the technology. Then I had 
 
 ### 75 to 110 seconds
 
-*Show the title and link for The Way of Code, with “Imagine → Build → Experience → Question → Verify → Refine” beneath it.*
+*Show the Rick Rubin meme. Its software caption is an adaptation, not a verified quotation.*
 
-Recently, I came across Rick Rubin’s The Way of Code. It gives me a way to think about the creative side of this project: start with an idea, explore it, and stay open to changing it.
+Music producer Rick Rubin became a meme for vibe coding: bring your taste and vision, and let AI help build it.
 
-My application of that is a hybrid approach. I use conversation with AI to make an idea tangible. Then I ask engineering questions: what should happen, what could go wrong, and how will we check?
+He then created The Way of Code with Anthropic, connecting Tao-inspired ideas with making software.
+
+For me, it gives language to the creative side of ArenaVoca. I describe the experience, try it, and change what feels wrong. Then engineering makes that intent concrete: define the behavior, test it, and check it in the headset.
 
 ### 110 to 165 seconds
 
@@ -111,6 +113,8 @@ A fallback recording of the demo has not been prepared by this script. Keep the 
 ## What The Way of Code contributes
 
 Rick Rubin's work adapts the Tao Te Ching to a creative relationship with technology. The publisher describes starting from an idea and shaping it through making and modification. Use that as creative context, with attribution to [The Way of Code](https://www.thewayofcode.com/) and [its publisher](https://canongate.co.uk/books/5790-the-way-of-code-the-timeless-art-of-vibe-coding/).
+
+The supplied Rick Rubin image is an internet meme with an adapted software caption; it is not presented as a verified interview quotation. The [a16z interview description](https://a16z.com/podcast/rick-rubin-vibe-coding-is-the-punk-rock-of-software/) documents his transition from vibe-coding meme to The Way of Code. The [official project credits](https://www.thewayofcode.com/) attribute the words to Rubin, based on Lao Tzu, and the website and art to Anthropic. [Anthropic describes](https://www.anthropic.com/news/build-artifacts) its 81 meditations with interactive artwork that readers can reshape using Claude.
 
 The following connections are our interpretation for ArenaVoca, not a software method prescribed by Rubin:
 
