@@ -66,15 +66,31 @@ We also separate learning rules from the screens. Kotlin Multiplatform shares th
 
 The useful loop is to make something, observe it, explain the behavior, and test the parts we need to rely on.
 
-### 270 to 300 seconds
+### 270 to 280 seconds
 
-*Return to ArenaVoca. Show the repository link and the audience question.*
+*Show the audience question, then advance to the warning.*
 
-I’m still learning the medium. Spanish review and testing whether people remember the phrases are next steps.
+Spanish review and a recall experiment are next. Would you explore a phrase during the match, or save it for afterwards?
 
-AI makes it easier for me to try ideas. My responsibility is to understand the decisions, experience the result, and keep asking whether it serves the person using it.
+### 280 to 295 seconds
 
-If you were watching your team, would you explore a phrase during the match, or save it for afterwards?
+*Show Katie Dill’s talk as a reference. Keep its full video for after the five-minute slot.*
+
+One warning: AI can make a prototype look finished very quickly. I still have to judge the experience and verify what matters. Katie Dill’s talk is a useful reminder to keep that standard.
+
+### 295 to 300 seconds
+
+*End on the LGTM slide. Its link is available for optional playback after the talk.*
+
+Thank you. I’ll leave you with LGTM.
+
+### Closing references and optional playback
+
+The closing warning applies [Katie Dill’s talk, How to scale intent, quality, and artistry with AI](https://youtu.be/GLvFTMtw4Jk) to ArenaVoca: building quickly does not remove the need for product judgment. The publisher’s description emphasizes a clear point of view, understanding users, editing beyond the first draft and attention to detail. This is a paraphrase and our application, not a direct quotation. The full talk is 21:48.
+
+The final slide links to [LGTM (Looks Good to Me), by Degenerative Pixels](https://www.youtube.com/watch?v=3TNpOD6bov8). The publisher describes a satirical music video about approving code under deadline pressure while review and testing suffer. It runs 5:05. No lyrics are included in the presentation.
+
+Both links open YouTube and require internet. Full video playback is optional after the five-minute presentation; playing both in full adds 26:53. The slides preserve the order requested: Katie Dill first, LGTM last.
 
 ## Demo cues and fallback
 
