@@ -1,3 +1,4 @@
+import { SpatialWindows } from "../spatial-windows/windows";
 import { attachMatchLab } from "../match-lab/spatial";
 import { UIKitMLAsset, VisibilityState, type World } from "@iwsdk/core";
 import {
@@ -31,7 +32,8 @@ export function attachXR(
   getViewingMode: () => ViewingMode = () => "theater",
 ) {
   const s = experience.session;
-  const renderLab = attachMatchLab(world, experience, fontFamilies);
+  const windows = new SpatialWindows(world);
+  const renderLab = attachMatchLab(world, experience, fontFamilies, windows);
   world.scene.background = new Color("#160e16");
   const layout = world.requireSceneObject<Group>("viewing-space");
   attachArenaReveal(
@@ -39,7 +41,8 @@ export function attachXR(
     world.requireSceneObject<Group>("arena-brand"),
     () => s.mode === "Onboarding",
   );
-  const stage = world.requireSceneObject<Group>("surfaces");
+  const learningAnchor = world.requireSceneObject<Group>("window-learning");
+  const exploreAnchor = world.requireSceneObject<Group>("window-explore");
   const room = world.requireSceneObject<Group>("theater");
   const accents: Mesh<PlaneGeometry, MeshBasicMaterial>[] = [];
   room.traverse((node) => {
@@ -49,15 +52,15 @@ export function attachXR(
     }
   });
   const surface = (name: string) =>
-    stage.getObjectByName(name) as Mesh<PlaneGeometry, MeshBasicMaterial>;
+    world.requireSceneObject<Mesh<PlaneGeometry, MeshBasicMaterial>>(name);
   const videoTexture = new VideoTexture(experience.player.video);
   videoTexture.colorSpace = SRGBColorSpace;
-  const screen = surface("Match screen");
+  const screen = surface("matchScreen");
   screen.material = screen.material.clone();
   screen.material.map = videoTexture;
   screen.material.color.set("#ffffff");
   screen.material.needsUpdate = true;
-  const frame = surface("Match frame");
+  const frame = surface("matchFrame");
   frame.material = frame.material.clone();
   const panel = (id: string) => world.requireSceneObject<UIKitMLAsset>(id);
   const watch = panel("watch-controls"),
@@ -76,7 +79,7 @@ export function attachXR(
   canvas.height = 540;
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
-  const diagram = surface("Pass diagram");
+  const diagram = surface("passDiagram");
   diagram.scale.setScalar(0.85 / 0.7);
   diagram.material = diagram.material.clone();
   diagram.material.map = texture;
@@ -87,12 +90,23 @@ export function attachXR(
   traceCanvas.height = 540;
   const traceTexture = new CanvasTexture(traceCanvas);
   traceTexture.colorSpace = SRGBColorSpace;
-  const tracePlane = surface("Trace diagram");
+  const tracePlane = surface("traceDiagram");
   tracePlane.material = tracePlane.material.clone();
   tracePlane.material.map = traceTexture;
   tracePlane.material.color.set("#ffffff");
   tracePlane.material.needsUpdate = true;
+  windows.bind("screen", screen, 7.29, 4.14);
+  for (const [id, obj, width, height] of [
+    ["watch-controls", watch, 1.95, 0.71],
+    ["learning", learning, 1.05, 1.435],
+    ["explore", explore, 1.12, 1.12],
+    ["welcome", welcome, 1.3, 1.17],
+    ["karaoke", karaoke, 0.95, 0.44],
+    ["coach", coachPanel, 1.15, 1.15],
+  ] as const)
+    windows.bind(id, obj, width, height);
   const recenter = () => {
+    windows.reset();
     const head = world.player.head;
     const position = head.getWorldPosition(new Vector3());
     const direction = head.getWorldDirection(new Vector3());
@@ -115,6 +129,7 @@ export function attachXR(
   const probes = new Map<string, ReturnType<World["createTransformEntity"]>>();
   if (import.meta.env.DEV) {
     for (const id of [
+      "xr-reset-layout",
       "xr-lab-open",
       "xr-coach-open",
       "xr-coach-close",
@@ -221,6 +236,7 @@ export function attachXR(
       world.exitXR();
     },
     "xr-recenter": () => recenter(),
+    "xr-reset-layout": () => recenter(),
   };
   const cleanups: (() => void)[] = [];
   for (const [id, action] of Object.entries(actions)) {
@@ -261,6 +277,7 @@ export function attachXR(
     cleanups.push(() => document.removeEventListener("keydown", reportTargets));
   }
   const origin = new Vector3();
+  const traceWorldScale = new Vector3();
   cleanups.push(
     world.onXRFrame((frame) => {
       if (!experience.trace.armed || s.mode !== "Exploring") return;
@@ -285,7 +302,7 @@ export function attachXR(
           origin.x / 0.98 + 0.5,
           0.5 - origin.y / ((0.98 * 9) / 16),
         ),
-        depth: origin.z * tracePlane.scale.z,
+        depth: origin.z * tracePlane.getWorldScale(traceWorldScale).z,
         tracked: true,
       });
     }),
@@ -372,9 +389,7 @@ export function attachXR(
       "Completed",
       "Error",
     ].includes(mode);
-    if (library) {
-      welcome.position.set(-0.7, 1.25, -1.9);
-    } else welcome.position.set(0, 1.3, -1.7);
+
     const side = s.snapshot.preferences.panelSide === "left" ? -1 : 1;
     const preferences = s.snapshot.preferences;
     const theme = themeFor(preferences.team, preferences.sport);
@@ -420,28 +435,49 @@ export function attachXR(
     const key = `${side}/${s.snapshot.preferences.panelDistance}/${s.snapshot.preferences.panelHeight}`;
     if (key !== placementKey) {
       const pose = companionPlacement(s.snapshot.preferences);
-      explore.position.set(pose.x, pose.y, pose.z);
-      explore.rotation.y = -0.55 * side;
-      coachPanel.position.set(pose.x, pose.y, pose.z);
-      coachPanel.rotation.y = -0.55 * side;
+      windows.place(
+        "explore",
+        pose.x,
+        pose.y,
+        pose.z,
+        -0.55 * side,
+        pose.width,
+        pose.width,
+      );
+      windows.place(
+        "coach",
+        pose.x,
+        pose.y,
+        pose.z,
+        -0.55 * side,
+        pose.width,
+        pose.width,
+      );
+      windows.place(
+        "learning",
+        3 * side,
+        1.4,
+        -3.65,
+        -0.55 * side,
+        1.05,
+        1.435,
+      );
       coachPanel.document.setTargetDimensions(pose.width, pose.width);
       explore.document.setTargetDimensions(pose.width, pose.width);
       tracePlane.scale.setScalar(pose.width / 1.12);
       placementKey = key;
     }
     find("xr-trace-area").getWorldPosition(traceOrigin);
-    stage.worldToLocal(traceOrigin);
+    exploreAnchor.worldToLocal(traceOrigin);
     tracePlane.position.copy(traceOrigin);
     tracePlane.position.add(
       traceOffset.set(0, 0, 0.021).applyQuaternion(explore.quaternion),
     );
-    learning.position.x = 3 * side;
-    learning.position.z = -3.65;
-    learning.rotation.y = -0.55 * side;
+
     diagram.rotation.y = learning.rotation.y;
     tracePlane.rotation.y = explore.rotation.y;
     find("xr-learning-area").getWorldPosition(learningOrigin);
-    stage.worldToLocal(learningOrigin);
+    learningAnchor.worldToLocal(learningOrigin);
     diagram.position
       .copy(learningOrigin)
       .add(traceOffset.set(0, 0, 0.021).applyQuaternion(learning.quaternion));
@@ -634,6 +670,7 @@ export function attachXR(
       );
       traceTexture.needsUpdate = true;
     }
+    windows.update();
     for (const [id, probe] of probes)
       if (probe.object3D) find(id).getWorldPosition(probe.object3D.position);
   }

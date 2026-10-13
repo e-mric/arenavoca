@@ -1,5 +1,16 @@
 import { AssetType, defineAssets } from "@iwsdk/core";
-import surfaces from "./features/xr/surfaces.scene-asset";
+import {
+  matchScreen,
+  matchFrame,
+  passDiagram,
+  traceDiagram,
+} from "./features/xr/surfaces.scene-asset";
+import {
+  windowGrip,
+  windowMove,
+  windowResize,
+  momentCard,
+} from "./features/spatial-windows/objects.scene-asset";
 import theater from "./scene-assets/theater.scene-asset";
 import arena from "./features/branding/arena.scene-asset";
 import { assetUrl } from "./features/content/model";
@@ -27,7 +38,14 @@ export default defineAssets({
       { url: assetUrl(`artwork/match-lab/${id}.png`), type: AssetType.Texture },
     ]),
   ),
-  surfaces,
+  matchScreen,
+  matchFrame,
+  passDiagram,
+  traceDiagram,
+  windowGrip,
+  windowMove,
+  windowResize,
+  momentCard,
   theater,
   arena,
   ...Object.fromEntries(

@@ -50,111 +50,6 @@
           }
         },
         {
-          "id": "surfaces",
-          "name": "Viewing surfaces",
-          "content": {
-            "type": "asset",
-            "asset": "surfaces"
-          },
-          "transform": {
-            "position": [
-              0,
-              0,
-              0
-            ]
-          }
-        },
-        {
-          "id": "watch-controls",
-          "name": "watch-controls",
-          "content": {
-            "type": "asset",
-            "asset": "watch-controls"
-          },
-          "transform": {
-            "position": [
-              0,
-              0.48,
-              -3.25
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "learning",
-          "name": "learning",
-          "content": {
-            "type": "asset",
-            "asset": "learning"
-          },
-          "transform": {
-            "position": [
-              3,
-              1.4,
-              -3
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "explore",
-          "name": "explore",
-          "content": {
-            "type": "asset",
-            "asset": "explore"
-          },
-          "transform": {
-            "position": [
-              3,
-              1.4,
-              -3
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "welcome",
-          "name": "welcome",
-          "content": {
-            "type": "asset",
-            "asset": "welcome"
-          },
-          "transform": {
-            "position": [
-              0,
-              1.3,
-              -1.9
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "karaoke",
-          "name": "karaoke",
-          "content": {
-            "type": "asset",
-            "asset": "karaoke"
-          },
-          "transform": {
-            "position": [
-              0,
-              4.9,
-              -5.95
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
           "id": "house-ambient",
           "name": "House ambient",
           "components": {
@@ -245,159 +140,1490 @@
           }
         },
         {
-          "id": "coach",
-          "name": "coach",
-          "content": {
-            "type": "asset",
-            "asset": "coach"
+          "id": "window-watch-controls",
+          "name": "Window / watch-controls",
+          "transform": {
+            "position": [
+              0,
+              0.48,
+              -3.25
+            ]
           },
+          "children": [
+            {
+              "id": "watch-controls",
+              "name": "watch-controls",
+              "content": {
+                "type": "asset",
+                "asset": "watch-controls"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-learning",
+          "name": "Window / learning",
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3
+            ]
+          },
+          "children": [
+            {
+              "id": "learning",
+              "name": "learning",
+              "content": {
+                "type": "asset",
+                "asset": "learning"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "passDiagram",
+              "name": "passDiagram",
+              "content": {
+                "type": "asset",
+                "asset": "passDiagram"
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-explore",
+          "name": "Window / explore",
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3
+            ]
+          },
+          "children": [
+            {
+              "id": "explore",
+              "name": "explore",
+              "content": {
+                "type": "asset",
+                "asset": "explore"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "traceDiagram",
+              "name": "traceDiagram",
+              "content": {
+                "type": "asset",
+                "asset": "traceDiagram"
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-welcome",
+          "name": "Window / welcome",
+          "transform": {
+            "position": [
+              0,
+              1.3,
+              -1.9
+            ]
+          },
+          "children": [
+            {
+              "id": "welcome",
+              "name": "welcome",
+              "content": {
+                "type": "asset",
+                "asset": "welcome"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-karaoke",
+          "name": "Window / karaoke",
+          "transform": {
+            "position": [
+              0,
+              4.9,
+              -5.95
+            ]
+          },
+          "children": [
+            {
+              "id": "karaoke",
+              "name": "karaoke",
+              "content": {
+                "type": "asset",
+                "asset": "karaoke"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-coach",
+          "name": "Window / coach",
           "transform": {
             "position": [
               3,
               1.4,
               -3.65
+            ]
+          },
+          "children": [
+            {
+              "id": "coach",
+              "name": "coach",
+              "content": {
+                "type": "asset",
+                "asset": "coach"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-match-lab",
+          "name": "Window / match-lab",
+          "transform": {
+            "position": [
+              3,
+              1.4,
+              -3.65
+            ]
+          },
+          "children": [
+            {
+              "id": "match-lab",
+              "name": "match-lab",
+              "content": {
+                "type": "asset",
+                "asset": "match-lab"
+              },
+              "components": {
+                "RayInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "lab-board",
+              "name": "lab-board",
+              "content": {
+                "type": "asset",
+                "asset": "labBoard"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "lab-ball",
+              "name": "lab-ball",
+              "content": {
+                "type": "asset",
+                "asset": "labBall"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "components": {
+                "RayInteractable": {},
+                "MatchLabTarget": {
+                  "index": -1
+                }
+              }
+            },
+            {
+              "id": "lab-player-0",
+              "name": "lab-player-0",
+              "content": {
+                "type": "asset",
+                "asset": "labPawn"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "components": {
+                "RayInteractable": {},
+                "MatchLabTarget": {
+                  "index": 0
+                }
+              }
+            },
+            {
+              "id": "lab-player-1",
+              "name": "lab-player-1",
+              "content": {
+                "type": "asset",
+                "asset": "labPawn"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "components": {
+                "RayInteractable": {},
+                "MatchLabTarget": {
+                  "index": 1
+                }
+              }
+            },
+            {
+              "id": "lab-player-2",
+              "name": "lab-player-2",
+              "content": {
+                "type": "asset",
+                "asset": "labPawn"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "components": {
+                "RayInteractable": {},
+                "MatchLabTarget": {
+                  "index": 2
+                }
+              }
+            },
+            {
+              "id": "lab-replay-screen",
+              "name": "lab-replay-screen",
+              "content": {
+                "type": "asset",
+                "asset": "labReplay"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "components": {
+                "RayInteractable": {},
+                "MatchLabTarget": {
+                  "index": -3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-screen",
+          "name": "Window / match screen",
+          "transform": {
+            "position": [
+              0,
+              2.5,
+              -5.95
+            ]
+          },
+          "children": [
+            {
+              "id": "matchScreen",
+              "name": "Match screen",
+              "content": {
+                "type": "asset",
+                "asset": "matchScreen"
+              }
+            },
+            {
+              "id": "matchFrame",
+              "name": "Match frame",
+              "content": {
+                "type": "asset",
+                "asset": "matchFrame"
+              },
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  -0.016
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "window-moment-card",
+          "name": "Handheld moment card",
+          "content": {
+            "type": "asset",
+            "asset": "momentCard"
+          },
+          "transform": {
+            "position": [
+              -0.6,
+              1.3,
+              -0.72
+            ],
+            "rotationDeg": [
+              0,
+              35,
+              0
+            ],
+            "scale": [
+              0.7,
+              0.7,
+              0.7
             ]
           },
           "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "match-lab",
-          "name": "match-lab",
-          "content": {
-            "type": "asset",
-            "asset": "match-lab"
-          },
-          "transform": {
-            "position": [
-              3,
-              1.4,
-              -3.65
-            ]
-          },
-          "components": {
-            "RayInteractable": {}
-          }
-        },
-        {
-          "id": "lab-board",
-          "name": "lab-board",
-          "content": {
-            "type": "asset",
-            "asset": "labBoard"
-          },
-          "transform": {
-            "position": [
-              3,
-              1.4,
-              -3.65
-            ]
-          }
-        },
-        {
-          "id": "lab-ball",
-          "name": "lab-ball",
-          "content": {
-            "type": "asset",
-            "asset": "labBall"
-          },
-          "transform": {
-            "position": [
-              3,
-              1.4,
-              -3.65
-            ]
-          },
-          "components": {
-            "RayInteractable": {},
-            "MatchLabTarget": {
-              "index": -1
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            },
+            "SpatialWindow": {
+              "window": "moment-card",
+              "kind": 0
             }
           }
         },
         {
-          "id": "lab-player-0",
-          "name": "lab-player-0",
+          "id": "watch-controls-handle-0",
+          "name": "watch-controls / two hand grip",
           "content": {
             "type": "asset",
-            "asset": "labPawn"
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "watch-controls",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
           },
           "transform": {
             "position": [
-              3,
-              1.4,
-              -3.65
+              0.0,
+              0.035,
+              -3.25
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
             ]
-          },
-          "components": {
-            "RayInteractable": {},
-            "MatchLabTarget": {
-              "index": 0
-            }
           }
         },
         {
-          "id": "lab-player-1",
-          "name": "lab-player-1",
+          "id": "watch-controls-handle-1",
+          "name": "watch-controls / move handle",
           "content": {
             "type": "asset",
-            "asset": "labPawn"
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "watch-controls",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
           },
           "transform": {
             "position": [
-              3,
-              1.4,
-              -3.65
+              0.0,
+              0.035,
+              -3.205
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
             ]
-          },
-          "components": {
-            "RayInteractable": {},
-            "MatchLabTarget": {
-              "index": 1
-            }
           }
         },
         {
-          "id": "lab-player-2",
-          "name": "lab-player-2",
+          "id": "watch-controls-handle-2",
+          "name": "watch-controls / resize corner",
           "content": {
             "type": "asset",
-            "asset": "labPawn"
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "watch-controls",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
           },
           "transform": {
             "position": [
-              3,
-              1.4,
-              -3.65
+              1.03,
+              0.035,
+              -3.25
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
             ]
-          },
-          "components": {
-            "RayInteractable": {},
-            "MatchLabTarget": {
-              "index": 2
-            }
           }
         },
         {
-          "id": "lab-replay-screen",
-          "name": "lab-replay-screen",
+          "id": "learning-handle-0",
+          "name": "learning / two hand grip",
           "content": {
             "type": "asset",
-            "asset": "labReplay"
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "learning",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
           },
           "transform": {
             "position": [
-              3,
-              1.4,
-              -3.65
+              3.0,
+              0.5925,
+              -3.0
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
             ]
+          }
+        },
+        {
+          "id": "learning-handle-1",
+          "name": "learning / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
           },
           "components": {
-            "RayInteractable": {},
-            "MatchLabTarget": {
-              "index": -3
+            "SpatialWindow": {
+              "window": "learning",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
             }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.5925,
+              -2.955
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "learning-handle-2",
+          "name": "learning / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "learning",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.58,
+              0.5925,
+              -3.0
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "explore-handle-0",
+          "name": "explore / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "explore",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.75,
+              -3.0
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "explore-handle-1",
+          "name": "explore / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "explore",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.75,
+              -2.955
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "explore-handle-2",
+          "name": "explore / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "explore",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.615,
+              0.75,
+              -3.0
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "welcome-handle-0",
+          "name": "welcome / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "welcome",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              0.625,
+              -1.9
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "welcome-handle-1",
+          "name": "welcome / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "welcome",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              0.625,
+              -1.855
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "welcome-handle-2",
+          "name": "welcome / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "welcome",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              0.705,
+              0.625,
+              -1.9
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "karaoke-handle-0",
+          "name": "karaoke / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "karaoke",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              4.59,
+              -5.95
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "karaoke-handle-1",
+          "name": "karaoke / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "karaoke",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              4.59,
+              -5.905
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "karaoke-handle-2",
+          "name": "karaoke / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "karaoke",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              0.53,
+              4.59,
+              -5.95
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "coach-handle-0",
+          "name": "coach / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "coach",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.735,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "coach-handle-1",
+          "name": "coach / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "coach",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.735,
+              -3.605
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "coach-handle-2",
+          "name": "coach / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "coach",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.63,
+              0.735,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "match-lab-handle-0",
+          "name": "match-lab / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "match-lab",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "match-lab-handle-1",
+          "name": "match-lab / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "match-lab",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.605
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "match-lab-handle-2",
+          "name": "match-lab / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "match-lab",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.63,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "screen-handle-0",
+          "name": "screen / two hand grip",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "screen",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              0.34,
+              -5.95
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "screen-handle-1",
+          "name": "screen / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "screen",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              0.0,
+              0.34,
+              -5.905
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "screen-handle-2",
+          "name": "screen / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "screen",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.7,
+              0.34,
+              -5.95
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "moment-card-handle-1",
+          "name": "moment-card / move handle",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "moment-card",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              -0.581932,
+              0.985,
+              -0.694197
+            ],
+            "rotationDeg": [
+              0,
+              35,
+              0
+            ],
+            "scale": [
+              0.7,
+              0.7,
+              0.7
+            ]
+          }
+        },
+        {
+          "id": "moment-card-handle-2",
+          "name": "moment-card / resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "moment-card",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              -0.419377,
+              0.985,
+              -0.846474
+            ],
+            "rotationDeg": [
+              0,
+              35,
+              0
+            ],
+            "scale": [
+              0.7,
+              0.7,
+              0.7
+            ]
           }
         }
       ]

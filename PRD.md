@@ -8,6 +8,12 @@ This PRD contains the complete product requirements, technical specification, im
 
 The user will create the Codex project. Place this file in its root as PRD.md. Keep football-spanish-visual-prototype-v1.png beside it to display the reference image. The full design brief and generation prompt are included below, so the text remains usable even when the image is unavailable.
 
+### Direct manipulation of floating windows · 14 October 2026
+
+Every immersive window—including the match screen, playback controls, onboarding, learning/library, Explore, chants, coach and Match Lab—must be movable and uniformly resizable in both Theater and My room. Dedicated manipulation handles keep button presses distinct from moving a window. Blue handles support far pointing and holding; gold corners resize. Near peach grips support one-hand movement/rotation and two-hand resizing. A Reset layout control restores the current default placements without changing playback. Poses remain for the current page session; reload restores the defaults.
+
+Match Lab presents the selected prepared moment as a separate physical card within reach. It has thickness, a Spanish front, and a readable English reverse. Near hand pinch (controller squeeze fallback) holds the whole card; wrist rotation reveals the reverse, and two hands change its size. The selected card's illustration can show its silent replay. Navigation changes the content of this one held-card slot; it is not a spread of six simultaneous cards. Button flipping remains an accessible fallback. Revealing a translation does not grade or mark the phrase learned. Original sample behavior and the match's sole playback authority remain unchanged. Hand comfort and simultaneous-video performance require physical Quest 3 review.
+
 ### Confirmed Working Context
 
 - The user owns a Meta Quest 3, is working alone almost full time, and has no stated Unity or web development background.
@@ -146,7 +152,7 @@ The shared product should own playback timing, pause/resume, pronunciation, savi
 
 The user clarified that learning should happen alongside an uninterrupted match or race. Opening, replaying, tracing, listening, saving, or closing a companion window must not pause, seek, dim, or automatically resume the sporting event. Pause remains an explicit playback control. Session suspension still pauses media and requires an explicit resume. A selected explanation stays pinned when its original prompt expires; newer prompts cannot replace it or count as seen while it occupies the companion. If the match ends while learning, the explanation stays open until closed.
 
-The floating learning window supports deliberate left/right, near/far, and height presets, stored on the device. It stays in world space rather than following the user's head. Default layout and fingertip reach still require Quest 3 testing; Replay supports diagrams positioned beyond fingertip reach. Free dragging and arbitrary rotation are not implemented in this sample.
+The floating learning window supports deliberate left/right, near/far, and height presets, stored on the device. It stays in world space rather than following the user's head. Default layout and fingertip reach still require Quest 3 testing; Replay supports diagrams positioned beyond fingertip reach. The original preset-only limitation is superseded by the direct-manipulation implementation dated 14 October 2026.
 
 Before a match, offer a team preference and a neutral “just watching” option. Team chants are an optional companion: show only the selected team's authored chant, highlight its current word, and put a translation directly underneath. Switching or hiding lyrics must never affect match playback. Real chants should use the chant's original language, with English support for this audience; do not relabel Catalan or other languages as Spanish. Do not require microphone access or record singing.
 

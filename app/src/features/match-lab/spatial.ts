@@ -14,12 +14,15 @@ import type { Experience } from "../session/experience";
 import { companionPlacement } from "../xr/placement";
 import { MatchLabInput } from "./input";
 import { labFeedbackColor, labPrimaryLabel, labStep } from "./presentation";
+import type { SpatialWindows } from "../spatial-windows/windows";
+import { attachHandheldCard } from "./handheld";
 import { cutback } from "./lab";
 /** Scene-authored board, markers and controls all follow the same world anchor. */
 export function attachMatchLab(
   world: World,
   e: Experience,
   fontFamilies: unknown,
+  windows: SpatialWindows,
 ) {
   const panel = world.requireSceneObject<UIKitMLAsset>("match-lab");
   const board = world.requireSceneObject<Group>("lab-board");
@@ -28,7 +31,9 @@ export function attachMatchLab(
     world.requireSceneObject<Group>(`lab-player-${i}`),
   );
   const replay = world.requireSceneObject<Mesh>("lab-replay-screen");
-  const layout = world.requireSceneObject<Group>("viewing-space");
+  const layout = world.requireSceneObject<Group>("window-match-lab");
+  windows.bind("match-lab", panel, 1.15, 1.15 * 1.46);
+  const renderCard = attachHandheldCard(world, e, windows);
   panel.document.rootElement.setProperties({
     fontFamilies: fontFamilies as never,
   });
@@ -131,6 +136,7 @@ export function attachMatchLab(
   let videoTexture: VideoTexture | undefined;
   let placementKey = "";
   let lastCards: boolean | undefined;
+  let panelWidth = 1.15;
   let lastFeedback = "",
     lastBackground = "";
   const place = (obj: Group | Mesh, x: number, y: number, z: number) =>
@@ -144,25 +150,34 @@ export function attachMatchLab(
   function render() {
     const lab = e.lab;
     panel.visible = lab.open && e.session.matchActive;
+    renderCard();
     const showingReplay = !!e.labReplay?.visible;
     const cards = lab.view === "cards";
     board.visible = ball.visible =
       panel.visible && !cards && lab.phase !== "observe" && !showingReplay;
     for (const player of players) player.visible = board.visible;
-    replay.visible = panel.visible && (showingReplay || cards);
+    replay.visible = panel.visible && !cards && showingReplay;
     if (!panel.visible) return;
     const pref = e.session.snapshot.preferences,
       key = `${pref.panelSide}/${pref.panelHeight}/${pref.panelDistance}`;
     if (key !== placementKey) {
       const pose = companionPlacement(pref);
       const clearance = pref.panelDistance === "near" ? 0.12 : 0.4;
-      panel.position.set(
+      windows.place(
+        "match-lab",
         pose.x + (pref.panelSide === "left" ? -clearance : clearance),
         pose.y,
         pose.z,
+        pref.panelSide === "left" ? 0.55 : -0.55,
+        pose.width,
+        pose.width * 1.46,
       );
-      panel.rotation.y = pref.panelSide === "left" ? 0.55 : -0.55;
-      panel.document.setTargetDimensions(pose.width, pose.width * 1.46);
+      panelWidth = pose.width;
+      panel.document.setTargetDimensions(
+        panelWidth,
+        panelWidth * (cards ? 0.95 : 1.46),
+      );
+      windows.size("match-lab", panelWidth, panelWidth * (cards ? 0.95 : 1.46));
       for (const obj of [board, ball, ...players, replay]) {
         obj.scale.setScalar((pose.width / 1.12) * 0.88);
         obj.quaternion.copy(panel.quaternion);
@@ -245,7 +260,7 @@ export function attachMatchLab(
           : cards
             ? lab.saved
               ? "Phrase saved on this device."
-              : "Prepared from commentary and frames. Spanish review pending. Illustration is a teaching aid."
+              : "Pinch the card to hold it. Turn it over for English. Two hands resize. Spanish review pending."
             : lab.message),
     );
     text(
@@ -257,8 +272,17 @@ export function attachMatchLab(
     text("lab-story-label", lab.cards.storyMode ? "Single card" : "Read story");
     if (cards !== lastCards) {
       node("lab-card-nav").setProperties({ display: cards ? "flex" : "none" });
+      node("lab-board-area").setProperties({
+        display: cards ? "none" : "flex",
+      });
+      panel.document.rootElement.setProperties({ height: cards ? 950 : 1460 });
       node("lab-browse").setProperties({ display: cards ? "none" : "flex" });
       node("lab-demo").setProperties({ display: cards ? "none" : "flex" });
+      panel.document.setTargetDimensions(
+        panelWidth,
+        panelWidth * (cards ? 0.95 : 1.46),
+      );
+      windows.size("match-lab", panelWidth, panelWidth * (cards ? 0.95 : 1.46));
       lastCards = cards;
     }
     const feedback = cards ? "#432c36" : labFeedbackColor(lab);

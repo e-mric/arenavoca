@@ -5,25 +5,60 @@ import scene from "../../../public/scenes/main.iwsdk.scene.json";
 it("requires hands, disables locomotion and keeps the seated scene stationary", () => {
   expect(config.world.xr.features.handTracking).toEqual({ required: true });
   expect(config.world.features.locomotion).toBe(false);
-  expect(config.world.features.grabbing).toBe(false);
+  expect(config.world.features.grabbing).toBe(true);
   expect(config.world.xr.offer).toBe("once");
   expect(config.world.xr.features.gazeTracking).toBe(true);
 });
-it("registers every spatial control as a hand-ray target", () => {
-  for (const node of scene.nodes[0].children.filter(
-    (n) =>
-      "content" in n &&
-      [
-        "welcome",
-        "learning",
-        "explore",
-        "watch-controls",
-        "karaoke",
-        "coach",
-      ].includes(n.id),
-  )) {
-    expect(node.components).toHaveProperty("RayInteractable");
-    expect(node.transform?.position?.[2]).toBeLessThan(0);
+it("keeps every panel clickable inside its own movable window", () => {
+  const roots = scene.nodes[0].children;
+  for (const id of [
+    "welcome",
+    "learning",
+    "explore",
+    "watch-controls",
+    "karaoke",
+    "coach",
+    "match-lab",
+  ]) {
+    const anchor = roots.find((n) => n.id === `window-${id}`);
+    expect(anchor, id).toBeDefined();
+    const children = (
+      anchor as { children?: { id: string; components?: unknown }[] }
+    ).children;
+    expect(children?.find((n) => n.id === id)?.components).toHaveProperty(
+      "RayInteractable",
+    );
+  }
+});
+it("each floating window has separate near-grab, far-move and resize targets", () => {
+  const roots = scene.nodes[0].children;
+  for (const id of [
+    "welcome",
+    "learning",
+    "explore",
+    "watch-controls",
+    "karaoke",
+    "coach",
+    "match-lab",
+    "screen",
+    "moment-card",
+  ]) {
+    for (const kind of [0, 1, 2]) {
+      const target = roots.find(
+        (n) =>
+          n.id ===
+          (kind === 0 && id === "moment-card"
+            ? "window-moment-card"
+            : `${id}-handle-${kind}`),
+      );
+      expect(target?.components).toHaveProperty(
+        kind === 0 ? "TwoHandsGrabbable" : "DistanceGrabbable",
+      );
+      expect(target?.components).toHaveProperty("SpatialWindow", {
+        window: id,
+        kind,
+      });
+    }
   }
 });
 it("has real UIKitML controls for every essential action", () => {
@@ -43,6 +78,7 @@ it("has real UIKitML controls for every essential action", () => {
     )
     .join("");
   for (const id of [
+    "xr-reset-layout",
     "xr-coach-open",
     "xr-coach-close",
     "xr-coach-mic",

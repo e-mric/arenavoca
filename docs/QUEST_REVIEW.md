@@ -174,3 +174,19 @@ Pending physical Quest 3 acceptance. Desktop controller emulation is not device 
 9. Exit immersive mode and repeat steps 1–8 in **My room · Passthrough**. Confirm the real room stays visible behind the same cards and board. Stop if placement, tracking or two simultaneous videos are uncomfortable.
 
 Record: hand vs controller input, theater vs passthrough, chosen placement, readability, missed selections, video smoothness, and whether you can explain `hacia atrás` in the changed arrangement without English. Spanish and synthetic speech still need fluent review. The main footage and six silent derivatives are private local demo assets; run `python3 src/features/match-lab/prepare-media.py` from `app/` on the authoring Mac to regenerate them and the provisional speech.
+
+
+## Hands-on windows and physical cards · 14 October 2026
+
+Reload the app, then test in both **Theater** and **My room**. Device acceptance is pending.
+
+1. Point at a **blue handle**, pinch and hold, move your hand, then release. Try the match screen, playback controls, welcome, learning/phrase library, Explore, chants, coach and Match Lab when each is visible. Their buttons must still work after moving.
+2. Pull a **gold corner** outward/inward to resize. Text, diagrams and video should stay proportional; size is bounded. Each window moves independently.
+3. Bring a window within reach. Pinch its **peach grip** to move and rotate it. Pinch the same grip with both hands and spread/bring them together to resize. Controllers use squeeze for near grabs and trigger for blue/gold handles.
+4. Open **Match Lab**. Its selected moment now has a physical card on your left. Pinch anywhere on the card to hold it, move it, turn your wrist to read English on the back, and turn back to practise Spanish. Use two hands to resize. Release it: it should stay where you put it.
+5. After releasing a card, move your hand clear before pointing at a distant button; near-object interaction takes priority. **Flip card** remains a button fallback. Next/Previous and Read story update the same physical card; try them while holding it and while its English side faces you. Its position and wrist orientation must remain yours. **Watch moment** plays on its Spanish face; turn it towards you to see the replay.
+6. Move and resize Match Lab, then complete both cutback arrangements. The board and markers must follow the panel, and selection targets must stay aligned. Move/resize Explore and check fingertip tracing too.
+7. Use **Reset layout** in playback controls. It restores default placement, orientation and sizes, including the smaller card; it must not change match time, pause intent or saved phrases. Placements survive close/reopen during this page session; reloading restores defaults.
+8. Repeat while explicitly paused, then during playback. Background and return, switch input hands/controllers, and temporarily lose hand tracking. No stuck grab, unintended playback, unintentional answer or persistent invisible target should remain.
+
+Check seated reach, text size, near/far pointer transitions, two-hand comfort and Quest frame rate. The screenshot/emulator evidence does not establish these. Speech still awaits fluent Spanish review.
