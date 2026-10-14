@@ -55,6 +55,8 @@ export function attachMatchLab(
   };
   const cleanups: (() => void)[] = [];
   const actions: Record<string, () => unknown> = {
+    "lab-analysis": () => e.toggleRecognition(),
+    "lab-drafts": () => e.showRecognitionDrafts(),
     "lab-flip": () => e.changeLabCard("flip"),
     "lab-next": () => e.changeLabCard("next"),
     "lab-previous": () => e.changeLabCard("previous"),
@@ -153,6 +155,7 @@ export function attachMatchLab(
     renderCard();
     const showingReplay = !!e.labReplay?.visible;
     const cards = lab.view === "cards";
+    const height = (cards ? 950 : 1460) + (e.recognitionEnabled ? 220 : 0);
     board.visible = ball.visible =
       panel.visible && !cards && lab.phase !== "observe" && !showingReplay;
     for (const player of players) player.visible = board.visible;
@@ -175,9 +178,9 @@ export function attachMatchLab(
       panelWidth = pose.width;
       panel.document.setTargetDimensions(
         panelWidth,
-        panelWidth * (cards ? 0.95 : 1.46),
+        (panelWidth * height) / 1000,
       );
-      windows.size("match-lab", panelWidth, panelWidth * (cards ? 0.95 : 1.46));
+      windows.size("match-lab", panelWidth, (panelWidth * height) / 1000);
       for (const obj of [board, ball, ...players, replay]) {
         obj.scale.setScalar((pose.width / 1.12) * 0.88);
         obj.quaternion.copy(panel.quaternion);
@@ -219,7 +222,7 @@ export function attachMatchLab(
     const material = replay.material as MeshBasicMaterial;
     const nextMap = showingReplay
       ? videoTexture!
-      : AssetManager.getTexture(`lab-art-${lab.cards.card.id}`);
+      : AssetManager.getTexture(`lab-art-${lab.cards.artworkId}`);
     if (material.map !== nextMap) {
       material.map = nextMap;
       material.needsUpdate = true;
@@ -246,7 +249,7 @@ export function attachMatchLab(
     text(
       "lab-direction",
       cards
-        ? `Match clock ${lab.cards.card.evidence.matchClock}`
+        ? `${lab.cards.card.draft ? "UNREVIEWED / " : lab.cards.generated ? "AI-assisted / " : ""}Match clock ${lab.cards.card.evidence.matchClock}`
         : lab.arrangement.attack === 1
           ? "ATTACK RIGHT > / toward the coral goal"
           : "< ATTACK LEFT / toward the coral goal",
@@ -267,6 +270,12 @@ export function attachMatchLab(
       "lab-primary-label",
       cards ? "Practise cutback" : labPrimaryLabel(lab),
     );
+    text("lab-analysis-status", e.recognition.status);
+    text(
+      "lab-analysis-label",
+      e.recognition.active ? "Stop analysis" : "Start analysis",
+    );
+    text("lab-drafts-label", `New drafts (${lab.cards.draftCount})`);
     text("lab-save-label", lab.saved ? "Saved" : "Save phrase");
     text("lab-flip-label", lab.cards.flipped ? "Spanish side" : "Flip card");
     text("lab-story-label", lab.cards.storyMode ? "Single card" : "Read story");
@@ -275,14 +284,17 @@ export function attachMatchLab(
       node("lab-board-area").setProperties({
         display: cards ? "none" : "flex",
       });
-      panel.document.rootElement.setProperties({ height: cards ? 950 : 1460 });
+      node("lab-analysis-area").setProperties({
+        display: e.recognitionEnabled ? "flex" : "none",
+      });
+      panel.document.rootElement.setProperties({ height });
       node("lab-browse").setProperties({ display: cards ? "none" : "flex" });
       node("lab-demo").setProperties({ display: cards ? "none" : "flex" });
       panel.document.setTargetDimensions(
         panelWidth,
-        panelWidth * (cards ? 0.95 : 1.46),
+        (panelWidth * height) / 1000,
       );
-      windows.size("match-lab", panelWidth, panelWidth * (cards ? 0.95 : 1.46));
+      windows.size("match-lab", panelWidth, (panelWidth * height) / 1000);
       lastCards = cards;
     }
     const feedback = cards ? "#432c36" : labFeedbackColor(lab);

@@ -91,12 +91,20 @@ export function attachHandheldCard(
         ctx.fillStyle = i === 0 ? "#341e2c" : "#fff4ed";
         ctx.font = "bold 30px sans-serif";
         ctx.fillText(
-          i === 0 ? "ARENAVOCA / ESPAÑOL" : "ARENAVOCA / ENGLISH",
+          cards.card.draft
+            ? "AI DRAFT / REVIEW NEEDED"
+            : i === 0
+              ? "ARENAVOCA / ESPAÑOL"
+              : "ARENAVOCA / ENGLISH",
           50,
           62,
         );
         ctx.font = "24px sans-serif";
-        ctx.fillText(`MATCH MOMENT ${cards.index + 1} / 6`, 50, 108);
+        ctx.fillText(
+          `MATCH MOMENT ${cards.index + 1} / ${cards.count}`,
+          50,
+          108,
+        );
         paragraph(
           ctx,
           i === 0 ? cards.spanish : cards.english,
@@ -137,7 +145,7 @@ export function attachHandheldCard(
     }
     const map = e.labReplay?.visible
       ? video!
-      : AssetManager.getTexture(`lab-art-${cards.card.id}`);
+      : AssetManager.getTexture(`lab-art-${cards.artworkId}`);
     const material = art.material as MeshBasicMaterial;
     if (material.map !== map) {
       material.map = map;

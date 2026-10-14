@@ -229,3 +229,60 @@ The selected Match Lab moment is a rounded 3D card with a Spanish front, English
 The new feature is under `app/src/features/spatial-windows/`; `match-lab/handheld.ts` owns card presentation. Shared material/geometry prototypes remain in the asset manifest and placed clones receive their own dynamic textures. The reusable rounded card has no model diagnostic warnings. Private runtime screenshots containing match footage stay in ignored `app/.iwsdk/`.
 
 Verification includes typecheck, 189 unit tests, a production build, the full 28-passing browser suite (two external voice tests skipped), and controller interactions in an active IWSDK Quest emulator. Measured near grabs moved and wrist-flipped the card, two hands enlarged it, and release preserved its pose. A distance handle moved Match Lab approximately 40 cm and its corner resized it to 1.4×; the cutback button remained usable after moving the hand clear of the near card. The main screen moved approximately 45 cm and resized to 0.8× while the match clock advanced. Reset returned the screen to its initial transform without restarting playback. Scene and model previews validate; a compact runtime review checks card faces and window separation. Physical hand pinch, tracking-loss recovery, passthrough comfort and sustained headset performance remain pending `docs/QUEST_REVIEW.md`.
+
+### Audiovisual recognition experiment · 14 October 2026
+
+Added `src/features/match-recognition/recognize.py`: prepare a bounded local video
+excerpt with audio, optionally analyze it with Gemini, and validate timestamped
+observations, proposed Spanish cards and linked story sentences. No client key,
+web endpoint, automatic publication or headset integration is introduced. Unknown
+footage/replays and uncertain observations are withheld from candidate cards;
+all remaining output still requires factual and fluent Spanish review. Gemini
+self-reported confidence is explicitly uncalibrated.
+
+The actual local recording at 808–828 seconds was prepared successfully: 20 seconds,
+audio present, approximately 3.24 MB. No model request was made because no Gemini
+key was configured at verification time. No recognition accuracy or latency result
+is claimed. Physical TV camera input remains unimplemented and requires Quest
+permission/immersive-session verification.
+
+Verification: typecheck, 190 Vitest tests (including a wrapper for 13 Python
+recognition checks), production build, and all six affected Match Lab/theater
+browser tests passed. The build retains existing chunk-size and custom-font
+coverage warnings. Synthetic response tests verify evidence gating, schema/range
+validation, story references, provider failure handling and secret-free output;
+they are not model-quality or physical-headset evidence.
+
+### Cloud recognition connection and first model result · 15 October 2026
+
+Google Cloud CLI installed locally; user completed ADC sign-in with quota project
+`arenavoca`. The analyzer now supports `--project arenavoca` using the fixed
+project-scoped Agent Platform Interactions endpoint, short-lived bearer credentials
+and explicit quota project. AI Studio remains an optional separate route. Provider
+errors expose only known recovery hints, never raw private error content.
+
+Actual model request succeeded for the prepared 808–828 recording passage with
+audio, using `gemini-3.8-flash` and 4 fps sampling. It returned four draft cards
+(run, cutback, shot, goal) and three linked story sentences in 17.92 seconds.
+Reported usage: 2,717 input tokens, 772 output tokens, 1,353 thought tokens, 4,842
+total. No monetary cost or trial-credit deduction has been verified: reading
+billing metadata returned HTTP 403. Do not describe this request as free.
+
+Comparison against existing pack and two sequential-frame contact sheets: the
+cutback interval 814.5–816.5 falls inside the prepared 814–817 evidence interval.
+The model omits the initial run lead-in, and its shot/goal boundaries are late
+(the sampled frame at 816 already shows the keeper down after the finish). Its
+scoreboard-change claim is unsupported within the declared interval: inspected
+frames through 821 still show 0–0. The left-foot claim is not established by this
+spot-check. All four observations were self-rated high confidence, demonstrating
+why confidence alone cannot approve learning content. Raw results remain unchanged
+in the ignored match-analysis directory, alongside a separate review.json.
+
+No draft was published to Match Lab/mobile. This is one positive football clip,
+not an accuracy benchmark; ambiguous footage, misses, replays, F1 and actual
+headset-camera recognition remain untested. Fluent Spanish review is pending.
+
+Verification after the Cloud adapter: typecheck, 190 Vitest tests (including 17
+Python checks), production build and six Match Lab/theater browser tests passed.
+Existing font-coverage and bundle-size build warnings remain. No device acceptance
+or billing verification is inferred from those checks.

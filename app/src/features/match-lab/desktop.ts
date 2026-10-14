@@ -10,7 +10,7 @@ export function bindLabDesktop(e: Experience) {
   const panel = document.createElement("section");
   panel.id = "match-lab";
   panel.hidden = true;
-  panel.innerHTML = `<h2>Match Lab · Alba's cutback</h2><p data-step></p><h3 data-face>${cutback.spanish}</h3><p data-translation>${cutback.english}</p><p data-direction></p><img data-art alt="Illustrated sporting action" style="width:100%;border-radius:16px"><div data-replay></div><div class="lab-desktop-board"><span class="lab-goal lab-goal-left">GOAL</span><span class="lab-goal lab-goal-right">GOAL</span><button id="lab-ball" aria-label="Select ball">●</button><button id="lab-player-0">A</button><button id="lab-player-1">B</button><button id="lab-player-2">C</button></div><p data-message role="status"></p><div data-card-nav class="controls"><button id="lab-prev-card">Previous</button><button id="lab-flip-card">Flip card</button><button id="lab-next-card">Next</button><button id="lab-read-story">Read story</button></div><div class="controls"><button id="lab-cards">Moment cards</button><button id="lab-watch">Watch moment</button><button id="lab-speak">Hear phrase</button><button id="lab-continue">Try the pass</button><button id="lab-show">Show movement</button><button id="lab-store">Save phrase</button><button id="lab-dismiss">Close lab</button></div><small>Teaching diagram / Spanish and audio review pending</small>`;
+  panel.innerHTML = `<h2>Match Lab · Alba's cutback</h2><p data-step></p><h3 data-face>${cutback.spanish}</h3><p data-translation>${cutback.english}</p><p data-direction></p><img data-art alt="Illustrated sporting action" style="width:100%;border-radius:16px"><div data-replay></div><div class="lab-desktop-board"><span class="lab-goal lab-goal-left">GOAL</span><span class="lab-goal lab-goal-right">GOAL</span><button id="lab-ball" aria-label="Select ball">●</button><button id="lab-player-0">A</button><button id="lab-player-1">B</button><button id="lab-player-2">C</button></div><p data-message role="status"></p><div data-card-nav class="controls"><button id="lab-prev-card">Previous</button><button id="lab-flip-card">Flip card</button><button id="lab-next-card">Next</button><button id="lab-read-story">Read story</button></div><div class="controls"><button id="lab-cards">Moment cards</button><button id="lab-watch">Watch moment</button><button id="lab-speak">Hear phrase</button><button id="lab-continue">Try the pass</button><button id="lab-show">Show movement</button><button id="lab-store">Save phrase</button><button id="lab-dismiss">Close lab</button></div><div data-recognition hidden><p>Development test / sends played video and commentary to Google. Up to three windows.</p><p data-analysis-status role="status"></p><div class="controls"><button id="lab-analysis">Start analysis</button><button id="lab-drafts">New drafts (0)</button></div></div><small>Teaching diagram / Spanish and audio review pending</small>`;
   document.getElementById("companion")!.append(panel);
   const find = (selector: string) =>
     panel.querySelector<HTMLElement>(selector)!;
@@ -34,6 +34,8 @@ export function bindLabDesktop(e: Experience) {
   });
   bind("#lab-store", () => e.saveLab());
   bind("#lab-dismiss", () => e.closeLab());
+  bind("#lab-analysis", () => e.toggleRecognition());
+  bind("#lab-drafts", () => e.showRecognitionDrafts());
   const set = (selector: string, value: string) => {
     const n = find(selector);
     if (n.textContent !== value) n.textContent = value;
@@ -43,6 +45,14 @@ export function bindLabDesktop(e: Experience) {
     launch.hidden = !e.labAvailable || !e.session.matchActive;
     panel.hidden = !lab.open;
     if (!lab.open) return;
+    find("[data-recognition]").hidden = !e.recognitionEnabled;
+    set("[data-analysis-status]", e.recognition.status);
+    set(
+      "#lab-analysis",
+      e.recognition.active ? "Stop analysis" : "Start analysis",
+    );
+    set("#lab-drafts", `New drafts (${lab.cards.draftCount})`);
+    (find("#lab-drafts") as HTMLButtonElement).disabled = !lab.cards.draftCount;
     const cards = lab.view === "cards";
     set("[data-step]", cards ? lab.cards.label : labStep(lab));
     set(
@@ -67,7 +77,7 @@ export function bindLabDesktop(e: Experience) {
     find("#lab-cards").hidden = cards;
     find("#lab-show").hidden = cards;
     const art = find("[data-art]") as HTMLImageElement;
-    const src = `${import.meta.env.BASE_URL}artwork/match-lab/${lab.cards.card.id}.png`;
+    const src = `${import.meta.env.BASE_URL}${lab.cards.artworkPath}`;
     if (art.getAttribute("src") !== src) art.src = src;
     art.hidden = !cards || !!e.labReplay?.visible;
     set("#lab-read-story", lab.cards.storyMode ? "Single card" : "Read story");
@@ -75,7 +85,7 @@ export function bindLabDesktop(e: Experience) {
     set(
       "[data-direction]",
       cards
-        ? `Prepared moment / match clock ${lab.cards.card.evidence.matchClock}`
+        ? `${lab.cards.card.draft ? "AI DRAFT / review needed" : lab.cards.generated ? "AI-generated · corrected" : "Prepared moment"} / match clock ${lab.cards.card.evidence.matchClock}`
         : `Attack ${lab.arrangement.attack === 1 ? "RIGHT →" : "← LEFT"}. Select the ball, then a teammate.`,
     );
     set(
@@ -87,7 +97,9 @@ export function bindLabDesktop(e: Experience) {
           : cards
             ? lab.saved
               ? "Phrase saved on this device."
-              : "Prepared from commentary and frames. Spanish review pending."
+              : lab.cards.card.draft
+                ? "Unreviewed AI output. Check the replay; timing and Spanish may be wrong."
+                : "Prepared from commentary and frames. Spanish review pending."
             : lab.message),
     );
     set("#lab-continue", cards ? "Practise cutback" : labPrimaryLabel(lab));

@@ -45,3 +45,6 @@ app/native/local-media/
 # Presentation intermediates and private demo deck containing local footage.
 docs/demo/.build/
 docs/demo/output/
+
+# Local match-recognition Python caches
+app/src/features/match-recognition/__pycache__/

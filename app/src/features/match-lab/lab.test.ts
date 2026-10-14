@@ -97,8 +97,10 @@ describe("floating match cards", () => {
     expect(cards.flipped).toBe(true);
     expect(cards.english).toContain("back");
     cards.move(1);
-    expect(cards.card.id).toBe("coutinho-goal");
+    expect(cards.card.id).toBe("coutinho-shot");
     expect(cards.flipped).toBe(false);
+    cards.move(1);
+    expect(cards.card.id).toBe("coutinho-goal");
     cards.move(1);
     expect(cards.card.id).toBe("bale-run");
     cards.move(-1);
@@ -108,12 +110,12 @@ describe("floating match cards", () => {
     const cards = new MomentCards();
     cards.toggleStory();
     expect(cards.storyIndex).toBe(1);
-    expect(cards.spanish).toContain("Coutinho llega");
+    expect(cards.spanish).toContain("pase raso hacia atrás");
     cards.move(1);
     expect(cards.storyIndex).toBe(2);
-    expect(cards.english).toContain("opening goal");
+    expect(cards.english).toContain("shoots and scores a goal");
     cards.move(1);
-    expect(cards.story.id).not.toBe("barca-opening-goal");
+    expect(cards.story.id).not.toBe("alba-generated-story");
     expect(cards.storyIndex).toBe(0);
     expect(cards.card.evidence.startSeconds).toBe(640);
   });

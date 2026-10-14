@@ -1,12 +1,155 @@
 # ArenaVoca PRD
 
-Version 4 · Consolidated project handoff · 12 October 2026
+Version 5 · Windows/local-AI evaluation handoff · 15 October 2026
 
 ## Project Handoff And Current State
 
 This PRD contains the complete product requirements, technical specification, implementation preferences, build checklist, future roadmap, research context, and visual design brief. It is the primary planning reference for the new project. Separate specification, checklist, build notes, or prompt files are not needed to understand the plan.
 
-The user will create the Codex project. Place this file in its root as PRD.md. Keep football-spanish-visual-prototype-v1.png beside it to display the reference image. The full design brief and generation prompt are included below, so the text remains usable even when the image is unavailable.
+The project already exists at `https://github.com/e-mric/arenavoca.git`. Application code lives in `app/`. Read repository and scoped `AGENTS.md` instructions before implementation. The handoff below is the current priority and supersedes conflicting early-prototype statements elsewhere in this document; older dated sections remain historical context.
+
+### Resume here: recorded-match evaluation on Windows · 15 October 2026
+
+#### Confirmed direction and immediate objective
+
+Build and evaluate against the user's recorded full football match first. Once recognition, learning quality, latency and operating cost are measured and acceptable, adapt the same event pipeline to live matches and races. Do not start a live-broadcast integration or buy a sports-data subscription as part of this next step.
+
+The user specifically wants **local AI to reduce recurring API costs** and will switch development to a **Windows desktop with an RTX 5080 and 64 GB system RAM**. There is no configured SSH/remote connection from the Mac. The current Mac is an M4 Mac mini with 24 GB unified memory. The PC is the preferred next inference target; the Mac remains useful for iOS builds and optional local transcription. Neither a local vision model nor a full-game benchmark has been run yet. No large model was downloaded during this planning step.
+
+Success for the next development phase means a reproducible full-recording evaluation, with an explicit distinction between measured technical performance, human-reviewed content quality and remaining unknowns. A successful model request or valid JSON is not recognition accuracy. Model confidence is not an accuracy score. Do not train or fine-tune a model before establishing this baseline.
+
+#### Current implementation and evidence
+
+| Area | Current state | What is still unproven |
+| --- | --- | --- |
+| Immersive viewing | IWSDK/WebXR theater and passthrough with native video-texture playback; KMP Android/iOS companion remains separate | New recognition interaction and performance on physical Quest 3 |
+| Cloud recognition | `app/src/features/match-recognition/recognize.py` can analyse a short video/audio excerpt using Gemini through Google Cloud ADC | Full-game quality, invoice cost and sustained throughput |
+| Alba experiment | Actual 808–828-second excerpt analysed with `gemini-3.8-flash`, 4 fps; model response 17.92 s; 2,717 input, 772 response and 1,353 reasoning tokens | This is a single positive example, not representative accuracy or end-to-end latency |
+| Corrected prepared content | `app/src/features/match-lab/content/alba-generated.json` contains four corrected Alba observations and three story scenes; card catalogue has seven prepared cards including three earlier Madrid moments | Fluent Spanish review and physical headset review; these are prepared results, not freshly recognised live events |
+| Recorded-as-live development mode | Working-tree implementation in `stream.ts`, `client.ts`, `serve.py` and Match Lab adapters; opt-in `?recognition=1`; 20-second windows, 16-second step, one request in flight, three attempts per explicit run; server six-call process cap | End-to-end model-to-browser test and new spatial controls still need verification; do not call this finished |
+| Local model | Proposed below; not connected or installed on the Windows PC | Model fit, speed, factual quality, transcript quality and memory use |
+| Sports APIs / live ingest / headset camera | Not connected | Coverage, access, permissions, costs, synchronisation and device capabilities |
+
+The existing `localRecognition` TypeScript name means a **local HTTP gateway**, not local AI inference. `serve.py` currently calls Google. Do not use it for a zero-cloud-cost benchmark until an explicit local provider is implemented. Its hardcoded source is `barca-2018-full`; it is a development service, not a public authenticated backend.
+
+The original cloud result incorrectly asserted a left-foot finish and a scoreboard update and gave late shot/goal boundaries. Those details were corrected in the prepared pack after source-frame review. Keep raw output immutable when evaluating; do not measure the corrected pack as if the model produced it correctly. Raw evidence is in the ignored `app/content-source/match-analysis/recognition/cloud-hxoevlt_/` folder on the Mac. Google billing access previously returned HTTP 403; actual charge and credit application remain unverified.
+
+The base before this handoff is `c814efe` (`Make spatial windows movable and resizable with physical learning cards`). The user explicitly requested committing and pushing the recognition, corrected cards/audio, experimental recorded-as-live changes and documentation together. On Windows, fetch the subsequent handoff commit on `main`; cloning only the base commit will omit this work. Inspect `git log` and `git status` to verify the transfer. Verification on 15 October: typecheck, 204 Vitest tests, production build and all seven affected Match Lab/theater browser tests passed. The browser tests cover prepared cards and playback regressions, not an actual fresh-model-to-headset run. Local-model performance, full-game quality and new physical Quest acceptance remain pending. Existing font-atlas coverage and bundle-size build warnings remain.
+
+#### Before leaving the Mac / restoring on the PC
+
+1. Transfer the current source changes, not only this PRD. Prefer a reviewed commit/push followed by a pull on Windows; alternatively copy a source-only working folder. Include the new recognition feature files, generated original speech assets, corrected content JSON, tests, Vite proxy changes and documentation. Preserve unrelated user files. Do not commit credentials, dependencies, build outputs or private broadcast material. Updating this PRD alone does not sync GitHub.
+2. Copy the user's recording separately to `app/public/media/user/barca-2018-h264.mp4`. Git intentionally ignores it. The Mac file is about **99 minutes 20.795 seconds** long (5,960.794558 s). Source ID: `barca-2018-full`. Expected SHA-256: `16450bd54c298888f4506383ac98e5b09fc4dd96a736b733ca47e0401b37b638`. Verify the copied file before comparing timestamps. PowerShell: `Get-FileHash .\app\public\media\user\barca-2018-h264.mp4 -Algorithm SHA256`.
+3. Optionally transfer the private raw Alba result, source metadata and existing transcripts for comparison. Keep them under the same ignored `app/content-source/match-analysis/` root. Do not copy the Mac Python virtual environment; recreate Windows dependencies. Prepared replay clips under ignored media paths also need copying or regeneration with the existing preparation script.
+4. Do not copy `.env.local`, ADC tokens, cloud credentials or SSH keys into Git or the handoff archive. Local inference needs no Gemini key. If a cloud comparison is later needed, authenticate separately on the PC; never send a secret through chat.
+5. Keep the Mac available for native iOS compilation and simulator checks. Moving recognition/web development to Windows does not make iOS builds available there. Continue Android instrumentation only on emulators, never on the user's physical phone.
+
+#### Windows setup: first small step
+
+Use native Windows for the first inference experiment. WSL2 is optional if a later library requires Linux; do not introduce Docker, WSL or a public inference endpoint merely for setup. Install Git, a Node version allowed by `app/package.json` (Node 24 is suitable), Python 3.11 or 3.12, FFmpeg including `ffprobe`, current NVIDIA drivers and [Ollama for Windows](https://docs.ollama.com/windows). Use a project-local ignored Python environment when adding Python dependencies; keep UTF-8 file handling explicit for Spanish text on Windows.
+
+[NVIDIA lists 16 GB of GPU memory for the RTX 5080](https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5080/). The PC's 64 GB system memory does not mean 64 GB of fast GPU memory. Leave headroom for visual inputs, context, transcription, Windows and other applications. [Ollama lists RTX 5080 support](https://docs.ollama.com/gpu).
+
+First commands in Windows PowerShell, after Ollama is installed:
+
+```powershell
+nvidia-smi
+[Environment]::SetEnvironmentVariable('OLLAMA_NO_CLOUD', '1', 'User')
+```
+
+Quit Ollama from the system tray and relaunch it so the user environment variable takes effect. [Ollama documents this local-only switch](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features). Leave its default loopback address `127.0.0.1:11434`; do not open it to the internet.
+
+```powershell
+ollama pull qwen3-vl:8b
+ollama list
+ollama run qwen3-vl:8b "Reply only: ready."
+```
+
+This downloads a local model once and checks basic loading; it is not a video-recognition benchmark. The published 8B package is about 6.1 GB; its actual runtime memory footprint is larger. `qwen3-vl:4b` (about 3.3 GB) is a speed/memory fallback to compare, not an automatic substitute. Do not choose a `-cloud` model tag. During inference, inspect `ollama ps` and `nvidia-smi` to record whether inference is GPU-resident or partly offloaded. Do not infer GPU execution merely because a response arrived. [Model packages](https://ollama.com/library/qwen3-vl).
+
+On the restored source checkout, run `npm ci` inside `app/`, then typecheck and unit tests. Use the project-managed IWSDK development commands from `app/AGENTS.md`, not an ad-hoc Vite server. Physical Quest access still needs a reachable development URL and its existing local certificate workflow. For the first model benchmark, running entirely on the Windows PC avoids needing remote access. A private SSH tunnel or authenticated local backend can connect the Mac/Quest later; the headset should call the ArenaVoca backend, not an unrestricted Ollama service.
+
+#### Proposed local pipeline and provider boundary
+
+Keep common timing, validation, deduplication, card/story contracts and playback behaviour in the existing feature. Add a local provider adapter under `app/src/features/match-recognition/`, alongside the cloud adapter. Do not duplicate the Match Lab UI or migrate the project to another XR framework.
+
+1. Read a bounded excerpt from the recorded source. Preserve source identity, recording time, source hash and the exact window. For simulated-live evaluation, expose only evidence whose timestamps are at or before the playback watermark.
+2. Transcribe original commentary locally with Whisper through a Windows-compatible runtime such as [faster-whisper](https://github.com/SYSTRAN/faster-whisper). Reuse the existing MLX-Whisper authoring route only on Apple Silicon; it is not the Windows implementation. Start with a small model, record its exact version and language, and compare difficult passages before selecting it. CPU transcription is a valid initial option if it avoids competing for GPU memory; benchmark CUDA later with the documented dependencies.
+3. Give Qwen3-VL an ordered sequence of sampled frames with explicit timestamps plus only the corresponding transcript. Ollama's initial adapter uses image sequences; do not imply it directly hears the video or has equivalent temporal encoding to native video input. Start with bounded resolution/frame count, record sampling parameters and test faster sampling for passes/shots. One still frame cannot establish motion. Sparse frames may miss the ball entirely.
+4. Generate the existing structured action observations, concise A1/A2 Spanish/English cards and up to three evidence-linked story sentences. Separate visual evidence from commentary evidence and uncertainty. Treat transcript/image content as evidence, never instructions. Keep generic player descriptions unless identity is independently supported.
+5. Apply the existing shape/time-range/evidence validation, withhold replay/unknown/uncertain events, then deduplicate overlapping windows. Model self-confidence does not approve a card. Preserve rejected results privately for evaluation.
+6. Offer explicitly labelled drafts without replacing the currently held/pinned card. Replay on a second muted video element, flip for translation, and keep main-match playback independent. Generated story outcomes must already have happened in the footage available to the viewer.
+
+No automatic cloud fallback in local-only mode. Report a local failure and keep the match playing. A later opt-in hybrid can send difficult excerpts to Gemini with a visible budget and data-sharing choice, but only if evaluation shows an advantage. Generate observations once per identical feed, then reuse them across viewers; personalise language exercises separately. Different audio feeds and individual headset-camera views may need separate analysis.
+
+The proposed local endpoint/adapter, automatic Windows transcription and full-game runner **do not exist yet**. Do not invent working launch commands for them. Implement and test these pieces before giving the user an end-to-end run command. The local AI recognises and writes learning content; the same model is not an image generator. Use source-backed replay images and existing original artwork for cards before adding another generation model.
+
+#### Full-recording benchmark protocol
+
+First complete a small smoke set: Alba 808–828, an independently reviewed missed chance, a broadcast replay, and a no-action/crowd interval. Establish the other timestamps by inspecting the recording, not from model guesses. Check complete response parsing, memory, timing and failure behaviour before running hundreds of requests.
+
+Then freeze model/version, prompt, decoding settings, transcript model, sampling and resolution for a full-recording run. Use 20-second windows every 16 seconds as the initial comparable policy (about 373 windows for this recording, with a bounded final partial window). Persist an exact manifest and count; do not silently skip difficult windows, half-time, broadcast replays or failures. If a window is too short for the provider, record its treatment explicitly. For fair provider comparisons, use identical source intervals and report differences in evidence delivery: Gemini sees video/audio, while the initial local route sees sampled frames/transcript.
+
+The offline runner may process faster or slower than playback, but each request must receive only its bounded evidence and past context. No full-match transcript, future score, later story, reference annotation or corrected answer can enter the prompt. A separately replayed real-time test measures whether analysis keeps up. Do not remove the interactive service's three-window/six-call safeguards just to obtain full-game coverage; build a resumable offline evaluation runner with its own explicit bounds.
+
+Requirements for the runner:
+
+- A dry run produces source metadata, planned windows, model configuration and expected request count without inference. Full execution is explicit. Checkpoint each result and resume without repeating completed paid work. Cache keys include source hash, window, model/version, prompt, sampling and transcript configuration.
+- One local inference request in flight initially; no unbounded queue or automatic paid retries. Stop on repeated infrastructure failure or memory pressure. Retain reasons for every rejected/failed/skipped window.
+- Record preparation, transcription, inference, validation and end-to-end durations separately, including model warm-up. Report median/p95 and worst case, actual processed recording coverage and time-to-card after action completion. Record queue/coalescing losses in a real-time replay.
+- Preserve raw response, validated observations, generated cards/stories, rejection reasons, input evidence references and usage metadata privately. Record Ollama/model digest, runtime and transcription package versions, GPU memory and whether CPU offload occurred. Do not store generated frame sequences, recordings or secrets in Git.
+- Do not label counters as accuracy. Produce a review sheet that includes empty-output windows and supports action correctness, missed actions, wrong outcomes, replay false positives, timestamp error, duplicate cards, translation accuracy and story grounding.
+
+#### Quality review and acceptance gates
+
+Create reference annotations independently of model output across the whole game, including goals, misses, saves, ordinary passes/cutbacks, replays, crowd shots and ambiguous footage. The corrected Alba example is a development case, not a held-out test. Select a held-out set before tuning and do not tune on its answers. Document annotator, reviewed intervals, disagreements and the exact denominator; if only a subset is reviewed, call it a sampled audit, not full-game accuracy.
+
+Report event precision (correct proposed events / reviewed proposed events), event recall against the independently annotated in-scope actions, timestamp error, duplicate rate and false suggestions during replay/no-action footage. Define action matching and time tolerance before scoring; count an unmatched detection as a false positive and an unmatched reference as a miss. Measure before and after evidence filtering so a model that returns nothing cannot appear perfect. Audit story sentences separately for invented or temporally premature outcomes. Have a fluent Spanish reviewer judge correctness, translation fidelity, beginner suitability and pronunciation when audio is generated. No learning-effectiveness claim follows from these technical checks.
+
+Proposed engineering gates, to confirm with the user after the pilot: no future-evidence access, no invented goals among accepted reviewed suggestions, at least 90% precision on reviewed suggestions, and p95 processing at or below the 16-second step for sustained single-worker live coverage. Recall and useful unique cards per viewing hour must also be reported; high precision with negligible coverage is not success. These are targets, not achieved results. If local inference is slower, recorded post-match generation can still be useful; change live sampling only after showing the coverage tradeoff.
+
+#### Cost measurement, not just estimates
+
+Local inference has no per-request provider fee, but electricity, hardware use, storage and human review have costs. Measure elapsed wall time and, ideally, whole-PC energy with a wall meter. GPU power samples alone omit CPU, memory, PSU losses and other components. Calculate `kWh × the user's electricity tariff`; if only assumed watts or tariff are available, label the result an estimate. For illustration only, a PC averaging 400 W for two hours at €0.30/kWh costs €0.24 in electricity. If inference takes six hours, the same assumptions give €0.72. These are not measurements of this PC.
+
+For cloud comparison, retain provider-reported input, output and reasoning tokens for every completed request, including charged responses that fail content validation. Calculate a rate-based estimate separately from the final billed amount, currency, tax and promotional credits. A returned HTTP 200 can still produce unusable content. The saved Alba usage is about $0.01 at the published promotional effective rate or $0.02 at the announced standard rate; actual billing remains unverified. Prices, assumptions and primary sources are in [the live cost estimate](docs/LIVE_COST_ESTIMATE.md).
+
+Report cost per processed hour, per correct reviewed unique card and per useful reviewed story, alongside failure rate and review effort. Do not describe all generated cards as useful. The current recording is about 99 minutes, whereas the earlier business estimate used a two-hour event. Keep those denominators separate. A local model reduces inference fees; it does not eliminate sports-data subscriptions or broadcast/replay rights costs.
+
+#### Finish the existing development mode before headset acceptance
+
+These are inspection findings / pending work, not verified device failures:
+
+- `client.ts` aborts the start handshake. Verify that Stop during session creation cannot leave a server session occupied until expiry; release a session created after the user stops.
+- `Experience.frame()` detects seeks, but add/verify immediate seeking and page-exit/HMR cleanup so a late result cannot be published between a seek and the next frame. Preserve generation-based stale-response rejection.
+- Current learning text accepts up to 600 characters; bound card/story copy for spatial readability without truncating into a misleading sentence. Evidence text may remain longer.
+- Fresh draft audio is not prepared, and draft content is transient. Make saving behaviour honest: persist validated content with provenance or explicitly withhold Save for transient drafts. A saved boolean alone is not a saved card.
+- Add an explicit, separately labelled jump-to-Alba playback action if needed for practical testing. Starting recognition or opening Match Lab must never implicitly seek or pause the match.
+- Verify new Start/Stop/status/New drafts controls through browser and active immersive-session input. Keep the prepared pack as fallback. Do not declare Quest acceptance from emulation.
+
+Run typecheck before unit tests, production build and affected browser tests. Add meaningful local-provider tests for malformed output, future timestamps/transcript leakage, empty results, replay filtering, duplicated events, timeouts, cancellation, resumption and no-cloud fallback. Use fixtures for automation; real-model quality belongs in the separate evidence report. Re-test theater and passthrough on Quest 3 after the local provider actually works.
+
+#### Work order for the next Codex session
+
+1. Read this section and `AGENTS.md`; inspect the working tree and verify that the source changes/private recording arrived. Do not restart the project or assume GitHub contains the latest local work.
+2. Check Windows tools, driver, model download and GPU residency. No remote access is currently set up; ask only for concrete missing setup information.
+3. Implement the local provider, local commentary transcription, shared output validation and a resumable offline evaluation runner. Keep cloud as an explicitly selected comparison provider, not a silent fallback.
+4. Run the small smoke set. Inspect failures and stabilise the data contract before the full game.
+5. Run the full recording, measure processing and energy/cost, prepare independently scored quality evidence and clearly state which review remains pending. Do not spend on a full cloud rerun automatically; choose the comparison scope and cap after the local smoke results.
+6. Complete the recorded-as-live lifecycle/UI work above, integrate approved or explicitly labelled draft content, and invite focused Quest feedback.
+7. Only after this phase is solid, trial a live source adapter and optional event feed. Preserve the same source/timestamp/observation contract; align provider events to each viewer's delayed broadcast to avoid spoilers. Camera recognition of a real TV remains a separate later adapter and device-permission investigation.
+
+Desktop continuation prompt: “Read PRD.md, especially Resume here: recorded-match evaluation on Windows, and the applicable AGENTS.md files. I am on the Windows PC with RTX 5080 and 64 GB RAM. Continue ArenaVoca's local-AI evaluation on the recorded Barça match to reduce API costs. Verify the transferred working tree and recording first; establish the local smoke benchmark before the full game. Preserve playback and prepared Match Lab content, report real cost/quality evidence, and do not claim unrun tests or enable paid cloud fallback.”
+
+### Audiovisual match recognition · 14 October 2026
+
+The user selected both recognition inputs, starting with ArenaVoca’s own video, followed by a real TV viewed through the headset camera. The initial experiment uses a bounded 2–30 second excerpt of the local recording with original commentary. A multimodal model proposes temporal observations and draft Spanish/English cards and story sentences. No foundation-model training is planned before measuring the baseline on reviewed examples.
+
+The local command under `app/src/features/match-recognition/` prepares evidence without uploading by default. The selected Cloud route now accepts `--project arenavoca`, using local Google Application Default Credentials and a project-scoped Agent Platform endpoint rather than AI Studio billing. No key or token is exposed to XR/mobile clients. Trial-credit deduction must be confirmed in billing; successful inference alone does not establish it. Explicit analysis sends that excerpt and audio to Google Gemini using a server/local-only key. Inputs and results remain under the existing ignored match-analysis directory. Every observation retains recording-relative timestamps, source/clip hashes, visual and commentary evidence, replay classification and uncalibrated model confidence. Replay/unknown footage, low or medium confidence, explicit uncertainty or missing visual evidence withhold the proposed card. Even high-confidence drafts require factual and fluent Spanish review; schema validation is not correctness evaluation.
+
+The initial experiment was offline. The 15 October handoff above records the subsequently corrected Alba pack and the unfinished recorded-as-live development mode. The next acceptance gate is a measured local-model smoke set followed by full-recording evaluation, including a miss, a replay and a no-action interval. F1 needs separately reviewed temporal examples; do not infer braking from a still image. Background suggestions must preserve the selected card and the match's sole playback authority.
+
+For a real TV, capture only a user-selected screen region and explicitly enabled microphone commentary; camera permission and successful passthrough rendering are different capabilities. Validate actual Quest Browser camera access during an immersive session before selecting a web adapter or native bridge. No cross-headset camera compatibility is assumed. Camera capture, room cropping and production service authentication remain future work. Initial overlapping-window deduplication and runtime integration now exist in the development working tree but require end-to-end verification as described above. A virtual match is read from its video source, not the physical cameras.
 
 ### Direct manipulation of floating windows · 14 October 2026
 
@@ -25,7 +168,7 @@ Match Lab presents the selected prepared moment as a separate physical card with
 
 ### Learning And Community Demo · 13 October 2026
 
-The user plans to demonstrate ArenaVoca at [DevDay Exchange Community: Brussels](https://luma.com/my26sz4n) and wants to share their learning process as someone new to VR development. The event includes community discussion, Q&A and demos; an individual presentation length has not been confirmed.
+The user plans to demonstrate ArenaVoca at [DevDay Exchange Community: Brussels](https://luma.com/my26sz4n) and wants to share their learning process as someone new to VR development. The user confirmed a five-minute presentation in English.
 
 Proposed narrative: **Building a place to learn Spanish—and learning VR along the way.** Show the user's decisions, experiments and discoveries alongside the prototype. Do not imply that implementation by Codex establishes the user's understanding; use hands-on experiments and the user's own explanations as evidence of learning.
 
@@ -49,7 +192,7 @@ Working cadence for subsequent features:
 - Invite a focused Quest observation, then record the assumption, experiment, actual observation, decision and next question in existing implementation notes.
 - Continue independent work while awaiting device feedback. Do not record an offered exercise as completed learning or browser checks as physical device acceptance.
 
-First proposed learning exercise: world-space versus head-relative panels, using the existing placement presets to compare comfort and visibility. The prototype supports deliberate placement presets, not free dragging. Explain the coordinate system before inviting changes.
+First proposed learning exercise: world-space versus head-relative panels, comparing comfort and visibility. Placement presets were the original implementation; direct manipulation was subsequently implemented as described in the 14 October update. Explain the coordinate system before inviting changes.
 
 Demo evidence must remain precise: the user has confirmed passthrough with their room and floating screen visible. Physical AI coach acceptance remains pending. Full-match practice is manual; the coach does not hear or understand the broadcast. Spanish audio awaits fluent review, and language-learning effectiveness has not been validated.
 
@@ -77,7 +220,7 @@ The first implementation includes illustrated football/F1 example heroes, illust
 
 The user authorized a meaningful spatial learning activity around Alba’s cutback, in Theater and My room, then requested floating replay cards that flip to reveal translation and stories from the match. This extends the existing viewing loop; the match remains its own playback authority.
 
-The first lab is available only for the configured `barca-2018-full` football source. It opens on the cutback card and offers six prepared source-backed moments and two three-part stories from the existing match pack. Point and pinch the illustration, or use Flip card, to reveal English; moving to a different moment hides the translation again. Story mode connects each moment to its corresponding Spanish/English narrative. The selected card remains pinned as the main match advances. These are an offline prepared batch, not live event generation or automatic whole-match analysis.
+The lab is available only for the configured `barca-2018-full` football source. It opens on the cutback card. The 15 October corrected pack offers seven prepared source-backed moments and two three-part stories; the extra shot card shares its story's final scene. Point and pinch the illustration, or use Flip card, to reveal English; moving to a different moment hides the translation again. Story mode connects each moment to its corresponding Spanish/English narrative. The selected card remains pinned as the main match advances. These are a prepared batch. The separate opt-in recorded-as-live draft mode remains experimental, not automatic whole-match acceptance.
 
 Practise cutback opens an original spatial tactical board. Select the ball, then a teammate to demonstrate `hacia atrás`, relative to the marked direction of attack. A second arrangement reverses the attack direction and changes the correct teammate. Translation is hidden during a fresh attempt; explanatory feedback follows a selection. Show movement is a complete animation fallback and does not count as answering. This is point-and-pinch / controller selection, not unrestricted grabbing or an exact 3D reconstruction. Placement offers the existing deliberate left/right, near/far and height presets.
 
@@ -103,7 +246,9 @@ Target the upcoming Meta VR glasses with eyes/hands interaction, using Quest 3 f
 
 The selected continuous arena icon gains a short, original 3D welcome animation: its oval becomes a stepped arena bowl and the coral play symbol rises above the floor. Show it only during immersive onboarding, above the welcome panel, in theater and passthrough. It settles after four seconds and disappears when the user starts the match. It never changes camera pose or playback. Respect reduced-motion preference with a static completed form. Physical Quest comfort and recognizability remain pending review.
 
-### Immediate Implementation Task
+### Original Implementation Task · historical first milestone
+
+For current work, follow **Resume here: recorded-match evaluation on Windows** above. The original prototype instructions below do not request rebuilding the existing application.
 
 Read this document and any instructions in the new project's actual directory. Inspect that repository and runtime, then execute the First Prototype checklist items. Use app/ inside the new project as the proposed application source directory, adjusting to an existing repository's structure when necessary. Do not keep using the old chat's generated folder after the handoff.
 

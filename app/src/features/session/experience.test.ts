@@ -247,3 +247,34 @@ it("Match Lab reports failed saving and pronunciation, then clears the notice on
   expect(e.lab.notice).toBe("");
   vi.unstubAllGlobals();
 });
+
+it("generated cards, story narration and the tactical board use distinct Spanish audio", async () => {
+  const { e, session, audio } = await setup();
+  session.content.version = "theater-barca-2018-full-football";
+  vi.stubGlobal("localStorage", { getItem: () => null, setItem: vi.fn() });
+  audio.has = () => false;
+  e.openLab();
+  await e.listenLab();
+  expect(audio.preload).toHaveBeenLastCalledWith(
+    "lab-generated-alba-cutback",
+    "audio/lab-generated-alba-cutback-es.mp3",
+  );
+  e.changeLabCard("story");
+  await e.listenLab();
+  expect(audio.listen).toHaveBeenLastCalledWith(
+    "lab-story-alba-generated-story-2",
+  );
+  e.labPrimary();
+  await e.listenLab();
+  expect(audio.listen).toHaveBeenLastCalledWith("alba-cutback");
+  vi.unstubAllGlobals();
+});
+
+it("suspension stops analysis immediately, before the next render frame", async () => {
+  const { e, session } = await setup();
+  e.recognition.active = true;
+  const stop = vi.spyOn(e.recognition, "stop");
+  session.suspend();
+  expect(stop).toHaveBeenCalledWith("Analysis stopped on exit");
+  expect(e.recognition.active).toBe(false);
+});

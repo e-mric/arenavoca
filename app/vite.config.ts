@@ -10,7 +10,18 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [iwsdkDev({ https: process.env.IWSDK_HTTP !== "1" })],
-  server: { host: "0.0.0.0", port: 8081, open: false },
+  server: {
+    host: "0.0.0.0",
+    port: 8081,
+    open: false,
+    proxy: {
+      "/api/recognition": {
+        target: "http://127.0.0.1:8788",
+        changeOrigin: false,
+        timeout: 180000,
+      },
+    },
+  },
   build: {
     outDir: "dist",
     sourcemap: process.env.NODE_ENV !== "production",

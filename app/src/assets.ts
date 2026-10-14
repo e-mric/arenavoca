@@ -25,6 +25,10 @@ export default defineAssets({
   labPawn,
   labBall,
   labReplay,
+  "lab-art-draft": {
+    url: assetUrl("branding/favicon.png"),
+    type: AssetType.Texture,
+  },
   ...Object.fromEntries(
     [
       "bale-run",

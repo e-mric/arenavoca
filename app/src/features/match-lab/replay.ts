@@ -19,12 +19,12 @@ export class LabReplay {
         "Replay unavailable. You can still use the teaching board.";
     });
   }
-  async play(cardId = "alba-cutback") {
+  async play(cardId = "alba-cutback", replayPath?: string) {
     const request = ++this.generation;
     this.error = "";
     this.visible = true;
     this.status = "Silent replay of the selected moment";
-    const src = assetUrl(`media/user/${cardId}.mp4`);
+    const src = assetUrl(replayPath ?? `media/user/${cardId}.mp4`);
     if (this.video.getAttribute("src") !== src) this.video.src = src;
     this.video.currentTime = 0;
     try {

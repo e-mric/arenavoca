@@ -15,19 +15,19 @@ test("moment cards flip, stories follow their source, and silent replay never co
 }) => {
   await page.locator("#match-lab-open").click();
   await expect(page.locator("#match-lab [data-face]")).toHaveText(
-    "Alba pasa el balón hacia atrás.",
+    "El jugador pasa el balón hacia atrás dentro del área.",
   );
   await page.locator("#lab-flip-card").click();
   await expect(page.locator("#match-lab [data-face]")).toHaveText(
-    "Alba passes the ball back.",
+    "The player passes the ball back inside the penalty area.",
   );
   await page.locator("#lab-read-story").click();
   await expect(page.locator("#match-lab [data-face]")).toContainText(
-    "Coutinho llega",
+    "pase raso hacia atrás",
   );
   await page.locator("#lab-next-card").click();
   await expect(page.locator("#match-lab [data-face]")).toContainText(
-    "marca el primer gol",
+    "marca un gol",
   );
   await page.locator("#lab-watch").click();
   const replay = page.locator("video[data-lab-replay]");
@@ -95,5 +95,44 @@ test("missing replay recovers to the activity", async ({ page }) => {
   );
   await page.locator("#lab-continue").click();
   await expect(page.locator("#lab-ball")).toBeVisible();
+  expect(await page.locator(mainVideo).evaluate((v) => v.paused)).toBe(false);
+});
+
+test("the generated shot replays its own excerpt and joins the three-scene story without interrupting the match", async ({
+  page,
+}) => {
+  await page.locator("#match-lab-open").click();
+  const initial = await page.locator(mainVideo).evaluate((v) => v.currentTime);
+  await page.locator("#lab-next-card").click();
+  await expect(page.locator("#match-lab [data-face]")).toHaveText(
+    "El jugador dispara a puerta.",
+  );
+  await expect(page.locator("#match-lab [data-step]")).toContainText("6 of 7");
+  await page.locator("#lab-watch").click();
+  const replay = page.locator("video[data-lab-replay]");
+  await expect
+    .poll(() => replay.evaluate((v) => v.currentTime))
+    .toBeGreaterThan(0.2);
+  expect(await replay.evaluate((v) => v.currentSrc)).toContain(
+    "coutinho-shot.mp4",
+  );
+  expect(await replay.evaluate((v) => v.duration)).toBeCloseTo(4, 1);
+  await page.locator("#lab-read-story").click();
+  await expect(replay).toBeHidden();
+  await expect(page.locator("#match-lab [data-step]")).toContainText("3 of 3");
+  await expect(page.locator("#match-lab [data-face]")).toHaveText(
+    "Su compañero dispara y marca un gol.",
+  );
+  await page.locator("#lab-flip-card").click();
+  await expect(page.locator("#match-lab [data-face]")).toHaveText(
+    "His teammate shoots and scores a goal.",
+  );
+  await page.locator("#lab-prev-card").click();
+  await expect(page.locator("#match-lab [data-face]")).toContainText(
+    "pase raso",
+  );
+  const final = await page.locator(mainVideo).evaluate((v) => v.currentTime);
+  expect(final).toBeGreaterThan(initial);
+  expect(final - initial).toBeLessThan(20);
   expect(await page.locator(mainVideo).evaluate((v) => v.paused)).toBe(false);
 });

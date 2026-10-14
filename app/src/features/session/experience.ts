@@ -1,3 +1,5 @@
+import { RecordedStream } from "../match-recognition/stream";
+import { localRecognition } from "../match-recognition/client";
 import { MatchLab, cutback } from "../match-lab/lab";
 import { LabReplay } from "../match-lab/replay";
 import { readLabSave, saveLabPhrase } from "../match-lab/progress";
@@ -12,6 +14,26 @@ export class Experience {
   coach?: Coach;
   readonly lab = new MatchLab();
   labReplay?: LabReplay;
+  readonly recognition = new RecordedStream(localRecognition, (batch) =>
+    this.lab.cards.append(batch),
+  );
+  private readonly recognitionRequested =
+    typeof location !== "undefined" &&
+    new URLSearchParams(location.search).has("recognition");
+  get recognitionEnabled() {
+    return this.recognitionRequested && this.labAvailable;
+  }
+  toggleRecognition() {
+    if (this.recognition.active) this.recognition.stop();
+    else if (this.recognitionEnabled && this.session.matchActive)
+      void this.recognition.start(this.player.position);
+  }
+  showRecognitionDrafts() {
+    if (!this.lab.open) return;
+    this.changeLabCard("browse");
+    this.lab.cards.showDrafts();
+    this.lab.saved = readLabSave(localStorage, this.lab.cards.card.id);
+  }
   private labListening = false;
   get labAvailable() {
     return this.session.content.version === "theater-barca-2018-full-football";
@@ -38,6 +60,8 @@ export class Experience {
     };
     this.trace = new PassTrace(session.content.diagrams[0].route);
     session.onChange = () => {
+      if (this.recognition.active && !session.matchActive)
+        this.recognition.stop("Analysis stopped on exit");
       this.syncAudio();
       this.onChange();
     };
@@ -72,6 +96,7 @@ export class Experience {
     this.labReplay ??= new LabReplay(document.createElement("video"));
     void this.labReplay.play(
       this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id,
+      this.lab.view === "cards" ? this.lab.cards.replayPath : undefined,
     );
     this.onChange();
   }
@@ -124,7 +149,14 @@ export class Experience {
     this.labListening = true;
     const request = ++this.listenRequest;
     const cardId =
-      this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id;
+      this.lab.view === "cards" ? this.lab.cards.audioId : cutback.id;
+    if (!cardId) {
+      this.labListening = false;
+      this.lab.notice =
+        "Draft audio is not prepared yet. Read the Spanish and check the replay.";
+      this.onChange();
+      return;
+    }
     try {
       if (!this.audio.has(cardId))
         await this.audio.preload(cardId, `audio/${cardId}-es.mp3`);
@@ -254,6 +286,17 @@ export class Experience {
     await this.session.back();
   }
   frame(delta: number) {
+    if (this.recognition.active) {
+      if (!this.session.matchActive)
+        this.recognition.stop("Analysis stopped on exit");
+      else
+        this.recognition.tick(
+          this.player.position,
+          this.player.playing,
+          delta,
+          this.player.video.seeking,
+        );
+    }
     if (!this.session.matchActive) this.lab.close();
     this.lab.frame(delta);
     if (this.session.matchActive) this.session.tick();
