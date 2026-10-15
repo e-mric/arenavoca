@@ -1,7 +1,8 @@
-"""Analyze a short local match excerpt with Gemini; never controls app playback.
+"""Analyze a bounded match excerpt with Gemini or Ollama; never controls playback.
 
 Default: prepare locally. --analyze explicitly sends the excerpt and its audio to
-Google. Results remain private review drafts, not automatically published cards.
+Google on the default route. --provider ollama uses only the local model service.
+Results remain private review drafts, not automatically published cards.
 """
 import argparse
 import base64
@@ -290,36 +291,64 @@ def analyze(clip, source, sport, model, key, output, opener=urllib.request.urlop
     return result
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--video', type=Path, required=True)
     parser.add_argument('--source-id', required=True)
     parser.add_argument('--sport', choices=list(ACTIONS), default='football')
     parser.add_argument('--start', type=float, required=True)
     parser.add_argument('--duration', type=float, default=20)
-    parser.add_argument('--model', default='gemini-3.8-flash')
+    parser.add_argument('--provider', choices=['gemini', 'ollama'], default='gemini')
+    parser.add_argument('--model', help='Defaults to gemini-3.8-flash or local qwen3-vl:8b.')
+    local_audio = parser.add_mutually_exclusive_group()
+    local_audio.add_argument('--visual-only', action='store_true', help='Local frames without commentary.')
+    local_audio.add_argument('--whisper-model', type=Path, help='Complete local faster-whisper model directory.')
+    parser.add_argument('--fps', type=float, default=1, help='Local frame sampling; at most 48 frames.')
+    parser.add_argument('--local-timeout', type=float, default=180)
     parser.add_argument('--project', help='Use Google Cloud ADC and this project instead of an AI Studio key.')
-    parser.add_argument('--analyze', action='store_true', help='Send excerpt + audio to Google.')
-    args = parser.parse_args()
+    parser.add_argument('--analyze', action='store_true', help='Run the selected provider (Gemini uploads; Ollama stays local).')
+    args = parser.parse_args(argv)
     try:
         validate_window(args.start, args.duration)
         if not args.video.is_file(): raise ValueError('Local video not found.')
         if not args.source_id.strip() or len(args.source_id) > 120:
             raise ValueError('Choose a short source identity.')
-        if args.project: cloud_endpoint(args.project)
-        key = (cloud_token(args.project) if args.project else api_key()) if args.analyze else ''
-        if args.analyze and not key: raise ValueError('GEMINI_API_KEY is not configured.')
+        local = None
+        model = args.model or ('qwen3-vl:8b' if args.provider == 'ollama' else 'gemini-3.8-flash')
+        key = ''
+        if args.provider == 'ollama':
+            import local_model as local
+            if args.project:
+                raise ValueError('--project cannot be used with the local provider.')
+            if not args.visual_only and args.whisper_model is None:
+                raise ValueError('Choose --visual-only or --whisper-model explicitly for local analysis.')
+            if model not in local.MODELS:
+                raise ValueError('Choose qwen3-vl:8b or qwen3-vl:4b, installed locally.')
+            local.sample_times(args.duration, args.fps)
+            local.OllamaClient(timeout=args.local_timeout)  # Validate settings; makes no requests.
+        else:
+            if args.visual_only or args.whisper_model:
+                raise ValueError('Local audio options require --provider ollama.')
+            if args.project: cloud_endpoint(args.project)
+            key = (cloud_token(args.project) if args.project else api_key()) if args.analyze else ''
+            if args.analyze and not key: raise ValueError('GEMINI_API_KEY is not configured.')
         # A new run directory avoids stale results being mistaken for a fresh success.
         import tempfile
         OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
         output = Path(tempfile.mkdtemp(prefix='run-', dir=OUTPUT_ROOT))
         clip, source = prepare(args.video, output, args.start, args.duration, args.source_id)
         print(f'Prepared local video + audio excerpt: {output}', flush=True)
+        frames = local.prepare_frames(clip, source, output, args.fps) if local and not args.analyze else None
         if args.analyze:
-            result = analyze(clip, source, args.sport, args.model, key, output, project=args.project)
+            if local:
+                result = local.analyze_local(clip, source, args.sport, model, output,
+                                            fps=args.fps, whisper_model=args.whisper_model,
+                                            timeout=args.local_timeout, frames=frames)
+            else:
+                result = analyze(clip, source, args.sport, model, key, output, project=args.project)
             print(f"Draft only: {len(result['observations'])} observations, {len(result['cards'])} reviewable cards.")
         else:
-            print('Nothing uploaded. Add --analyze to call the model.')
+            print('No inference performed. Add --analyze to call the selected provider.')
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         parser.exit(1, f'{error}\n')
 

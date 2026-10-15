@@ -1,6 +1,6 @@
 # ArenaVoca PRD
 
-Version 6 · Dual-submission plan and Windows/local-AI handoff · 15 October 2026
+Version 7 · Local-model adapter and dual-submission plan · 16 October 2026
 
 ## Project Handoff And Current State
 
@@ -46,10 +46,10 @@ Success for the next development phase means a reproducible full-recording evalu
 | Alba experiment | Actual 808–828-second excerpt analysed with `gemini-3.8-flash`, 4 fps; model response 17.92 s; 2,717 input, 772 response and 1,353 reasoning tokens | This is a single positive example, not representative accuracy or end-to-end latency |
 | Corrected prepared content | `app/src/features/match-lab/content/alba-generated.json` contains four corrected Alba observations and three story scenes; card catalogue has seven prepared cards including three earlier Madrid moments | Fluent Spanish review and physical headset review; these are prepared results, not freshly recognised live events |
 | Recorded-as-live development mode | Working-tree implementation in `stream.ts`, `client.ts`, `serve.py` and Match Lab adapters; opt-in `?recognition=1`; 20-second windows, 16-second step, one request in flight, three attempts per explicit run; server six-call process cap | End-to-end model-to-browser test and new spatial controls still need verification; do not call this finished |
-| Local model | Proposed below; not connected or installed on the Windows PC | Model fit, speed, factual quality, transcript quality and memory use |
+| Local model | Ollama short-excerpt adapter and optional local Whisper transcription implemented/tested with fixtures on Mac; Windows commands documented | No actual model run yet; Windows setup, speed, factual quality, transcript quality and GPU memory use |
 | Sports APIs / live ingest / headset camera | Not connected | Coverage, access, permissions, costs, synchronisation and device capabilities |
 
-The existing `localRecognition` TypeScript name means a **local HTTP gateway**, not local AI inference. `serve.py` currently calls Google. Do not use it for a zero-cloud-cost benchmark until an explicit local provider is implemented. Its hardcoded source is `barca-2018-full`; it is a development service, not a public authenticated backend.
+The existing `localRecognition` TypeScript name means a **local HTTP gateway**, not local AI inference. `serve.py` currently calls Google. It has not been wired to the new local adapter: use the authoring command with explicit `--provider ollama` for local inference, not this service. Its hardcoded source is `barca-2018-full`; it is a development service, not a public authenticated backend.
 
 The original cloud result incorrectly asserted a left-foot finish and a scoreboard update and gave late shot/goal boundaries. Those details were corrected in the prepared pack after source-frame review. Keep raw output immutable when evaluating; do not measure the corrected pack as if the model produced it correctly. Raw evidence is in the ignored `app/content-source/match-analysis/recognition/cloud-hxoevlt_/` folder on the Mac. Google billing access previously returned HTTP 403; actual charge and credit application remain unverified.
 
@@ -88,9 +88,9 @@ This downloads a local model once and checks basic loading; it is not a video-re
 
 On the restored source checkout, run `npm ci` inside `app/`, then typecheck and unit tests. Use the project-managed IWSDK development commands from `app/AGENTS.md`, not an ad-hoc Vite server. Physical Quest access still needs a reachable development URL and its existing local certificate workflow. For the first model benchmark, running entirely on the Windows PC avoids needing remote access. A private SSH tunnel or authenticated local backend can connect the Mac/Quest later; the headset should call the ArenaVoca backend, not an unrestricted Ollama service.
 
-#### Proposed local pipeline and provider boundary
+#### Local pipeline and provider boundary
 
-Keep common timing, validation, deduplication, card/story contracts and playback behaviour in the existing feature. Add a local provider adapter under `app/src/features/match-recognition/`, alongside the cloud adapter. Do not duplicate the Match Lab UI or migrate the project to another XR framework.
+Keep common timing, validation, deduplication, card/story contracts and playback behaviour in the existing feature. `app/src/features/match-recognition/local_model.py` now provides the local adapter alongside the cloud adapter, selected by `recognize.py --provider ollama`. It is an offline short-excerpt authoring path, not yet connected to the Match Lab service. Do not duplicate the Match Lab UI or migrate the project to another XR framework.
 
 1. Read a bounded excerpt from the recorded source. Preserve source identity, recording time, source hash and the exact window. For simulated-live evaluation, expose only evidence whose timestamps are at or before the playback watermark.
 2. Transcribe original commentary locally with Whisper through a Windows-compatible runtime such as [faster-whisper](https://github.com/SYSTRAN/faster-whisper). Reuse the existing MLX-Whisper authoring route only on Apple Silicon; it is not the Windows implementation. Start with a small model, record its exact version and language, and compare difficult passages before selecting it. CPU transcription is a valid initial option if it avoids competing for GPU memory; benchmark CUDA later with the documented dependencies.
@@ -101,11 +101,13 @@ Keep common timing, validation, deduplication, card/story contracts and playback
 
 No automatic cloud fallback in local-only mode. Report a local failure and keep the match playing. A later opt-in hybrid can send difficult excerpts to Gemini with a visible budget and data-sharing choice, but only if evaluation shows an advantage. Generate observations once per identical feed, then reuse them across viewers; personalise language exercises separately. Different audio feeds and individual headset-camera views may need separate analysis.
 
-The proposed local endpoint/adapter, automatic Windows transcription and full-game inference runner **do not exist yet**. A dry-run schedule/worksheet planner is implemented as of 16 October (below); it does not execute inference. Do not invent working execution commands for the missing pieces. Implement and test them before giving the user an end-to-end run command. The local AI recognises and writes learning content; the same model is not an image generator. Use source-backed replay images and existing original artwork for cards before adding another generation model.
+**Implemented adapter · 16 October:** the authoring command can prepare ordered frames, call an installed local Qwen3-VL through Ollama, optionally transcribe the bounded excerpt with a complete local faster-whisper model folder, and validate output through the shared card/story policy. It rejects remote models, redirects, invalid/future evidence and truncated output, with no cloud fallback or automatic downloads/retries. It records source/frame/model fingerprints, raw output, review status and adapter timings. The Mac test used real excerpt extraction and fixture responses over loopback HTTP; no real model was run. [Windows commands and limitations](app/src/features/match-recognition/README.md#local-ollama-adapter--16-october-2026).
+
+The full-game inference runner and local-provider integration with `serve.py` **remain pending**. `benchmark.py` only prepares a schedule/worksheet. Windows dependency compatibility, GPU residency, model quality and throughput must be measured on the PC. Optional Whisper currently runs CPU/int8; compare GPU transcription later. Do not invent execution/resume commands for the full-game runner or label fixture results as recognition accuracy. Use source-backed replay images and existing original artwork for cards; the vision model does not generate illustrations.
 
 #### Full-recording benchmark protocol
 
-**Implemented preparation · 16 October:** `app/src/features/match-recognition/benchmark.py` now writes a source-hashed manifest and blank review worksheet into a fresh ignored directory. It was run on the actual Mac recording: 373 planned windows, source hash matching the transfer reference, final interval 5952–5960.794558 seconds, zero inference requests. It preserves short tails explicitly and does not overwrite prior reviews. [Command and limitations](app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). Local inference, transcription, resumable execution and actual accuracy/cost results remain pending; this is schedule verification only.
+**Implemented preparation · 16 October:** `app/src/features/match-recognition/benchmark.py` now writes a source-hashed manifest and blank review worksheet into a fresh ignored directory. It was run on the actual Mac recording: 373 planned windows, source hash matching the transfer reference, final interval 5952–5960.794558 seconds, zero inference requests. It preserves short tails explicitly and does not overwrite prior reviews. [Command and limitations](app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). Actual local-model evaluation, resumable execution and accuracy/cost results remain pending; this is schedule verification only.
 
 First complete a small smoke set: Alba 808–828, an independently reviewed missed chance, a broadcast replay, and a no-action/crowd interval. Establish the other timestamps by inspecting the recording, not from model guesses. Check complete response parsing, memory, timing and failure behaviour before running hundreds of requests.
 
@@ -154,7 +156,7 @@ Run typecheck before unit tests, production build and affected browser tests. Ad
 
 1. Read this section and `AGENTS.md`; inspect the working tree and verify that the source changes/private recording arrived. Do not restart the project or assume GitHub contains the latest local work.
 2. Check Windows tools, driver, model download and GPU residency. No remote access is currently set up; ask only for concrete missing setup information.
-3. Implement the local provider, local commentary transcription, shared output validation and a resumable offline evaluation runner. Keep cloud as an explicitly selected comparison provider, not a silent fallback.
+3. Use the implemented local adapter and optional commentary path for one bounded smoke test; verify Windows dependencies and inspect the resulting evidence. Then implement the resumable offline evaluation runner. Keep cloud as an explicitly selected comparison provider, not a silent fallback.
 4. Run the small smoke set. Inspect failures and stabilise the data contract before the full game.
 5. Run the full recording, measure processing and energy/cost, prepare independently scored quality evidence and clearly state which review remains pending. Do not spend on a full cloud rerun automatically; choose the comparison scope and cap after the local smoke results.
 6. Complete the recorded-as-live lifecycle/UI work above, integrate approved or explicitly labelled draft content, and invite focused Quest feedback.

@@ -71,12 +71,105 @@ delivery and physical Quest verification remain pending.
 
 The user will continue on Windows with RTX 5080 / 64 GB system RAM, starting with
 local Qwen3-VL and local commentary transcription to reduce inference fees. A
-local-only benchmark planner is now implemented (below); the local-provider
-adapter and resumable inference runner are still pending.
+local-only benchmark planner and short-excerpt Ollama adapter are implemented
+(below); actual Windows model evaluation and the resumable inference runner are
+still pending. `serve.py` continues to use Google; the new provider is currently
+available through the authoring command only.
 The current setup instructions, source/media transfer checklist, known pending
 work and cost/quality evaluation protocol are in
 [PRD.md](../../../../PRD.md), under “Resume here: recorded-match evaluation on
 Windows”. No automatic cloud fallback is authorised for local-only mode.
+
+## Local Ollama adapter · 16 October 2026
+
+The adapter uses the existing event/card/story schema and review rules. It sends
+ordered JPEG samples and optional locally transcribed commentary to Ollama on
+`127.0.0.1:11434`. It does not send the MP4/audio to Qwen directly. Sampled frames
+can miss a fast ball; this is a different input representation from Gemini video.
+It never reads cloud credentials, pulls a model, follows HTTP redirects, uses a
+system proxy or falls back to Gemini. Only installed `qwen3-vl:8b` and
+`qwen3-vl:4b` are accepted, with vision capability and no remote-model metadata.
+Keep `OLLAMA_NO_CLOUD=1` enabled in the Ollama process as described in the PRD.
+
+### Windows: first visual smoke test
+
+Install/start Ollama, explicitly download the selected model with
+`ollama pull qwen3-vl:8b`, and verify the recording/FFmpeg setup from the PRD.
+From `app/`, using Python 3.12 (or your installed Python 3.11), prepare evidence:
+
+```powershell
+py -3.12 src/features/match-recognition/recognize.py --provider ollama --visual-only --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20
+```
+
+This encodes the bounded excerpt and extracts **20 frames at 1 fps, 640 px wide**.
+It makes no model calls, even if Ollama is running. Add `--analyze` to the same
+command for one local inference request. `--model qwen3-vl:4b` selects an explicitly
+installed alternative. `--fps` accepts 0.5–4 with 2–48 frames per excerpt; excessive
+requests are rejected rather than silently undersampled. Choose higher sampling
+only after inspecting memory use and quality. Sample times are clip-relative seek
+targets and may round to a decoded frame boundary.
+
+The request uses a schema-constrained JSON response, deterministic generation
+settings, a 16,384-token context and a 2,048-token output cap. Truncated responses
+are rejected. No automatic retry: lower sampling or investigate the failure
+before an explicit new run. `--local-timeout` defaults to 180 seconds, maximum 300;
+this bounds the HTTP wait, not a guarantee that Ollama stops GPU work immediately.
+
+### Windows: add local commentary
+
+Download/install dependencies once, deliberately. This setup may access the
+internet; subsequent analysis requires only local model files. CPU/int8 Whisper
+leaves GPU memory for Qwen; GPU transcription is a separate later comparison.
+The virtual environment and weights below stay in the ignored analysis folder.
+
+```powershell
+py -3.12 -m venv content-source/match-analysis/.venv
+.\content-source\match-analysis\.venv\Scripts\python.exe -m pip install "faster-whisper>=1.2,<2"
+.\content-source\match-analysis\.venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download; snapshot_download('Systran/faster-whisper-small', local_dir='content-source/match-analysis/models/whisper-small')"
+.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/recognize.py --provider ollama --whisper-model content-source/match-analysis/models/whisper-small --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20 --analyze
+```
+
+The folder must contain `model.bin`, `config.json` and `tokenizer.json`; a model
+name alone is rejected. Whisper receives only the prepared excerpt, with no
+previous transcript/history. Out-of-range or unordered transcript segments fail
+validation. If audio is absent, choose `--visual-only` explicitly; failures do not
+silently change the evidence mode. Transcription can hallucinate or mishear names:
+it is evidence for review, not ground truth. No supplied full-match transcript or
+reference answers enter the request.
+
+### Outputs and verification limits
+
+Each run uses a fresh ignored `content-source/match-analysis/recognition/run-*`
+directory. Keep these private when transferring to Windows. Preparation writes
+`excerpt.mp4`, `source.json`, JPEG frames and `frames.json`. Analysis adds:
+
+- `transcript.json`: clip-relative segments, or explicit visual-only metadata.
+- `input.json`: prompt, evidence timing, settings and source/frame hashes, with
+  image bytes kept in the separate frame files.
+- `raw-response.json`: unchanged model response, preserved before card validation.
+- `analysis.json`: model digest/Ollama version, transcription model-file hashes and
+  package version, sampling/settings, request fingerprint, timings, token counts
+  and running-model telemetry where available. Failed validation remains a failed
+  run even when the HTTP request succeeded. Adapter timings exclude the initial
+  excerpt encoding and whole-recording hash; they are not full end-to-end latency.
+- `draft.json`: only after successful validation. Replay/uncertain events are
+  withheld; accepted cards still need factual and fluent Spanish review. Without
+  a transcript, any asserted commentary causes rejection.
+
+The Mac verification used actual Alba excerpt/frame preparation plus synthetic
+responses through a loopback HTTP test server. **No real Ollama/Whisper model was
+run.** Windows dependency compatibility, model speed, GPU residency, Spanish
+quality and full-game accuracy remain unverified. Check `ollama ps` and
+`nvidia-smi` during the first PC run; telemetry is not automatically an accuracy or
+energy measurement. `serve.py`, the three/six-request runtime limits and playback
+behaviour are unchanged. Full-game execute/resume and local-provider wiring into
+Match Lab remain later work; `benchmark.py` still only prepares the schedule.
+
+Implementation references checked 16 October 2026:
+[Ollama chat](https://docs.ollama.com/api/chat),
+[vision input](https://docs.ollama.com/capabilities/vision),
+[model metadata API](https://github.com/ollama/ollama/blob/main/api/types.go),
+[faster-whisper](https://github.com/SYSTRAN/faster-whisper).
 
 ## Full-recording preparation · 16 October 2026
 
