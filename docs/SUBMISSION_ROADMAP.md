@@ -2,6 +2,8 @@
 
 Updated 15 October 2026. Product authority: [PRD](../PRD.md). All unchecked work below is pending. This plan does not register, purchase, publish, contact organisers or submit. Emeric owns account/eligibility decisions and submission; Emeric and Codex prepare implementation, evidence and materials together.
 
+Progress, 16 October: local benchmark preparation now runs on the Mac. The actual recording produced 373 planned windows and an unreviewed worksheet, with no inference or upload. [Usage and evidence](../app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). The model smoke test/full-game execution gates below remain open.
+
 ## Official requirements and dates
 
 ### Meta VR Start Developer Competition 2026

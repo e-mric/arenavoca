@@ -70,12 +70,52 @@ build and seven prepared-card/theater browser regressions. Fresh-model browser
 delivery and physical Quest verification remain pending.
 
 The user will continue on Windows with RTX 5080 / 64 GB system RAM, starting with
-local Qwen3-VL and local commentary transcription to reduce inference fees. No
-local-provider adapter or full-game runner has been implemented or measured yet.
+local Qwen3-VL and local commentary transcription to reduce inference fees. A
+local-only benchmark planner is now implemented (below); the local-provider
+adapter and resumable inference runner are still pending.
 The current setup instructions, source/media transfer checklist, known pending
 work and cost/quality evaluation protocol are in
 [PRD.md](../../../../PRD.md), under “Resume here: recorded-match evaluation on
 Windows”. No automatic cloud fallback is authorised for local-only mode.
+
+## Full-recording preparation · 16 October 2026
+
+This works on the Mac now and uses the same Python/ffprobe setup on Windows.
+From `app/`, run:
+
+```sh
+python3 src/features/match-recognition/benchmark.py --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full
+```
+
+It only probes/hashes the recording and plans 20-second windows at 16-second
+intervals. No model is loaded, no credentials read, no media extracted and no
+inference/upload performed. A new ignored directory under
+`content-source/match-analysis/recognition/benchmarks/` receives:
+
+- `manifest.json`: source fingerprint, duration, audio presence, schedule,
+  per-window evidence watermarks and expected request count.
+- `review.csv`: all windows, including any tail shorter than two seconds (marked
+  `skip-too-short`). Review fields are blank, never fabricated zero-error scores.
+
+The actual Mac recording produced **373 planned windows**, ending at
+**5,960.794558 seconds**, with an **8.794558-second final window**. Its hash matches
+the PRD transfer reference. Inference requests made: **zero**. This verifies the
+schedule, not model quality, latency, cost or GPU performance. The script currently
+has no execute/resume command. Freeze provider/model, prompt, sampling and
+transcription configuration before adding execution; `planId` is not a sufficient
+inference-cache key. Do not sum overlapping durations as unique coverage.
+
+Review/reference annotations must remain outside model inputs. Decide annotation
+matching/tolerance and a held-out set before scoring; the worksheet alone does not
+compute accuracy. New preparation runs preserve previous review files. The
+schedule stores no machine-specific absolute recording path and can be recreated
+after verifying the copied recording's hash on Windows.
+
+Feature tests (including existing recognition/service tests):
+
+```sh
+python3 -m unittest discover -s src/features/match-recognition -p 'test_*.py'
+```
 
 ## First evaluation
 
