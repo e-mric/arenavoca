@@ -6,6 +6,8 @@ Learn languages through immersive sports. Watch football, F1 and more in a virtu
 
 [GitHub repository](https://github.com/e-mric/arenavoca)
 
+[Submission roadmap](docs/SUBMISSION_ROADMAP.md): preparation milestones and checklists for the Meta VR Start competition (18 November 2026) and No Excuses Fund (15 December 2026). The [PRD](PRD.md) defines the shared product scope; eligibility, public-content clearance and submission remain pending.
+
 The primary prototype is an **immersive sports viewing lounge** with a large match screen and optional floating Spanish panels. Choose **Theater** for the enclosed room or **My room · Passthrough** to keep your real surroundings visible behind the screen. Both use one video timeline; Explore, Replay and Save leave playback running. Pause remains explicit.
 
 The locally supplied Barça 5–1 Madrid full match is configured as the native immersive source. The original 30-second passing sample remains available at `/?sample=1`. Football and F1 practice share learning behavior and supply different vocabulary and diagrams. A native F1 race needs its own local video; the separate YouTube browser player remains available as a secondary route.

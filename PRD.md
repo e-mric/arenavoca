@@ -1,12 +1,31 @@
 # ArenaVoca PRD
 
-Version 5 · Windows/local-AI evaluation handoff · 15 October 2026
+Version 6 · Dual-submission plan and Windows/local-AI handoff · 15 October 2026
 
 ## Project Handoff And Current State
 
-This PRD contains the complete product requirements, technical specification, implementation preferences, build checklist, future roadmap, research context, and visual design brief. It is the primary planning reference for the new project. Separate specification, checklist, build notes, or prompt files are not needed to understand the plan.
+This PRD contains the complete product requirements, technical specification, implementation preferences, build checklist, future roadmap, research context, and visual design brief. It is the primary planning reference for the new project. The dated submission schedule and operational checklists are maintained in [docs/SUBMISSION_ROADMAP.md](docs/SUBMISSION_ROADMAP.md); this PRD remains the product authority.
 
 The project already exists at `https://github.com/e-mric/arenavoca.git`. Application code lives in `app/`. Read repository and scoped `AGENTS.md` instructions before implementation. The handoff below is the current priority and supersedes conflicting early-prototype statements elsewhere in this document; older dated sections remain historical context.
+
+### Current delivery priority: two submissions · 15 October 2026
+
+Prepare ArenaVoca for the Meta VR Start Developer Competition and the No Excuses Fund using one product and a shared body of evidence. The [submission roadmap](docs/SUBMISSION_ROADMAP.md) records official sources, eligibility checks, owners, internal targets, preparation checklists and release controls. Planning is authorized; registration, domain purchase, publishing, organiser messages and final submission are not performed by this documentation update.
+
+| Submission | Official deadline | Our preparation target | Main proof |
+| --- | --- | --- | --- |
+| Meta VR Start Developer Competition 2026 | 18 November 2026, 12:00 PST / 21:00 Europe/Brussels | Ready to submit 16 November | A short, useful hands-first Match Lab experience on Quest |
+| No Excuses Fund, first cohort | 15 December 2026, US Pacific Time; exact cutoff hour not published in the reviewed pages | Ready to submit 14 December, 18:00 Europe/Brussels | A working public product, credible user need and measured operation |
+
+Sources checked 15 October: [Meta FAQ](https://start-developer-competition-26.devpost.com/details/faqs), [No Excuses programme](https://noexcuses.get.tech/), [No Excuses terms](https://noexcuses.get.tech/terms). Internal targets are planning choices, not organiser deadlines. Recheck before submitting.
+
+The Windows/local-AI evaluation below remains the next engineering step. It must not consume the protected Quest testing and submission preparation time. By 31 October, choose the demonstration mode based on measured results: freshly generated content only if reliable; otherwise visibly labelled, reviewed prepared cards and stories. Retain failed and incomplete benchmark results as evidence; never describe a prepared pack as live recognition. Full-game evaluation can continue for the December application without blocking a reliable November demo.
+
+Public-demo scope is one coherent football loop: watch a short action, open Match Lab while viewing continues, manipulate a replay card, flip for translation, practise the action, save, and answer a recall question. Theater and passthrough use the same learning contracts. Make placement and hand interaction useful to the learning task. The mobile companion supports the wider product pitch; it is not required to complete the Quest demonstration. Keep F1 as a separate existing practice pack/future recognition expansion, not a claimed full-race recognition capability.
+
+The private Alba/Barça recording remains the development benchmark. It is not approved public submission content. Before publishing, resolve the rights and branding/person restrictions documented in the roadmap; prepare an original, unbranded football sequence with matching replay cards and story as the default submission alternative. Do not automatically publish the local recording, extracted frames, commentary or recognisable-player material. The existing 30-second sample is a calibration starting point, not evidence that a complete submission pack is ready.
+
+Live broadcasts, paid sports feeds, headset-camera recognition, model training, automatic account sync and additional XR platforms remain after these submissions unless the current core is already accepted. No change of XR framework is planned. The five-minute English community presentation remains separate from competition materials and uses its own script and media review.
 
 ### Resume here: recorded-match evaluation on Windows · 15 October 2026
 
@@ -258,6 +277,7 @@ The current scope and first milestone are sufficiently defined to begin. Exact p
 
 ### Reading Map
 
+- Current delivery priority and [submission roadmap](docs/SUBMISSION_ROADMAP.md): November/December deadlines, preparation tasks and release gates.
 - Product Summary through Epics And User Stories: audience, learning journey, and testable behaviour.
 - Edge Cases, What We Are Building, and Non Goals: scope boundaries.
 - Future Human Spanish Coaching: later roadmap.
@@ -375,18 +395,15 @@ The earlier search did not find an exact match for the proposed combination. Thi
 
 The key risks are distraction from the match, passive exposure without recall, a narrow football vocabulary, and the need to justify wearing a headset. The pilot compares the spatial explanation with flat bilingual cards and separately checks ordinary viewing enjoyment. The app should show why exploring an action adds value beyond a subtitle panel.
 
-## Hackathon Context For Submission Planning
+## Submission Context And Product Positioning
 
-The event is the Meta VR Start Developer Competition 2026. These planning facts come from the review on 12 October 2026; re-check the official event pages before submission.
+The current plan covers two programmes. The [submission roadmap](docs/SUBMISSION_ROADMAP.md) is the maintained rules/preparation checklist, reviewed on 15 October 2026. Both organisers retain final eligibility decisions; no explicit cross-entry prohibition was found in the reviewed terms. This is a planning interpretation, not written organiser clearance or confirmation of the user's eligibility.
 
-- The reviewed deadline is 18 November 2026 at 12:00 PST, or 21:00 Europe/Brussels. The total advertised prize pool is $1 million. [Overview](https://start-developer-competition-26.devpost.com/)
-- Entertainment is the proposed track. New Experience is the proposed division for this newly conceived project, subject to its actual development history. A playable build, public demo video under three minutes, and completed submission form are required. [Requirements](https://start-developer-competition-26.devpost.com/)
-- The official equally weighted criteria are Innovation & Creativity, Experience Design, Technical Implementation, and Polish & Presentation. Potential Impact and Quality of the Idea were the user's concept-selection criteria. [Judging](https://start-developer-competition-26.devpost.com/details/judging)
-- Fully usable hand interaction is a requirement. Seated use within a two-foot radius, short satisfying sessions, and an entrant-built core experience guide the design. [Overview](https://start-developer-competition-26.devpost.com/)
-- Age, jurisdiction, developer access, and Start membership need verification. The rules limit each individual to one submitted entry, personally or as a team representative. [Rules](https://start-developer-competition-26.devpost.com/rules), [FAQs](https://start-developer-competition-26.devpost.com/details/faqs)
-- The reviewed rules restrict identifiable people, branding, and third-party rights. The chosen demo therefore uses fictional players, original illustrations, and unbranded content. Spanish teaching has English meanings and entry materials will be English. [Rules](https://start-developer-competition-26.devpost.com/rules)
+For **Meta**, propose Entertainment and verify the correct division against the actual Git/development history. The product argument is spatial learning: a viewer can inspect, turn and replay a sporting action while the match continues. A flat video player with decorative panels is insufficient for our own acceptance target.
 
-For an IWSDK/WebXR build, the reviewed submission route is an accessible hosted link. Engine-based APK builds use the Competition release channel. The complete official rules govern eligibility and submission; this PRD is a product plan, not a rules acknowledgment. Nothing has been submitted or published.
+For **No Excuses**, position ArenaVoca as language practice grounded in sports that fans already enjoy. Support the pitch with real usage feedback, a working public experience, reviewed learning material and cost/quality measurements. Keep user demand, retention and willingness to pay as hypotheses until tested. The public product must work independently of the developer's personal PC and private recording; prepared results are an acceptable proposed demo fallback when labelled honestly, not an assurance of fund selection.
+
+Prepare one source-controlled release manifest per submission, linking its commit, build, assets, test evidence and stated limitations. Keep the competition release stable while later product work continues separately.
 
 ## Product Goals
 
@@ -592,7 +609,7 @@ Protect pass tracing for the first passing example: the user selected it as the 
 
 ## What We Would Add With More Time
 
-Future work should follow evidence that viewers enjoy and remember the first experience.
+The dated near-term roadmap is [docs/SUBMISSION_ROADMAP.md](docs/SUBMISSION_ROADMAP.md). Prioritise its submission gates before the longer-term ideas below. Future work should follow evidence that viewers enjoy and remember the first experience.
 
 1. Longer sessions and additional scenarios, with reviews scheduled across days.
    Sport-specific packs can extend this to F1/motorsport, tennis, basketball, and other sports after the first device learning loop is validated. Each pack needs its own authored action explanations and reviewed language content.
@@ -726,17 +743,19 @@ Use observed distraction to adjust prompt timing and density before expanding th
 
 ## Submission Proof Points
 
-The demo should show actual product behaviour through one clear sequence:
+The public demonstration should show one clear sequence using the approved submission content:
 
-1. Enter and start the match with hands while seated.
-2. Show a passing action becoming its illustrated replay and Spanish phrase.
-3. Explore the diagram, trace or replay the pass, request pronunciation, and save the phrase.
-4. Return to the match from the same position.
-5. Answer a review question and show the correct action and phrase.
+1. Enter and start viewing with hands while seated.
+2. Open a moment in Match Lab; show its replay and Spanish phrase without interrupting the main video.
+3. Grab and turn the card to reveal English, explore/trace the action, request pronunciation and save it. Demonstrate a practical panel placement adjustment.
+4. Close the learning view while the match continues at its current position. Do not seek back to the position at which learning opened.
+5. Answer a recall question. Show a short story only when its events and language have been reviewed.
 
-The write-up should explain the specific audience, the learning hypothesis, and why spatial action exploration adds value beyond a subtitle panel. It should state that the demonstration uses a simulation and prepared event timings. Any retention or enjoyment claim must be supported by actual pilot results, with the sample size and conditions disclosed.
+Record the sequence on physical Quest 3 in theater and passthrough. A test on a desktop browser cannot complete headset acceptance. Keep prototype audio marked as awaiting fluent Spanish review until that review is actually recorded.
 
-The event review identified hands-first use, seated comfort, short sessions, and an accessible playable build as important design inputs. The official [overview](https://start-developer-competition-26.devpost.com/), [judging page](https://start-developer-competition-26.devpost.com/details/judging), [rules](https://start-developer-competition-26.devpost.com/rules), and [FAQs](https://start-developer-competition-26.devpost.com/details/faqs) remain the references for submission preparation; this PRD is not an eligibility determination.
+The write-up must distinguish original simulated footage, reviewed prepared content and any newly generated model output. Cite the model configuration, actual measured coverage, corrections, latency and cost; do not turn a successful request into an accuracy claim. Report pilot participant counts and conditions, and distinguish enjoyment, immediate recall and delayed recall. No fluency or proven learning-effectiveness claim is supported yet.
+
+For the startup pitch, demonstrate the existing mobile recap honestly, including manual transfer and device-local progress. Do not imply automatic cross-device sync. The [roadmap](docs/SUBMISSION_ROADMAP.md) defines the separate submission material lists and the fallback when a release gate fails.
 
 ## Open Decisions For Technical Planning
 
@@ -744,11 +763,11 @@ The visual prototype, its design brief, and its complete generation prompt are i
 
 | Decision | Why It Matters |
 | --- | --- |
-| Exact working schedule | The user is solo and almost full time; milestones still need allocation within that availability. |
-| Match simulation visual style and production | Produce an original scripted clip and matching diagram data without building a full football game. |
-| Static host and stable app URL | Use HTTPS and retain the same origin for browser-local progress. |
+| Work allocation | Follow the dated submission roadmap; adjust internal milestones if availability changes without silently changing official deadlines. |
+| Public submission content | Resolve footage eligibility and produce an original unbranded action pack with reviewed cards/story; keep the private benchmark separate. |
+| Host and .tech domain | Choose an available domain and HTTPS host for the actual product; preserve a frozen competition build and review the fund’s domain commitment before purchase/application. |
 | Spanish language reviewer | Release content needs review of wording, meanings, and pronunciation. |
-| Visual tone and final product name | The current name is descriptive; final branding should follow a coherent visual direction. |
+| Confirmed identity | ArenaVoca, the continuous arena icon, Playmaker mobile and Matchday VR remain selected; no rebranding is required for submission. |
 | Pilot recruitment | Learning and enjoyment claims depend on a real audience test. |
 
 ## Technical Specification
@@ -945,7 +964,7 @@ If hands, video, and spatial UI cannot work together reliably in the first devic
 
 ### Demo And Submission Flow
 
-Produce the first device slice, then expand to all six targets, then finish saving and review, and finally complete recovery, captions, and polish. Protect time for device testing and the learning pilot. The sequenced checklist follows in this PRD; assign dates once the exact working schedule is chosen.
+Follow the dated milestones in [docs/SUBMISSION_ROADMAP.md](docs/SUBMISSION_ROADMAP.md). Finish one complete Match Lab learning loop, then verify hands, video independence, saving/recall, recovery and captions. Protect time for Quest testing, Spanish review and a small learning pilot before expanding content. The historical build checklist below supplies implementation detail; the current delivery priority governs scope and timing.
 
 The hosted build should open without an app account and supply loading and VR-entry instructions. A clean Quest browser session must complete the flow. Demo footage should show actual headset behaviour and clearly identify the prepared simulation. Publishing, registration, and final submission are separate actions; this specification does not perform them.
 
