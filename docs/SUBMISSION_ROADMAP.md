@@ -1,8 +1,8 @@
 # ArenaVoca submission roadmap
 
-Updated 15 October 2026. Product authority: [PRD](../PRD.md). All unchecked work below is pending. This plan does not register, purchase, publish, contact organisers or submit. Emeric owns account/eligibility decisions and submission; Emeric and Codex prepare implementation, evidence and materials together.
+Updated 16 October 2026. Official submission requirements below were last reviewed 15 October; this update adds development/testing lessons, not a fresh eligibility review. Product authority: [PRD](../PRD.md). All unchecked work below is pending. This plan does not register, purchase, publish, contact organisers or submit. Emeric owns account/eligibility decisions and submission; Emeric and Codex prepare implementation, evidence and materials together.
 
-Progress, 16 October: local benchmark preparation now runs on the Mac. The actual recording produced 373 planned windows and an unreviewed worksheet, with no inference or upload. [Usage and evidence](../app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). The short-excerpt Ollama adapter and optional local Whisper path are also implemented with fixture/HTTP tests; [Windows commands](../app/src/features/match-recognition/README.md#local-ollama-adapter--16-october-2026) are ready. Match Lab now routes to the same local adapter with an explicit provider notice and no cloud fallback; [Windows service launch and Quest checks](../app/src/features/match-recognition/README.md#match-lab-local-service--16-october-2026) are documented. No actual local model has run, so Windows/Quest acceptance and the model smoke test/full-game execution gates below remain open.
+Progress, 16 October: local benchmark preparation now runs on the Mac. The actual recording produced 373 planned windows and an unreviewed worksheet, with no inference or upload. [Usage and evidence](../app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). The short-excerpt Ollama adapter and optional local Whisper path are also implemented with fixture/HTTP tests; [Windows commands](../app/src/features/match-recognition/README.md#local-ollama-adapter--16-october-2026) are ready. Match Lab now routes to the same local adapter with an explicit provider notice and no cloud fallback; [Windows service launch and Quest checks](../app/src/features/match-recognition/README.md#match-lab-local-service--16-october-2026) are documented. The subsequent [Windows pilot and accuracy follow-up](WINDOWS_LOCAL_AI_2026-10-16.md) measured actual local inference and verified desktop Match Lab delivery. Raw action/timing errors remain; a larger-model comparison still missed the cutback and was too slow for the live step. Keep the reviewed prepared pack for demonstrations. Physical Quest acceptance, fluent Spanish review, and full-game evaluation remain open.
 
 ## Official requirements and dates
 
@@ -26,7 +26,7 @@ These are our internal targets, not extra organiser requirements. Scope reductio
 
 | Target, Europe/Brussels | Deliverable and exit evidence | Owner |
 | --- | --- | --- |
-| 15–22 October | Restore Windows checkout/media; run local-AI smoke set; verify Start status and project ownership; settle public-content approach and shortlist domain/host | Emeric: eligibility/choices; Codex: setup, evidence and drafts |
+| 15–22 October | Restore Windows checkout/media; run local-AI smoke set; investigate connected-Quest tooling and establish a one-card interaction baseline; verify Start status and project ownership; settle public-content approach and shortlist domain/host | Emeric: eligibility/choices; Codex: setup, evidence and drafts |
 | 23–31 October | Complete local-provider integration and attempt resumable full-match benchmark; produce approved public action pack; choose live-generation or prepared demonstration mode from measured results | Joint build/review |
 | 1–8 November | Rehearse complete hands-only Quest loop in both environments, get Spanish review, collect a small consented pilot and fix usability failures | Emeric: device/pilot; fluent reviewer: language; Codex: fixes/report |
 | 9–15 November | Prepare hosted release candidate, source/asset manifest, screenshots, competition video and English Devpost copy; verify from a fresh Quest browser session | Joint preparation |
@@ -57,6 +57,26 @@ These are our internal targets, not extra organiser requirements. Scope reductio
 - [ ] English Devpost copy, testing instructions, track/division, build link, launch target, asset/licence inventory, model/data disclosure and honest limitations. Audit presentation memes and third-party videos separately; do not automatically reuse the community deck.
 - [ ] Release manifest: commit, dependency lockfile, deployed URL, asset hashes, approved content version, test report and demo-video link. No credentials, private recordings or extracted frame sequences in Git.
 - [ ] Final rule review, authorised submission and saved receipt. Registration/submission status is unverified until evidence exists.
+
+## Quest interaction testing gate
+
+Priority: start after the bounded Windows Alba smoke test, with the first baseline targeted for 22 October; repeat fixes during the 1–8 November hands-only rehearsal. Use the private Alba source for development and the approved original pack for public submission evidence. This expands the existing interaction acceptance work, not the feature scope.
+
+- [ ] **Tooling capability:** inspect the installed IWSDK tooling and verify whether connected-Quest runtime inspection/input/performance capture works in this project. Meta documents this workflow in its [IWSDK 1.0 announcement](https://developers.meta.com/vr/blog/immersive-web-sdk-1-0/); do not infer availability from the video alone or silently upgrade dependencies. Record supported commands and any blocker in the existing setup/review docs. Manual physical testing can proceed if automation is unavailable.
+- [ ] **One-card repeatable scenario:** in the emulator, exercise grab, move, release, flip to translation and back, listen, and replay; test window resizing and layout recovery. Assert that opening/closing learning surfaces and manipulating cards never pause, seek, dim, or resume the main match, and that the selected learning item remains pinned. Debugger engine stepping is only for isolated diagnosis.
+- [ ] **Physical Quest 3, both modes:** repeat the scenario in theater and passthrough with real hands. Record readability, reach, flip/grab reliability, accidental selections, lost tracking/recovery, comfort, and performance while match and replay video are active. Save build/commit, device/browser/SDK versions, input method, steps, failures, measurement method and results in [Quest review](QUEST_REVIEW.md). Do not import another demo's frame-rate result as our target or measured outcome.
+- [ ] **Independent review:** request a separate review of visual clarity and interaction feedback against the scenario; fix the most consequential failure and repeat it. Keep reviewer suggestions, automated device execution, and Emeric's comfort observations distinct. A screenshot or injected interaction is not proof of natural hand usability.
+- [ ] **Evidence for the demo:** retain one before/after example of a failure diagnosed through scene state or headset feedback. Explain what the AI built, what the tests established, and what the human headset test changed. Label prepared versus freshly generated content and retain fluent Spanish/audio review as a separate gate.
+
+Reference and learning notes: [IWSDK live-build lessons](wiki/immersive-lessons.md#lessons-from-the-iwsdk-live-build). These tasks are pending; no new Quest test was performed while writing this plan.
+
+## Future real-TV camera investigation
+
+After the protected submission work; not a prerequisite for the recorded-match demo. The [current camera guide](https://iwsdk.dev/guides/13-camera-access.html), reviewed 16 October, limits `CameraSource` to browser-exposed `MediaDevices` cameras and explicitly excludes direct access to Quest passthrough imagery/raw tracking-camera frames. This qualifies the broader answer in the live session. See [the wiki distinction](wiki/recognition.md#camera-access-is-a-separate-capability-gate).
+
+- [ ] On the intended hardware/browser, record whether a suitable `videoinput` is exposed and whether permission-based frame capture works. Handle absent input and denied permission. Do not infer access from passthrough visibility or platform hand tracking.
+- [ ] If a usable capture path exists, evaluate TV framing, glare, resolution, latency, commentary acquisition and video/audio timing separately from action recognition. Require explicit capture intent and document where frames/audio are processed and retained before connecting inference.
+- [ ] If the browser exposes no suitable input, record the blocker and evaluate a separately supported capture integration. Do not promise real-TV recognition on Quest or future glasses without device evidence. Keep the recorded-video provider path working independently.
 
 ## No Excuses preparation checklist
 

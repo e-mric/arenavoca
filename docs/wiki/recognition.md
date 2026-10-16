@@ -38,6 +38,22 @@ A possible future hybrid combines video evidence, commentary, and a licensed spo
 
 ## Next experiment
 
+Continue with the recorded source; the camera investigation below is separate from the current Alba test.
+
 The [Windows pilot](../WINDOWS_LOCAL_AI_2026-10-16.md) completed both Alba evidence modes. Total elapsed was 15.859 seconds visual-only and 13.656 with Whisper; the second run reused a warm model/image cache, so this is not a comparative speed result. Raw responses and a separate Codex AI audit are private; no human corrections or fluent Spanish approval were supplied. Both outputs miss the desired run/cutback structure and label celebration as goals. Next: human contact/timestamp review, then physical Quest acceptance and a deliberate sampling/context comparison. Do not start full-game inference from this result alone. A GPU may reduce metered API spending, but compute, electricity, latency, and review effort still matter. The [cost estimate](../LIVE_COST_ESTIMATE.md) contains dated planning assumptions, not measured local savings.
 
 Open questions: whether about 1 GiB sampled GPU headroom is sufficient alongside immersive rendering, action precision across a full match, replay/duplicate handling, useful-card rate, fluent Spanish review, and sustained latency. Start with [Windows continuation](windows-continuation.md).
+
+## Camera access is a separate capability gate
+
+Reviewed 16 October 2026. In the [live-build Q&A at 24:40](https://www.youtube.com/watch?v=D04z9PYUSao&t=1480s), the answer describes camera access through `CameraSource` and `getUserMedia` broadly. The current [IWSDK camera documentation](https://iwsdk.dev/guides/13-camera-access.html) is more specific: `CameraSource` uses browser `MediaDevices` inputs and does not expose Quest passthrough imagery or raw tracking-camera frames. A camera must actually be exposed as a `videoinput`; a visible passthrough room is not evidence of that access. Follow the documented boundary rather than treating the live answer as a device capability guarantee.
+
+There are three separate capabilities:
+
+- **Passthrough presentation:** the user sees their room behind ArenaVoca. Visibility was user-confirmed on Quest; this does not supply pixels to our recognition service.
+- **Hand interaction:** the platform supplies hand tracking. We do not need to obtain camera images and build our own hand-tracking model to manipulate cards.
+- **Real-TV recognition:** the model needs an accessible image stream, permission, useful framing and timing, and a way to obtain commentary. Neither room visibility nor working hands establishes this pipeline.
+
+The recorded ArenaVoca video is already an accessible analysis source, so this limitation does not block local Alba evaluation. For a future TV input, first inventory the cameras actually exposed on the target device/browser, verify permission and capture behavior, and record the result. If no suitable feed is available, document that blocker and investigate a separately supported capture path before promising the feature. Availability on future glasses remains unverified.
+
+The [roadmap camera gate](../SUBMISSION_ROADMAP.md#future-real-tv-camera-investigation) keeps this investigation after the protected submission work. Capture capability, action recognition quality, and Spanish quality must each earn their own evidence.

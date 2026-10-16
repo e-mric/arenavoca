@@ -33,3 +33,20 @@ Append entries at the end. This log records knowledge changes, not a replacement
 - **Learned (AI-written synthesis):** more frames/context or a larger model does not establish better recognition. Narrow transfer prompts even created false transfers and were rejected. A separate review-policy veto reduces obvious celebration/scoreboard goal candidates without changing raw results; this must not be scored as raw-model accuracy.
 - **Evidence:** [complete dated trials, timings and artifact locations](../WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement), [updated local controls](../../app/src/features/match-recognition/README.md). Exact production request fingerprint reproduced for the measured 27B profile; baseline raw hashes remained unchanged. Typecheck, 66 Python tests, 215 app tests, build and eight affected browser tests passed. No new physical Quest or fluent Spanish acceptance.
 - **Next check:** independent contact-time/identity review and a detector/tracker or temporally trained model investigation. Do not promote a complete three-action recognition claim or start a full-game run from these partial results.
+## [2026-10-16] ingest | IWSDK live-build lessons and Quest/camera gates
+
+- Reviewed the Devpost [IWSDK live build](https://www.youtube.com/watch?v=D04z9PYUSao) using its chapter metadata and selected automatic-transcript passages, with the official [release announcement](https://developers.meta.com/vr/blog/immersive-web-sdk-1-0/), [testing guide](https://iwsdk.dev/guides/02-testing-experience.html), and [camera guide](https://iwsdk.dev/guides/13-camera-access.html) checked on 16 October.
+- Added runtime inspection, repeatable hand interactions, independent review, and connected-Quest testing lessons to [immersive viewing](immersive-lessons.md); linked them from the index and Windows continuation.
+- Recorded a source discrepancy in [recognition](recognition.md): the live camera answer is broader than the documented `MediaDevices` boundary. Passthrough display, platform hand tracking, and analyzable camera input are separate capabilities.
+- Added pending [roadmap gates](../SUBMISSION_ROADMAP.md) for one-card testing in theater/passthrough and later real-TV capture feasibility. Preserved recorded-first scope, independent main playback, physical usability checks, and separate Spanish review. No device acceptance, model result, or camera capability was established by this documentation update.
+
+## [2026-10-16] lint | IWSDK learning update verification
+
+- Checked nine documents and 81 local links/anchors; all resolved and wiki pages remained indexed. Git whitespace validation passed.
+- Typecheck, 214 app unit tests, and production build passed. Existing font-atlas, dependency annotation, and bundle-size warnings remain. Documentation only: no affected browser tests or new physical-device tests were run.
+
+## [2026-10-16] lint | Reconcile concurrent Windows results
+
+- Integrated remote commits `cf5b857` and `839b6e0`, preserving the actual Windows pilot, accuracy follow-up, and raw-output limitations. Resolved overlapping wiki edits and replaced the roadmap's stale no-local-run statement with the measured report.
+- Rechecked 93 local links/anchors after integration. Typecheck, 215 app tests, 66 Python tests, production build, and eight affected browser tests passed. Existing build warnings remain.
+- The first browser run hit an unrelated application on port 4173 and was stopped. Reran against ArenaVoca on isolated port 4273 using a temporary configuration, then removed it. The other application was left running. These results do not establish physical Quest or camera acceptance.

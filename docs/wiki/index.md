@@ -9,8 +9,8 @@ Start here to understand why the project works this way and what remains unprove
 | Page | What it answers |
 | --- | --- |
 | [Architecture and boundaries](architecture.md) | Why IWSDK and KMP? Where does each responsibility belong? |
-| [Lessons from immersive viewing](immersive-lessons.md) | What makes VR useful, and what did the first Quest test actually prove? |
-| [Recognition and evidence](recognition.md) | What did Alba's sequence teach us? What is ready for local AI? |
+| [Lessons from immersive viewing](immersive-lessons.md) | What makes VR useful? What can we learn from the IWSDK live build and Quest testing? |
+| [Recognition and evidence](recognition.md) | What did Alba teach us? What is ready for local AI, and why is camera access a separate gate? |
 | [Learning and the demo](learning-and-demo.md) | How do match moments become Spanish practice, and how do we explain our learning? |
 | [Windows continuation](windows-continuation.md) | What should the next desktop session read, transfer, and verify? |
 | [Wiki log](log.md) | What knowledge was added or corrected, and when? |
@@ -24,6 +24,7 @@ Start here to understand why the project works this way and what remains unprove
 | Project run/build instructions | [Repository README](../../README.md), [application README](../../app/README.md) |
 | Recognition setup, Windows commands, experiment details | [Recognition README](../../app/src/features/match-recognition/README.md) |
 | Implementation history and automated verification | [Implementation record](../IMPLEMENTATION.md) |
+| Measured local-model results and failed trials | [Windows Alba pilot and follow-up](../WINDOWS_LOCAL_AI_2026-10-16.md) |
 | Physical headset acceptance | [Quest review](../QUEST_REVIEW.md) |
 | Language-learning research and its limits | [Spanish through sport research](../SPANISH_THROUGH_SPORT_RESEARCH.md) |
 | Users and needs | [Personas](../PERSONAS.md) |
