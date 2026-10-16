@@ -60,13 +60,15 @@ We used a local speech model for commentary, and Codex inspected sequences of fr
 
 ### 225 to 270 seconds
 
-*Show one simple example: “Return from background → replay stays paused.” Keep the passing test result available if someone asks.*
+*Show “How I work with Codex”. Point to the four cues, then the replay example. The phone image illustrates the separate iOS companion, not the Android bug.*
 
-Here’s where engineering changed the result. A playback test caught a bug: returning to the Android app could restart a replay. We fixed it so playback waits for the user.
+I’m also using OpenAI’s Codex best-practices guide to structure the work.
 
-We also separate learning rules from the screens. Kotlin Multiplatform shares those rules between Android and iOS. The immersive app remains a separate web experience.
+I give it the project context and a precise behavior. We make a small change, then check the result. The rules live in the repository so we don’t have to rediscover them.
 
-The useful loop is to make something, observe it, explain the behavior, and test the parts we need to rely on.
+For example, a test caught an Android replay restarting after returning to the app. Now it waits for the user.
+
+My learning check is to explain why the fix works. Passing tests is useful evidence; model accuracy and comfort in the headset need their own checks.
 
 ### 270 to 280 seconds
 
@@ -126,6 +128,12 @@ The following connections are our interpretation for ArenaVoca, not a software m
 | Refine through observation | Put the actual action beside each phrase | Check decoder progress, replay boundaries, single-player ownership and background behavior |
 
 The project existed before this reference was introduced. Say “it gives me a way to think about the process,” rather than claiming it inspired the original idea. Keep the philosophy section brief and show your interpretation through the demo.
+
+## Codex best practices in this project
+
+The [official guide](https://learn.chatgpt.com/guides/best-practices) is a practical companion to the creative reference. Slide 6 applies it to the existing replay example. Keep this section within its 45-second slot; do not turn the demo into a list of tools.
+
+The [project-specific review](AI_COLLABORATION.md) separates established habits from next steps. In particular, use focused tasks, explain one tradeoff yourself, and keep automated checks separate from actual model and headset evidence. Do not claim strict TDD, independently audited code, measured learning effectiveness or complete physical acceptance.
 
 ## Rehearsing what you learned
 
