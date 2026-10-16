@@ -11,6 +11,7 @@ import {
   VisibilityState,
   type World,
 } from "@iwsdk/core";
+import { HandleTouchPriority } from "./handle-input";
 import { SpatialWindow } from "./components";
 import { resizedScale, windowScale } from "./math";
 export class WindowTargets extends createSystem({
@@ -40,6 +41,7 @@ export class SpatialWindows {
   private matrix = new Matrix4();
   private inverse = new Matrix4();
   private grab: GrabSystem;
+  private touchPriority = new HandleTouchPriority();
   constructor(private world: World) {
     world.registerSystem(WindowTargets);
     this.grab = world.getSystem(GrabSystem)!;
@@ -92,8 +94,10 @@ export class SpatialWindows {
     target(2).object3D!.pointerEventsType = { allow: "ray" };
     for (const e of b.targets) {
       const kind = e.getValue(SpatialWindow, "kind")!;
-      if ((kind === 0 && !direct) || kind >= 3)
+      if ((kind === 0 && !direct) || kind >= 3) {
         e.object3D!.pointerEventsType = { allow: "grab" };
+        this.touchPriority.targets.add(e.object3D!);
+      }
     }
     this.bindings.set(id, b);
     this.sync(b);
@@ -135,6 +139,7 @@ export class SpatialWindows {
     }
   }
   releaseAll() {
+    this.touchPriority.release(this.world.input.xr.multiPointers);
     for (const b of this.bindings.values()) this.release(b);
   }
   private release(b: Binding) {
@@ -146,7 +151,9 @@ export class SpatialWindows {
   private offsetFor(b: Binding, kind: number, scale = b.anchor.scale.x) {
     return this.offset.set(
       kind === 2 || kind === 4 ? b.width / 2 + 0.035 : 0,
-      kind === 0 && b.direct ? 0 : -b.height / 2 - 0.18 / windowScale(scale),
+      kind === 0 && b.direct
+        ? 0
+        : -b.height / 2 - (b.direct ? 0.05 : 0.18 / windowScale(scale)),
       kind === 1 || kind === 2 ? 0.012 : 0,
     );
   }
@@ -164,6 +171,7 @@ export class SpatialWindows {
     }
   }
   update() {
+    this.touchPriority.update(this.world.input.xr.multiPointers);
     for (const b of this.bindings.values()) {
       const visible = b.content.visible;
       b.anchor.visible = visible;

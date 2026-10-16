@@ -248,7 +248,7 @@
           "transform": {
             "position": [
               -0.696511,
-              0.464,
+              0.6015,
               -0.940415
             ],
             "rotationDeg": [
@@ -282,7 +282,7 @@
           "transform": {
             "position": [
               -0.460883,
-              0.464,
+              0.6015,
               -1.026177
             ],
             "rotationDeg": [
@@ -593,7 +593,7 @@
           "transform": {
             "position": [
               -0.464372,
-              0.464,
+              0.6015,
               -1.035762
             ],
             "rotationDeg": [
@@ -624,7 +624,7 @@
           "transform": {
             "position": [
               -0.7,
-              0.464,
+              0.6015,
               -0.95
             ],
             "rotationDeg": [

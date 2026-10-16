@@ -39,7 +39,12 @@ function fixture(direct = false) {
       e.held = false;
     }),
   };
+  const pointer = {
+    getPointer: () => ({ getIntersection: () => undefined }),
+    toggleSubPointer: vi.fn(),
+  };
   const world = {
+    input: { xr: { multiPointers: { left: pointer, right: pointer } } },
     registerSystem: vi.fn(),
     getSystem: (s: unknown) =>
       s === GrabSystem
@@ -188,12 +193,12 @@ it("distance chrome cannot intercept near touch before a pinch grab", () => {
     expect(targets[kind].object3D.pointerEventsType).toEqual({ allow: "grab" });
 });
 
-it("keeps grab bars clear of card touch buttons even at minimum size", () => {
+it("keeps the card bar tucked beneath its edge as the card shrinks and grows", () => {
   const { windows, anchor, targets } = fixture(true);
   for (const scale of [0.45, 0.85, 2.2]) {
     anchor.scale.setScalar(scale);
     windows.update();
     const bottom = anchor.position.y - 0.5 * scale;
-    expect(bottom - targets[3].object3D.position.y).toBeCloseTo(0.18);
+    expect(bottom - targets[3].object3D.position.y).toBeCloseTo(0.05 * scale);
   }
 });

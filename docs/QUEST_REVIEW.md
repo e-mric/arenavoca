@@ -290,3 +290,10 @@ Device verification: with each hand, pinch the middle bar, move and release; rep
 
 
 Verification: typecheck, **295 unit tests**, production build and **16 affected browser tests** passed. Managed immersive AR emulation verified screen/card move, uniform corner resize and release using both near squeeze and distance trigger. Near targets exclude touch interception, and bars keep 18 cm of world-space clearance beneath the content even when resized. Hand emulation verified reveal, persistence through palm-away and tracking loss, explicit Close and reopening. Both More space choices updated the selected label while the match remained playing. These are emulator results; physical Quest pinch comfort and passthrough switching remain pending. The compact runtime review retained the cream/rounded visual treatment and independent main screen.
+
+
+### Card-handle spacing correction · 17 October 2026
+
+User Quest feedback showed the card bar visually detached after resizing. Replaced the card's fixed 18 cm clearance with a 5 cm local offset that scales with the card (2.5 cm at half size). The bar and corner grip continue following the card's transform on every frame. Screen/menu spacing is unchanged. A close grab candidate on dedicated manipulation chrome temporarily suppresses that hand's touch hover, restoring it immediately when the hand moves away, tracking is lost or the session releases. This avoids separating the bar from the card merely to avoid Replay/Listen/Save hover.
+
+Verification: 297 unit tests, typecheck, production build and 16 affected browser tests passed. Emulated near squeeze verified card/screen move, resize and release with the closer bar. Distance resize checks measured proportional card-to-bar spacing at small and large scales. On Quest, repeat shrinking/enlarging and rotating the card, grab the close bar with either hand, then move back to Replay/Listen/Save and confirm touch selection still works. Physical acceptance remains pending.
