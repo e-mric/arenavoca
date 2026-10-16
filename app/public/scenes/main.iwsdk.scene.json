@@ -247,20 +247,16 @@
           "name": "moment-card / move handle",
           "transform": {
             "position": [
-              -0.581932,
-              0.985,
-              -0.694197
+              -0.696511,
+              0.464,
+              -0.940415
             ],
             "rotationDeg": [
               0,
-              35,
+              20,
               0
             ],
-            "scale": [
-              0.7,
-              0.7,
-              0.7
-            ]
+            "scale": 0.85
           }
         },
         {
@@ -285,20 +281,16 @@
           "name": "moment-card / resize corner",
           "transform": {
             "position": [
-              -0.419377,
-              0.985,
-              -0.846474
+              -0.460883,
+              0.464,
+              -1.026177
             ],
             "rotationDeg": [
               0,
-              35,
+              20,
               0
             ],
-            "scale": [
-              0.7,
-              0.7,
-              0.7
-            ]
+            "scale": 0.85
           }
         },
         {
@@ -372,20 +364,16 @@
           "name": "minimal-screen / handle 0",
           "transform": {
             "position": [
-              0,
-              0.34,
-              -5.95
+              0.0,
+              0.5825,
+              -2.6
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              1,
-              1,
-              1
-            ]
+            "scale": 1
           }
         },
         {
@@ -410,20 +398,16 @@
           "name": "minimal-screen / handle 1",
           "transform": {
             "position": [
-              0,
-              0.34,
-              -5.905
+              0.0,
+              0.5825,
+              -2.588
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              1,
-              1,
-              1
-            ]
+            "scale": 1
           }
         },
         {
@@ -448,20 +432,16 @@
           "name": "minimal-screen / handle 2",
           "transform": {
             "position": [
-              3.7,
-              0.34,
-              -5.95
+              2.235,
+              0.5825,
+              -2.588
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              1,
-              1,
-              1
-            ]
+            "scale": 1
           }
         },
         {
@@ -494,20 +474,16 @@
           "name": "minimal-dock / handle 0",
           "transform": {
             "position": [
-              0,
-              0.34,
-              -5.95
+              0.2,
+              0.755,
+              -1.55
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              0.5,
-              0.5,
-              0.5
-            ]
+            "scale": 1
           }
         },
         {
@@ -532,20 +508,16 @@
           "name": "minimal-dock / handle 1",
           "transform": {
             "position": [
-              0,
-              0.34,
-              -5.905
+              0.2,
+              0.755,
+              -1.538
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              1,
-              1,
-              1
-            ]
+            "scale": 1
           }
         },
         {
@@ -570,20 +542,16 @@
           "name": "minimal-dock / handle 2",
           "transform": {
             "position": [
-              3.7,
-              0.34,
-              -5.95
+              0.415,
+              0.755,
+              -1.538
             ],
             "rotationDeg": [
               0,
               0,
               0
             ],
-            "scale": [
-              1,
-              1,
-              1
-            ]
+            "scale": 1
           }
         },
         {
@@ -603,6 +571,130 @@
               1.35,
               -1.1
             ]
+          }
+        },
+        {
+          "id": "moment-card-handle-4",
+          "name": "moment-card / pinch resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResizeGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "moment-card",
+              "kind": 4
+            },
+            "OneHandGrabbable": {
+              "rotate": false,
+              "translate": true
+            }
+          },
+          "transform": {
+            "position": [
+              -0.464372,
+              0.464,
+              -1.035762
+            ],
+            "rotationDeg": [
+              0,
+              20,
+              0
+            ],
+            "scale": 0.85
+          }
+        },
+        {
+          "id": "moment-card-handle-3",
+          "name": "moment-card / pinch move bar",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "moment-card",
+              "kind": 3
+            },
+            "OneHandGrabbable": {
+              "rotate": true,
+              "translate": true
+            }
+          },
+          "transform": {
+            "position": [
+              -0.7,
+              0.464,
+              -0.95
+            ],
+            "rotationDeg": [
+              0,
+              20,
+              0
+            ],
+            "scale": 0.85
+          }
+        },
+        {
+          "id": "minimal-screen-handle-4",
+          "name": "minimal-screen / pinch resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResizeGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "minimal-screen",
+              "kind": 4
+            },
+            "OneHandGrabbable": {
+              "rotate": false,
+              "translate": true
+            }
+          },
+          "transform": {
+            "position": [
+              2.235,
+              0.5825,
+              -2.6
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
+          }
+        },
+        {
+          "id": "minimal-dock-handle-4",
+          "name": "minimal-dock / pinch resize corner",
+          "content": {
+            "type": "asset",
+            "asset": "windowResizeGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "minimal-dock",
+              "kind": 4
+            },
+            "OneHandGrabbable": {
+              "rotate": false,
+              "translate": true
+            }
+          },
+          "transform": {
+            "position": [
+              0.415,
+              0.755,
+              -1.55
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
           }
         }
       ],

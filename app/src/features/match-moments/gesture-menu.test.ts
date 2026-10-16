@@ -3,7 +3,7 @@ import { GestureMenu } from "./gesture-menu";
 const observe = (m: GestureMenu, up: boolean, tracked = true, ticks = 5) => {
   for (let i = 0; i < ticks; i++) m.observe(up, tracked, 0.1);
 };
-it("requires a deliberate hold and tolerates brief movement before hiding", () => {
+it("requires a deliberate palm hold, then stays open through turning away", () => {
   const m = new GestureMenu();
   observe(m, true, true, 2);
   expect(m.visible).toBe(false);
@@ -11,25 +11,46 @@ it("requires a deliberate hold and tolerates brief movement before hiding", () =
   observe(m, true, true, 4);
   expect(m.visible).toBe(true);
   m.more = true;
-  observe(m, false, true, 2);
+  observe(m, false, true, 100);
   expect(m.visible).toBe(true);
-  observe(m, false, true, 3);
-  expect(m.visible).toBe(false);
-  expect(m.more).toBe(false);
+  expect(m.more).toBe(true);
 });
-it("recovers from tracking loss, resetting expanded tools on controller reopen", () => {
+it("keeps the menu and expanded tools available when hands lose tracking", () => {
   const m = new GestureMenu();
   observe(m, true);
   m.more = true;
-  observe(m, false, false, 3);
+  observe(m, false, false, 100);
   expect(m.visible).toBe(true);
-  observe(m, false, false, 5);
+  expect(m.more).toBe(true);
+  m.hide();
+  expect(m.visible).toBe(false);
+  expect(m.more).toBe(false);
+});
+it("Close stays closed until a new palm-away then palm-up gesture", () => {
+  const m = new GestureMenu();
+  observe(m, true);
+  m.hide();
+  observe(m, true, true, 20);
+  expect(m.visible).toBe(false);
+  observe(m, false, false, 10);
+  observe(m, true);
+  expect(m.visible).toBe(false);
+  observe(m, false);
+  observe(m, true, true, 2);
+  expect(m.visible).toBe(false);
+  observe(m, true, true, 2);
+  expect(m.visible).toBe(true);
+});
+it("controller toggle explicitly closes and reopens a compact menu", () => {
+  const m = new GestureMenu();
+  m.toggle();
+  expect(m.visible).toBe(true);
+  m.more = true;
+  m.toggle();
   expect(m.visible).toBe(false);
   m.toggle();
   expect(m.visible).toBe(true);
   expect(m.more).toBe(false);
-  m.toggle();
-  expect(m.visible).toBe(false);
 });
 it("invalid or long frame gaps cannot instantly trigger a gesture", () => {
   const m = new GestureMenu();

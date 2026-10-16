@@ -20,9 +20,6 @@ type Binding = {
   id: string;
   anchor: Object3D;
   content: Object3D;
-  near: Entity;
-  far: Entity;
-  resize: Entity;
   targets: Entity[];
   width: number;
   height: number;
@@ -76,10 +73,12 @@ export class SpatialWindows {
       width,
       height,
       direct,
-      near: target(0),
-      far: target(1),
-      resize: target(2),
-      targets: [target(0), target(1), target(2)],
+      targets: [
+        target(0),
+        target(1),
+        target(2),
+        ...handles.filter((e) => e.getValue(SpatialWindow, "kind")! > 2),
+      ],
       owner: null,
       resizedFrom: 1,
       resizeDistance: 1,
@@ -87,6 +86,15 @@ export class SpatialWindows {
       initialScale: anchor.scale.clone(),
       initialRotation: anchor.quaternion.clone(),
     };
+    // Distance handles otherwise accept touch, which wins over proximity grab
+    // and steals a pinch from the cream backing directly beneath it.
+    target(1).object3D!.pointerEventsType = { allow: "ray" };
+    target(2).object3D!.pointerEventsType = { allow: "ray" };
+    for (const e of b.targets) {
+      const kind = e.getValue(SpatialWindow, "kind")!;
+      if ((kind === 0 && !direct) || kind >= 3)
+        e.object3D!.pointerEventsType = { allow: "grab" };
+    }
     this.bindings.set(id, b);
     this.sync(b);
     return anchor;
@@ -135,11 +143,11 @@ export class SpatialWindows {
     b.owner = null;
     for (const e of b.targets) e.setValue(SpatialWindow, "held", false);
   }
-  private offsetFor(b: Binding, kind: number) {
+  private offsetFor(b: Binding, kind: number, scale = b.anchor.scale.x) {
     return this.offset.set(
-      kind === 2 ? b.width / 2 + 0.055 : 0,
-      kind === 0 && b.direct ? 0 : -b.height / 2 - 0.09,
-      kind === 1 ? 0.045 : 0,
+      kind === 2 || kind === 4 ? b.width / 2 + 0.035 : 0,
+      kind === 0 && b.direct ? 0 : -b.height / 2 - 0.18 / windowScale(scale),
+      kind === 1 || kind === 2 ? 0.012 : 0,
     );
   }
   private sync(b: Binding) {
@@ -181,7 +189,7 @@ export class SpatialWindows {
       if (b.owner) {
         const kind = b.owner.getValue(SpatialWindow, "kind")!,
           o = b.owner.object3D!;
-        if (kind === 2) {
+        if (kind === 2 || kind === 4) {
           b.anchor.scale.setScalar(
             resizedScale(
               b.resizedFrom,
@@ -193,7 +201,7 @@ export class SpatialWindows {
           // Handle and anchor share their parent. Undo the handle's local offset.
           o.updateMatrix();
           this.matrix.copy(o.matrix);
-          this.offsetFor(b, kind).negate();
+          this.offsetFor(b, kind, o.scale.x).negate();
           this.inverse.makeTranslation(
             this.offset.x,
             this.offset.y,

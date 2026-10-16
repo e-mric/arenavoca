@@ -19,6 +19,7 @@ import { Session } from "./features/session/session";
 import { Experience } from "./features/session/experience";
 import { bindDesktop } from "./features/session/desktop";
 import { loadCompanionFont, loadCardTypeface } from "./features/xr/font";
+import { ViewingSpace, viewingSessionMode } from "./features/xr/viewing-space";
 import { attachMinimalXR } from "./features/match-moments/xr";
 import { element } from "./shared/dom";
 prepareLauncher();
@@ -122,12 +123,12 @@ async function boot() {
         world = await World.create(element("scene-container"), projectOptions);
         const fontFamilies = await loadCompanionFont();
         await loadCardTypeface();
-        let viewingMode: ViewingMode = "theater";
+        const viewingSpace = new ViewingSpace();
         renderXR = attachMinimalXR(
           world,
           experience,
           fontFamilies,
-          () => viewingMode,
+          viewingSpace,
         );
         const vr = element<HTMLButtonElement>("enter-vr");
         if (source.kind !== "sample") vr.textContent = "Quiet space ↗";
@@ -136,18 +137,18 @@ async function boot() {
         const passthrough = element<HTMLButtonElement>("enter-passthrough");
         passthrough.disabled =
           !(await navigator.xr?.isSessionSupported("immersive-ar"));
-        vr.disabled = !supported;
+        vr.disabled = !supported && passthrough.disabled;
         element("xr-status").textContent = supported
           ? "Choose Quiet space or My room (passthrough), then point and pinch to select."
           : "Open the secure test URL in Quest Browser to enter VR.";
         const launch = async (mode: ViewingMode) => {
-          viewingMode = mode;
+          viewingSpace.mode = mode;
           renderXR();
           experience.stopAudio();
           try {
             await world?.launchXR({
               sessionMode:
-                mode === "passthrough"
+                viewingSessionMode(!passthrough.disabled) === "immersive-ar"
                   ? SessionMode.ImmersiveAR
                   : SessionMode.ImmersiveVR,
             });
@@ -158,7 +159,11 @@ async function boot() {
           }
         };
         vr.addEventListener("click", () => void launch("theater"));
-        enableLauncher(!!supported, !passthrough.disabled, launch);
+        enableLauncher(
+          !!supported || !passthrough.disabled,
+          !passthrough.disabled,
+          launch,
+        );
         passthrough.addEventListener("click", () => void launch("passthrough"));
       }
     } catch (e) {

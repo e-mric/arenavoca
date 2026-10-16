@@ -18,7 +18,7 @@ import {
   type World,
 } from "@iwsdk/core";
 import type { Experience } from "../session/experience";
-import type { ViewingMode } from "../xr/theater";
+import type { ViewingSpace } from "../xr/viewing-space";
 import { SpatialWindows } from "../spatial-windows/windows";
 import { attachHandheldCard } from "../match-lab/handheld";
 import { MomentDelivery } from "./delivery";
@@ -33,7 +33,7 @@ export function attachMinimalXR(
   world: World,
   e: Experience,
   fonts: unknown,
-  mode: () => ViewingMode,
+  space: ViewingSpace,
 ) {
   const root = world.requireSceneObject<Group>("viewing-space");
   for (const child of root.children) child.visible = false;
@@ -45,23 +45,11 @@ export function attachMinimalXR(
   ])
     world.requireSceneObject<Group>(id).visible = true;
   const windows = new SpatialWindows(world);
-  for (const id of ["minimal-screen", "minimal-dock", "moment-card"])
-    for (const kind of [0, 1, 2]) {
-      if (kind === 0 && id === "moment-card") continue;
-      world
-        .requireSceneObject<Group>(`${id}-handle-${kind}`)
-        .traverse((object) => {
-          if (!(object instanceof Mesh)) return;
-          const mat = (object.material as MeshBasicMaterial).clone();
-          mat.color.set(kind === 2 ? "#1646ed" : "#ddd8ff");
-          object.material = mat;
-          world.addCleanup(() => mat.dispose());
-        });
-    }
   const delivery = new MomentDelivery(e);
   const renderCard = attachHandheldCard(world, e, windows, true);
   const renderActions = attachMomentActions(world, e, fonts);
   const menu = new GestureMenu();
+  menu.visible = true;
   const notice = new MomentNotice();
   const invitation = world.requireSceneObject<UIKitMLAsset>("moment-notice");
   invitation.document.setTargetDimensions(0.23, 0.058);
@@ -94,8 +82,6 @@ export function attachMinimalXR(
     );
   }
   const palm = new PalmReader();
-  let wasActive = false;
-  let hiddenUntilPalmAway = false;
   const screen = world.requireSceneObject<Mesh>("minimal-screen");
   const dock = world.requireSceneObject<UIKitMLAsset>("minimal-dock");
   const texture = new VideoTexture(e.player.video);
@@ -131,13 +117,23 @@ export function attachMinimalXR(
       if (delivery.arrivals.available.length) delivery.open();
       else delivery.pregame();
     },
-    "minimal-mute": () => e.session.setPreference("muted", !e.session.snapshot.preferences.muted),
+    "minimal-mute": () =>
+      e.session.setPreference("muted", !e.session.snapshot.preferences.muted),
+    "minimal-room": () =>
+      space.select(
+        "passthrough",
+        world.renderer.xr.getSession()?.environmentBlendMode,
+      ),
+    "minimal-quiet": () =>
+      space.select(
+        "theater",
+        world.renderer.xr.getSession()?.environmentBlendMode,
+      ),
     "minimal-more": () => {
       menu.more = !menu.more;
     },
     "minimal-hide": () => {
       menu.hide();
-      hiddenUntilPalmAway = true;
     },
     "minimal-pregame": () => delivery.pregame(),
     "minimal-close": () => e.closeLab(),
@@ -174,15 +170,13 @@ export function attachMinimalXR(
   function placeMenu(atPalm: boolean) {
     world.player.head.getWorldPosition(head);
     world.player.head.getWorldDirection(direction);
-    if (atPalm)
-      dockAnchor.position.copy(palm.position).addScaledVector(direction, 0.08);
+    if (atPalm) palm.placeMenu(dockAnchor.position);
     else
       dockAnchor.position.set(
         head.x - direction.x * 0.65,
         head.y - 0.3,
         head.z - direction.z * 0.65,
       );
-    if (atPalm) dockAnchor.position.y += 0.1;
     dockAnchor.lookAt(head);
     dockAnchor.scale.setScalar(1);
   }
@@ -208,13 +202,8 @@ export function attachMinimalXR(
         for (const entity of world.getSystem(WindowTargets)!.queries.handles
           .entities)
           if (entity.hasComponent(Grabbed)) held = true;
-        if (hiddenUntilPalmAway && !palm.up) hiddenUntilPalmAway = false;
         if (!held || !menu.visible)
-          menu.observe(
-            palm.up && !held && !hiddenUntilPalmAway,
-            palm.tracked,
-            delta,
-          );
+          menu.observe(palm.up && !held, palm.tracked, delta);
       } else if (pressed) menu.toggle();
       else if (!controllers) menu.observe(false, false, delta);
 
@@ -222,11 +211,8 @@ export function attachMinimalXR(
       if (!menu.visible) menu.more = false;
     }),
   );
-  const handles = ["minimal-screen", "minimal-dock", "moment-card"].flatMap(
-    (id) =>
-      [0, 1, 2]
-        .filter((kind) => id !== "moment-card" || kind !== 0)
-        .map((kind) => world.requireSceneObject<Group>(`${id}-handle-${kind}`)),
+  const dockHandles = [0, 1, 2, 4].map((kind) =>
+    world.requireSceneObject<Group>(`minimal-dock-handle-${kind}`),
   );
   const probes = new Map<string, Group>();
   if (import.meta.env.DEV)
@@ -268,11 +254,10 @@ export function attachMinimalXR(
   });
   function render() {
     if (world.renderer.xr.isPresenting) delivery.update();
-    world.scene.background = mode() === "passthrough" ? null : background;
+    world.scene.background = space.mode === "passthrough" ? null : background;
+    world.renderer.setClearAlpha(space.mode === "passthrough" ? 0 : 1);
     screen.visible = true;
-    if (e.session.matchActive && !wasActive) menu.hide();
-    wasActive = e.session.matchActive;
-    dock.visible = !e.session.matchActive || menu.visible;
+    dock.visible = menu.visible;
     invitation.visible = e.session.matchActive && notice.visible;
     if (invitation.visible) {
       invitation.scale.setScalar(Math.max(0.01, notice.scale(reduced.matches)));
@@ -296,7 +281,7 @@ export function attachMinimalXR(
     renderCard();
     renderActions();
     windows.update();
-    for (const handle of handles)
+    for (const handle of dockHandles)
       handle.visible = handle.visible && menu.visible && menu.more;
     for (const [id, marker] of probes)
       dock.requireElementById(id).getWorldPosition(marker.position);
@@ -305,6 +290,32 @@ export function attachMinimalXR(
     const pending = delivery.arrivals.pending.length;
     show("minimal-open", active && e.labAvailable);
     show("minimal-options", menu.more);
+    const roomAvailable = space.canShowRoom(
+      world.renderer.xr.getSession()?.environmentBlendMode,
+    );
+    const spaceKey = `${space.mode}/${roomAvailable}`;
+    if (cache.get("space-selection") !== spaceKey) {
+      dock.requireElementById("minimal-room").setProperties({
+        disabled: !roomAvailable,
+        backgroundColor: space.mode === "passthrough" ? "#ddd8ff" : "#ece8fc",
+      });
+      dock.requireElementById("minimal-quiet").setProperties({
+        backgroundColor: space.mode === "theater" ? "#ddd8ff" : "#ece8fc",
+      });
+      text(
+        "minimal-room-label",
+        roomAvailable
+          ? space.mode === "passthrough"
+            ? "My room (on)"
+            : "My room"
+          : "Room unavailable",
+      );
+      text(
+        "minimal-quiet-label",
+        space.mode === "theater" ? "Quiet space (on)" : "Quiet space",
+      );
+      cache.set("space-selection", spaceKey);
+    }
     show("menu-play-icon", !active || e.player.video.paused);
     show("menu-pause-icon", active && !e.player.video.paused);
     show("minimal-pregame", active && e.labAvailable);
@@ -326,7 +337,10 @@ export function attachMinimalXR(
     text("minimal-open-label", "Moments");
     show("moment-badge", pending > 0);
     show("minimal-status", menu.more);
-    text("minimal-mute-label", e.session.snapshot.preferences.muted ? "Unmute match" : "Mute match");
+    text(
+      "minimal-mute-label",
+      e.session.snapshot.preferences.muted ? "Unmute match" : "Mute match",
+    );
     text("minimal-story-label", e.lab.cards.storyMode ? "Card" : "Story");
     text(
       "minimal-status",
@@ -334,10 +348,10 @@ export function attachMinimalXR(
         ? "Start, then palm up / controller A or X"
         : pending
           ? `${pending} new moment${pending === 1 ? "" : "s"}`
-          : "Palm away to hide / controller A or X",
+          : "Close to hide / palm up to reopen",
     );
     // Compact by default; the optional tools expand only on demand.
-    const height = menu.more ? 0.39 : 0.13;
+    const height = menu.more ? 0.45 : 0.13;
     if (height !== lastHeight) {
       dock.document.setTargetDimensions(0.36, height);
       windows.size("minimal-dock", 0.36, height);

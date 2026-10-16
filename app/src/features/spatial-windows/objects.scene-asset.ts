@@ -1,5 +1,4 @@
 import {
-  BoxGeometry,
   CapsuleGeometry,
   Group,
   Mesh,
@@ -8,23 +7,6 @@ import {
   Shape,
   ExtrudeGeometry,
 } from "@iwsdk/core";
-// Handles are intentionally tactile manufactured primitives, with +Z facing the viewer.
-export const windowGrip = new Mesh(
-  new CapsuleGeometry(0.025, 0.5, 4, 8),
-  new MeshBasicMaterial({ color: "#e5b7a6" }),
-);
-windowGrip.geometry.rotateZ(Math.PI / 2);
-windowGrip.name = "Two hand grip";
-export const windowMove = new Mesh(
-  new BoxGeometry(0.18, 0.06, 0.045),
-  new MeshBasicMaterial({ color: "#729bee" }),
-);
-windowMove.name = "Point and hold to move";
-export const windowResize = new Mesh(
-  new BoxGeometry(0.075, 0.075, 0.045),
-  new MeshBasicMaterial({ color: "#e6c178" }),
-);
-windowResize.name = "Pull corner to resize";
 // A 52 × 72 cm learning card, 20 mm thick, with rounded corners and two readable faces.
 function roundedShape(w: number, h: number, r: number) {
   const shape = new Shape();
@@ -39,6 +21,55 @@ function roundedShape(w: number, h: number, r: number) {
   shape.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
   return shape;
 }
+// Browser-style manipulation chrome. Local +Z faces the viewer; cream
+// near-grab backing and inset ray surface form one bar, with separate inputs.
+const handleCream = new MeshBasicMaterial({ color: "#fffaf2" });
+const handleEdge = new MeshBasicMaterial({ color: "#f3e6d3" });
+const handleInk = new MeshBasicMaterial({ color: "#142352" });
+function handleBody(w: number, h: number, depth: number, front: boolean) {
+  const mesh = new Mesh(
+    new ExtrudeGeometry(roundedShape(w, h, h / 2), {
+      depth,
+      bevelEnabled: true,
+      bevelThickness: 0.002,
+      bevelSize: 0.002,
+      bevelSegments: 2,
+      steps: 1,
+      curveSegments: 8,
+    }),
+    front ? handleCream : handleEdge,
+  );
+  mesh.position.z = -depth / 2;
+  mesh.name = front ? "Cream handle face" : "Cream handle edge";
+  return mesh;
+}
+function stroke(
+  length: number,
+  radius: number,
+  x: number,
+  y: number,
+  angle: number,
+) {
+  const mesh = new Mesh(new CapsuleGeometry(radius, length, 4, 8), handleInk);
+  mesh.rotation.z = angle;
+  mesh.position.set(x, y, 0.008);
+  mesh.name = "Navy handle mark";
+  return mesh;
+}
+export const windowGrip = handleBody(0.328, 0.06, 0.016, false);
+windowGrip.name = "Pinch bar to move";
+export const windowMove = new Group();
+windowMove.name = "Hold bar to move";
+windowMove.add(handleBody(0.32, 0.052, 0.01, true));
+windowMove.add(stroke(0.08, 0.002, 0, 0, Math.PI / 2));
+export const windowResizeGrip = handleBody(0.07, 0.07, 0.016, false);
+windowResizeGrip.name = "Pinch corner to resize";
+export const windowResize = new Group();
+windowResize.name = "Pull corner to resize";
+windowResize.add(handleBody(0.062, 0.062, 0.01, true));
+// Two diagonal resize marks; no large coloured block in the viewing field.
+windowResize.add(stroke(0.025, 0.0018, 0, 0, -Math.PI / 4));
+windowResize.add(stroke(0.014, 0.0018, 0.01, -0.01, -Math.PI / 4));
 // UVs preserve the full image; the actual silhouette clips its corners.
 function roundedFace(w: number, h: number, r: number) {
   const geometry = new ShapeGeometry(roundedShape(w, h, r), 12);

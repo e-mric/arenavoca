@@ -4,6 +4,7 @@ import {
   windowGrip,
   windowMove,
   windowResize,
+  windowResizeGrip,
   momentCard,
 } from "./features/spatial-windows/objects.scene-asset";
 import { assetUrl } from "./features/content/model";
@@ -31,6 +32,7 @@ export default defineAssets({
   windowGrip,
   windowMove,
   windowResize,
+  windowResizeGrip,
   momentCard,
   ...Object.fromEntries(
     ["minimal-dock", "moment-actions", "moment-notice"].map((id) => [

@@ -13,10 +13,10 @@ import { cardBackFacing, resizedScale, windowScale } from "./math";
 function fixture(direct = false) {
   const anchor = new Group();
   anchor.position.set(2, 1, -3);
-  if (direct) anchor.scale.setScalar(.7);
+  if (direct) anchor.scale.setScalar(0.7);
   const content = direct ? new Group() : anchor;
   content.visible = true;
-  const targets = [0, 1, 2].map((kind) => ({
+  const targets = [0, 1, 2, 3, 4].map((kind) => ({
     object3D: direct && kind === 0 ? anchor : new Group(),
     held: false,
     values: { window: "test", kind, held: false, scale: 1 } as Record<
@@ -144,8 +144,56 @@ it("turning a card exposes its actual reverse face without edge-on flicker", () 
   expect(cardBackFacing(-0.05, false)).toBe(false);
 });
 
-it("reset restores the authored handheld-card size rather than enlarging it",()=>{
- const {windows,anchor}=fixture(true);
- anchor.scale.setScalar(1.8);windows.reset();
- expect(anchor.scale.toArray()).toEqual([.7,.7,.7]);
+it("reset restores the authored handheld-card size rather than enlarging it", () => {
+  const { windows, anchor } = fixture(true);
+  anchor.scale.setScalar(1.8);
+  windows.reset();
+  expect(anchor.scale.toArray()).toEqual([0.7, 0.7, 0.7]);
+});
+
+it("the visible card bar moves both faces without needing a direct card grasp", () => {
+  const { windows, anchor, targets } = fixture(true);
+  const bar = targets[3];
+  bar.held = true;
+  bar.object3D.position.add(new Vector3(0.2, 0.1, 0.3));
+  windows.update();
+  expect(anchor.position.toArray()).toEqual([2.2, 1.1, -2.7]);
+  bar.held = false;
+  windows.update();
+  expect(anchor.scale.x).toBeCloseTo(0.7);
+  expect(targets[1].object3D.visible).toBe(true);
+});
+it("the near corner supports pinch resizing and releases with the card", () => {
+  const { windows, anchor, targets, content, grab } = fixture(true);
+  const corner = targets[4];
+  corner.held = true;
+  windows.update();
+  corner.object3D.position
+    .sub(anchor.position)
+    .multiplyScalar(1.5)
+    .add(anchor.position);
+  windows.update();
+  expect(anchor.scale.x).toBeCloseTo(1.05);
+  content.visible = false;
+  windows.update();
+  expect(grab.forceRelease).toHaveBeenCalledWith(corner);
+  for (const target of targets) expect(target.object3D.visible).toBe(false);
+});
+
+it("distance chrome cannot intercept near touch before a pinch grab", () => {
+  const { targets } = fixture();
+  expect(targets[1].object3D.pointerEventsType).toEqual({ allow: "ray" });
+  expect(targets[2].object3D.pointerEventsType).toEqual({ allow: "ray" });
+  for (const kind of [0, 3, 4])
+    expect(targets[kind].object3D.pointerEventsType).toEqual({ allow: "grab" });
+});
+
+it("keeps grab bars clear of card touch buttons even at minimum size", () => {
+  const { windows, anchor, targets } = fixture(true);
+  for (const scale of [0.45, 0.85, 2.2]) {
+    anchor.scale.setScalar(scale);
+    windows.update();
+    const bottom = anchor.position.y - 0.5 * scale;
+    expect(bottom - targets[3].object3D.position.y).toBeCloseTo(0.18);
+  }
 });
