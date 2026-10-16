@@ -9,7 +9,8 @@ export default defineConfig({
       "/api/recognition": {
         target: "http://127.0.0.1:8788",
         changeOrigin: false,
-        timeout: 180000,
+        // Match the development proxy for local transcription + vision.
+        timeout: 900000,
       },
     },
   },

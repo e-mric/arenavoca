@@ -20,7 +20,7 @@
 <div class="row"><Button id="lab-browse" class="action"><ButtonLabel class="label">Moment cards</ButtonLabel></Button><Button id="lab-demo" class="action"><ButtonLabel class="label">Show movement</ButtonLabel></Button><Button id="lab-save" class="action"><ButtonLabel id="lab-save-label" class="label">Save phrase</ButtonLabel></Button><Button id="lab-close" class="action"><ButtonLabel class="label">Close lab</ButtonLabel></Button></div>
 <div class="row"><Button id="lab-side" class="action"><ButtonLabel class="label">Other side</ButtonLabel></Button><Button id="lab-distance" class="action"><ButtonLabel class="label">Near / far</ButtonLabel></Button><Button id="lab-height" class="action"><ButtonLabel class="label">Higher / lower</ButtonLabel></Button></div>
 <div id="lab-analysis-area" style="display: none; flex-direction: column; gap: 10px">
-<span class="copy">Development / sends played video + audio to Google</span>
+<span id="lab-analysis-provider" class="copy">Check the analysis service before starting</span>
 <span id="lab-analysis-status" class="copy">Recorded-as-live / off</span>
 <div class="row"><Button id="lab-analysis" class="action"><ButtonLabel id="lab-analysis-label" class="label">Start analysis</ButtonLabel></Button><Button id="lab-drafts" class="action"><ButtonLabel id="lab-drafts-label" class="label">New drafts (0)</ButtonLabel></Button></div>
 </div>

@@ -4,6 +4,8 @@ import {
   validateBatch,
   type MomentBatch,
   type AnalysisWindow,
+  type RecognitionConfiguration,
+  providerNotice,
 } from "./stream";
 import { MomentCards } from "../match-lab/cards";
 const window = {
@@ -42,7 +44,16 @@ function batch(
 }
 function setup() {
   const transport = {
-    start: vi.fn(async () => "session"),
+    configuration: vi.fn(async (): Promise<RecognitionConfiguration> => ({
+      id: "a".repeat(32),
+      provider: "ollama",
+      model: "qwen3-vl:8b",
+      evidence: "frames",
+    })),
+    start: vi.fn(
+      async (_position: number, _signal: AbortSignal, _configuration: string) =>
+        "session",
+    ),
     analyze: vi.fn(async (_session: string, w: AnalysisWindow) => batch(w)),
     stop: vi.fn(async () => {}),
   };
@@ -64,6 +75,7 @@ function advance(
 describe("recorded-as-live ingestion", () => {
   it("waits for observed footage, excludes future frames and does not analyse while paused", async () => {
     const { stream, transport, publish } = setup();
+    await stream.connect();
     await stream.start(808);
     advance(stream, 808, 827);
     expect(transport.analyze).not.toHaveBeenCalled();
@@ -87,6 +99,7 @@ describe("recorded-as-live ingestion", () => {
           resolve = r;
         }),
     );
+    await stream.connect();
     await stream.start(808);
     advance(stream, 808, 828);
     advance(stream, 828, 858);
@@ -112,6 +125,7 @@ describe("recorded-as-live ingestion", () => {
             resolve = r;
           }),
       );
+      await stream.connect();
       await stream.start(808);
       advance(stream, 808, 828);
       if (reason === "stop") stream.stop();
@@ -134,6 +148,7 @@ describe("recorded-as-live ingestion", () => {
       b.moments[0].endSeconds = 827;
       return b;
     });
+    await stream.connect();
     await stream.start(808);
     advance(stream, 808, 828);
     await flush();
@@ -153,6 +168,7 @@ describe("recorded-as-live ingestion", () => {
       story: [],
       elapsedSeconds: 1,
     }));
+    await stream.connect();
     await stream.start(808);
     for (const [from, to] of [
       [808, 828],
@@ -164,6 +180,7 @@ describe("recorded-as-live ingestion", () => {
     }
     expect(stream.active).toBe(false);
     expect(transport.analyze).toHaveBeenCalledTimes(3);
+    await stream.connect();
     await stream.start(860);
     transport.analyze.mockRejectedValue(new Error("Offline"));
     advance(stream, 860, 880);
@@ -181,6 +198,7 @@ describe("recorded-as-live ingestion", () => {
           resolve = r;
         }),
     );
+    await stream.connect();
     const started = stream.start(808);
     stream.stop();
     resolve("late-session");
@@ -222,5 +240,55 @@ describe("publishing draft evidence", () => {
     cards.toggleStory();
     expect(cards.label).toContain("AI draft story");
     expect(cards.spanish).toBe(batch().story[0].spanish);
+  });
+});
+
+describe("provider disclosure", () => {
+  it("requires a separate Start after checking an unknown configuration", async () => {
+    const { stream, transport } = setup();
+    await stream.start(808);
+    expect(transport.start).not.toHaveBeenCalled();
+    expect(stream.notice).toContain("frames only");
+    expect(stream.startLabel).toBe("Start analysis");
+    await stream.start(808);
+    expect(transport.start).toHaveBeenCalledWith(
+      808,
+      expect.any(AbortSignal),
+      "a".repeat(32),
+    );
+    stream.stop();
+  });
+  it("forces a new notice after a service restart or failed start", async () => {
+    const { stream, transport } = setup();
+    await stream.connect();
+    transport.start.mockRejectedValueOnce(new Error("Configuration changed"));
+    await stream.start(808);
+    expect(stream.startLabel).toBe("Check service");
+    transport.configuration.mockResolvedValue({
+      id: "b".repeat(32),
+      provider: "gemini",
+      model: "cloud",
+      evidence: "video-audio",
+    });
+    await stream.start(808);
+    expect(transport.start).toHaveBeenCalledTimes(1);
+    expect(stream.notice).toContain("sends played video + audio to Google");
+    expect(stream.active).toBe(false);
+  });
+  it("keeps an unavailable service inactive and distinguishes commentary modes", async () => {
+    const { stream, transport } = setup();
+    transport.configuration.mockRejectedValue(new Error("Offline"));
+    await stream.start(808);
+    expect(stream.active).toBe(false);
+    expect(stream.notice).toContain("unavailable");
+    expect(transport.start).not.toHaveBeenCalled();
+    expect(
+      providerNotice({
+        id: "a",
+        provider: "ollama",
+        model: "local",
+        evidence: "frames-transcript",
+      }),
+    ).toContain("local commentary");
   });
 });

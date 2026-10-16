@@ -62,19 +62,20 @@ This standalone authoring command does not deduplicate overlapping clips.
 The adjacent `stream.ts` and `serve.py` add an experimental recorded-as-live path
 with overlapping-window deduplication and strict request limits. The optional
 `?recognition=1` controls are not a completed live service. The server runs locally
-but **still calls Google**, including when the client is named `localRecognition`.
-Do not treat it as local AI or remove its limits for a full-game benchmark.
+with explicit Ollama or Gemini selection. The `localRecognition` client name
+refers to the gateway, not the selected inference provider. The default is still
+Gemini; use the explicit local command below. Keep the runtime request limits.
 
-The latest implementation checks passed typecheck, 204 Vitest tests, production
-build and seven prepared-card/theater browser regressions. Fresh-model browser
-delivery and physical Quest verification remain pending.
+Verification on 16 October passed typecheck, 58 Python tests, 214 Vitest tests,
+production build and eight browser tests, including fixture-backed local draft
+delivery. Actual model delivery and physical Quest verification remain pending.
+Existing font-atlas accent and bundle-size warnings remain.
 
 The user will continue on Windows with RTX 5080 / 64 GB system RAM, starting with
 local Qwen3-VL and local commentary transcription to reduce inference fees. A
 local-only benchmark planner and short-excerpt Ollama adapter are implemented
 (below); actual Windows model evaluation and the resumable inference runner are
-still pending. `serve.py` continues to use Google; the new provider is currently
-available through the authoring command only.
+still pending. `serve.py` now also supports the local provider for Match Lab.
 The current setup instructions, source/media transfer checklist, known pending
 work and cost/quality evaluation protocol are in
 [PRD.md](../../../../PRD.md), under “Resume here: recorded-match evaluation on
@@ -161,15 +162,93 @@ responses through a loopback HTTP test server. **No real Ollama/Whisper model wa
 run.** Windows dependency compatibility, model speed, GPU residency, Spanish
 quality and full-game accuracy remain unverified. Check `ollama ps` and
 `nvidia-smi` during the first PC run; telemetry is not automatically an accuracy or
-energy measurement. `serve.py`, the three/six-request runtime limits and playback
-behaviour are unchanged. Full-game execute/resume and local-provider wiring into
-Match Lab remain later work; `benchmark.py` still only prepares the schedule.
+energy measurement. The three/six-request runtime limits and playback behaviour
+are preserved in the new Match Lab integration below. Full-game execute/resume
+remains later work; `benchmark.py` still only prepares the schedule.
 
 Implementation references checked 16 October 2026:
 [Ollama chat](https://docs.ollama.com/api/chat),
 [vision input](https://docs.ollama.com/capabilities/vision),
 [model metadata API](https://github.com/ollama/ollama/blob/main/api/types.go),
 [faster-whisper](https://github.com/SYSTRAN/faster-whisper).
+
+## Match Lab local service · 16 October 2026
+
+After the recording, FFmpeg and Ollama setup above, run from `app/` in a separate
+Windows PowerShell terminal:
+
+```powershell
+py -3.12 src/features/match-recognition/serve.py --provider ollama --visual-only
+```
+
+For commentary, use the environment/model folder already prepared above instead:
+
+```powershell
+.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/serve.py --provider ollama --whisper-model content-source/match-analysis/models/whisper-small
+```
+
+These are alternatives: stop the first service with Ctrl+C before starting the
+second. Both listen only on `127.0.0.1:8788`. The app proxies `/api/recognition` to
+that service; the headset never connects directly to Ollama. No Gemini key or
+Google sign-in is needed for local mode. Optional `--model qwen3-vl:4b`, `--fps 2`
+and `--local-timeout 240` have the same meaning as in the authoring command.
+Sampling must fit a full 20-second window within 48 frames; `--fps 4` is rejected
+at startup. Models are never downloaded automatically.
+
+Start the managed app separately:
+
+```powershell
+npx @iwsdk/cli dev up --open --timeout 45000
+```
+
+Open the runtime URL printed by that command with `?recognition=1` added. For
+Quest, use the established headset pairing/local-certificate workflow in
+`app/AGENTS.md`, retaining the query parameter. Keep the app and Python service
+on the same PC. The standard production preview also forwards this route; both
+proxies allow up to 15 minutes of inactive socket wait for local processing.
+That is a transport ceiling, not a latency target or a cancellation guarantee.
+
+1. Enter the match in theater or passthrough. For the Alba smoke test, seek to
+   recording **13:28 (808 seconds)** before starting analysis.
+2. Open Match Lab. Confirm its notice says **Local AI / frames only** or
+   **Local AI / frames + local commentary**. If unavailable, fix/start the PC
+   service and press **Check service**. Checking never also starts analysis.
+3. Press **Start analysis** and let at least 20 seconds play normally. Pausing
+   stops collection; seeking ends this analysis run. Processing may take longer
+   than playback: there is one request at a time, no queued backlog.
+4. New results appear under **New drafts**. Your selected/flipped card stays
+   pinned until you choose the drafts. Flip a new card, open its story and play
+   its separate muted replay. The main match keeps its own playback state.
+5. Press **Stop analysis** to discard pending results. This does not guarantee
+   immediate cancellation of GPU work; the server stays busy until work finishes.
+   Three attempts end one test; six end the process budget. Sessions expire after
+   five minutes for new requests, so very slow local runs may yield fewer cards.
+
+The browser reads a non-secret configuration (provider/model/evidence mode) and
+binds Start to that service instance. If the service is restarted or changed to
+cloud, the old Start fails before inference; check the notice again and explicitly
+Start. To deliberately compare Google, restart with
+`python src/features/match-recognition/serve.py --provider gemini --project arenavoca`
+and complete the existing Cloud setup. This route uploads played video/audio.
+There is no automatic retry or cloud fallback in local mode.
+
+Local outputs are private under
+`content-source/match-analysis/recognition/stream/<job>/`: the same evidence,
+raw response, model/timing metadata and draft files as the authoring adapter,
+plus silent replay MP4s. The browser receives only validated draft observations,
+evidence text, story references, bounded replay URLs and elapsed processing time.
+Replay/uncertain events stay withheld. Elapsed time includes excerpt preparation,
+analysis and replay encoding, but excludes waiting for footage and network/UI
+presentation. No matches, transcripts, frames or model weights belong in Git.
+
+Verification uses synthetic model responses through the real adapter/service
+contract and a separate browser fixture to exercise draft selection, flip, story,
+muted replay and uninterrupted main playback. It is not model-quality evidence.
+**Pending Quest-only acceptance:** on Windows with the actual model, repeat the
+five steps in both theater and passthrough; check the notice, draft arrival,
+readability, hand-grab/flip and independent replay. Also stop during processing
+and disconnect Ollama: no late cards, no cloud fallback, match keeps playing.
+Spanish content and prototype audio still require fluent review.
 
 ## Full-recording preparation · 16 October 2026
 

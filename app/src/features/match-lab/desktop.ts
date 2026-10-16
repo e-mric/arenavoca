@@ -10,7 +10,7 @@ export function bindLabDesktop(e: Experience) {
   const panel = document.createElement("section");
   panel.id = "match-lab";
   panel.hidden = true;
-  panel.innerHTML = `<h2>Match Lab · Alba's cutback</h2><p data-step></p><h3 data-face>${cutback.spanish}</h3><p data-translation>${cutback.english}</p><p data-direction></p><img data-art alt="Illustrated sporting action" style="width:100%;border-radius:16px"><div data-replay></div><div class="lab-desktop-board"><span class="lab-goal lab-goal-left">GOAL</span><span class="lab-goal lab-goal-right">GOAL</span><button id="lab-ball" aria-label="Select ball">●</button><button id="lab-player-0">A</button><button id="lab-player-1">B</button><button id="lab-player-2">C</button></div><p data-message role="status"></p><div data-card-nav class="controls"><button id="lab-prev-card">Previous</button><button id="lab-flip-card">Flip card</button><button id="lab-next-card">Next</button><button id="lab-read-story">Read story</button></div><div class="controls"><button id="lab-cards">Moment cards</button><button id="lab-watch">Watch moment</button><button id="lab-speak">Hear phrase</button><button id="lab-continue">Try the pass</button><button id="lab-show">Show movement</button><button id="lab-store">Save phrase</button><button id="lab-dismiss">Close lab</button></div><div data-recognition hidden><p>Development test / sends played video and commentary to Google. Up to three windows.</p><p data-analysis-status role="status"></p><div class="controls"><button id="lab-analysis">Start analysis</button><button id="lab-drafts">New drafts (0)</button></div></div><small>Teaching diagram / Spanish and audio review pending</small>`;
+  panel.innerHTML = `<h2>Match Lab · Alba's cutback</h2><p data-step></p><h3 data-face>${cutback.spanish}</h3><p data-translation>${cutback.english}</p><p data-direction></p><img data-art alt="Illustrated sporting action" style="width:100%;border-radius:16px"><div data-replay></div><div class="lab-desktop-board"><span class="lab-goal lab-goal-left">GOAL</span><span class="lab-goal lab-goal-right">GOAL</span><button id="lab-ball" aria-label="Select ball">●</button><button id="lab-player-0">A</button><button id="lab-player-1">B</button><button id="lab-player-2">C</button></div><p data-message role="status"></p><div data-card-nav class="controls"><button id="lab-prev-card">Previous</button><button id="lab-flip-card">Flip card</button><button id="lab-next-card">Next</button><button id="lab-read-story">Read story</button></div><div class="controls"><button id="lab-cards">Moment cards</button><button id="lab-watch">Watch moment</button><button id="lab-speak">Hear phrase</button><button id="lab-continue">Try the pass</button><button id="lab-show">Show movement</button><button id="lab-store">Save phrase</button><button id="lab-dismiss">Close lab</button></div><div data-recognition hidden><p data-analysis-provider></p><p data-analysis-status role="status"></p><div class="controls"><button id="lab-analysis">Start analysis</button><button id="lab-drafts">New drafts (0)</button></div></div><small>Teaching diagram / Spanish and audio review pending</small>`;
   document.getElementById("companion")!.append(panel);
   const find = (selector: string) =>
     panel.querySelector<HTMLElement>(selector)!;
@@ -46,10 +46,11 @@ export function bindLabDesktop(e: Experience) {
     panel.hidden = !lab.open;
     if (!lab.open) return;
     find("[data-recognition]").hidden = !e.recognitionEnabled;
+    set("[data-analysis-provider]", e.recognition.notice);
     set("[data-analysis-status]", e.recognition.status);
     set(
       "#lab-analysis",
-      e.recognition.active ? "Stop analysis" : "Start analysis",
+      e.recognition.active ? "Stop analysis" : e.recognition.startLabel,
     );
     set("#lab-drafts", `New drafts (${lab.cards.draftCount})`);
     (find("#lab-drafts") as HTMLButtonElement).disabled = !lab.cards.draftCount;

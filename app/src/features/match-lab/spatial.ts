@@ -270,10 +270,11 @@ export function attachMatchLab(
       "lab-primary-label",
       cards ? "Practise cutback" : labPrimaryLabel(lab),
     );
+    text("lab-analysis-provider", e.recognition.notice);
     text("lab-analysis-status", e.recognition.status);
     text(
       "lab-analysis-label",
-      e.recognition.active ? "Stop analysis" : "Start analysis",
+      e.recognition.active ? "Stop analysis" : e.recognition.startLabel,
     );
     text("lab-drafts-label", `New drafts (${lab.cards.draftCount})`);
     text("lab-save-label", lab.saved ? "Saved" : "Save phrase");

@@ -1,8 +1,10 @@
 """Local recorded-as-live development service. Not a public production backend.
-Start from app/: python3 src/features/match-recognition/serve.py --project arenavoca
+Local: python3 src/features/match-recognition/serve.py --provider ollama --visual-only
+Cloud: python3 src/features/match-recognition/serve.py --provider gemini --project arenavoca
 Vite forwards /api/recognition to this loopback-only service. Six model calls per
 process, three per explicit session, one in flight; no automatic retries.
 """
+from __future__ import annotations
 import argparse
 import json
 import math
@@ -11,15 +13,38 @@ import secrets
 import subprocess
 import threading
 import time
+from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from recognize import APP, OUTPUT_ROOT, prepare, analyze, cloud_token
+from recognize import APP, OUTPUT_ROOT, prepare, analyze, cloud_token, cloud_endpoint
 
 VIDEO = APP / 'public/media/user/barca-2018-h264.mp4'
 MEDIA = OUTPUT_ROOT / 'stream'
 PREFIX = '/api/recognition/'
+
+
+@dataclass(frozen=True)
+class Provider:
+    """Server-owned inference choice; browsers cannot change providers or paths."""
+    name: str = 'gemini'
+    model: str = 'gemini-3.8-flash'
+    project: str = 'arenavoca'
+    fps: float = 1
+    whisper_model: Path | None = None
+    timeout: float = 180
+
+    def analyze(self, clip, source, output):
+        if self.name == 'ollama':
+            from local_model import analyze_local
+            return analyze_local(clip, source, 'football', self.model, output,
+                                 fps=self.fps, whisper_model=self.whisper_model,
+                                 timeout=self.timeout)
+        if self.name != 'gemini':
+            raise ValueError('Unsupported inference provider.')
+        return analyze(clip, source, 'football', self.model, cloud_token(self.project),
+                       output, project=self.project)
 
 
 class RunPolicy:
@@ -75,13 +100,13 @@ class RunPolicy:
                 self.session = None
 
 
-def produce(window, project):
+def produce(window, provider):
     started = time.monotonic()
     job = secrets.token_hex(8)
     output = MEDIA / job
     clip, source = prepare(VIDEO, output, window['startSeconds'],
                            window['endSeconds'] - window['startSeconds'], window['sourceId'])
-    draft = analyze(clip, source, 'football', 'gemini-3.8-flash', cloud_token(project), output, project=project)
+    draft = provider.analyze(clip, source, output)
     moments = []
     for event in draft['observations']:
         if event['status'] != 'needs-review':
@@ -104,7 +129,12 @@ def produce(window, project):
                 elapsedSeconds=round(time.monotonic() - started, 2))
 
 
-def handler(policy, project, producer=produce):
+def handler(policy, provider, producer=produce):
+    # Bind the displayed configuration to this process. A restart/provider change
+    # requires reloading the notice and a new explicit Start, before any inference.
+    configuration = dict(id=secrets.token_hex(16), provider=provider.name,
+                         model=provider.model, evidence='video-audio' if provider.name == 'gemini'
+                         else 'frames-transcript' if provider.whisper_model else 'frames')
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *_):
             pass  # Do not log session tokens, provider bodies or private media paths.
@@ -131,7 +161,9 @@ def handler(policy, project, producer=produce):
                 data = json.loads(self.rfile.read(size))
                 if not isinstance(data, dict):
                     raise ValueError('Invalid request.')
-                if self.path == PREFIX + 'start' and set(data) == {'position'}:
+                if self.path == PREFIX + 'start' and set(data) == {'position', 'configuration'}:
+                    if data['configuration'] != configuration['id']:
+                        raise ValueError('Analysis configuration changed. Check the service again.')
                     if not VIDEO.is_file():
                         raise ValueError('Private recording is unavailable.')
                     self.reply(200, {'session': policy.start(data['position'])})
@@ -142,7 +174,7 @@ def handler(policy, project, producer=produce):
                     token = data['session']
                     policy.claim(token, data['window'])
                     try:
-                        batch = producer(data['window'], project)
+                        batch = producer(data['window'], provider)
                     finally:
                         valid = policy.finish(token)
                     if not valid:
@@ -159,6 +191,9 @@ def handler(policy, project, producer=produce):
                     pass
 
         def do_GET(self):
+            if self.path == PREFIX + 'configuration':
+                self.reply(200, configuration)
+                return
             match = re.fullmatch(PREFIX + r'media/([a-f0-9]{16})/([a-f0-9]{16}-\d+\.mp4)', self.path)
             if not match:
                 self.reply(404, {'error': 'Unknown media.'})
@@ -198,9 +233,48 @@ def handler(policy, project, producer=produce):
     return Handler
 
 
-if __name__ == '__main__':
+def parse_provider(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--project', default='arenavoca')
-    args = parser.parse_args()
-    print('Recorded-as-live service on loopback:8788. Six model calls maximum; explicit Start required.', flush=True)
-    ThreadingHTTPServer(('127.0.0.1', 8788), handler(RunPolicy(), args.project)).serve_forever()
+    parser.add_argument('--provider', choices=['gemini', 'ollama'], default='gemini')
+    parser.add_argument('--project', help='Cloud project (default arenavoca); Gemini only.')
+    parser.add_argument('--model', help='Defaults to gemini-3.8-flash or qwen3-vl:8b.')
+    audio = parser.add_mutually_exclusive_group()
+    audio.add_argument('--visual-only', action='store_true')
+    audio.add_argument('--whisper-model', type=Path, help='Complete local faster-whisper model folder.')
+    parser.add_argument('--fps', type=float, default=1)
+    parser.add_argument('--local-timeout', type=float, default=180)
+    args = parser.parse_args(argv)
+    try:
+        if args.provider == 'ollama':
+            from local_model import MODELS, sample_times, OllamaClient
+            if args.project or not (args.visual_only or args.whisper_model):
+                raise ValueError('Local mode requires --visual-only or --whisper-model, and no --project.')
+            model = args.model or 'qwen3-vl:8b'
+            if model not in MODELS:
+                raise ValueError('Choose an installed qwen3-vl:8b or qwen3-vl:4b.')
+            sample_times(20, args.fps)
+            OllamaClient(timeout=args.local_timeout)  # Validate only; no network request.
+            if args.whisper_model and not all((args.whisper_model / name).is_file()
+                    for name in ('model.bin', 'config.json', 'tokenizer.json')):
+                raise ValueError('Whisper needs a complete local model folder; see README.')
+            return Provider(name='ollama', model=model, project='', fps=args.fps,
+                            whisper_model=args.whisper_model, timeout=args.local_timeout)
+        if args.visual_only or args.whisper_model or args.fps != 1 or args.local_timeout != 180:
+            raise ValueError('Local evidence options require --provider ollama.')
+        cloud_endpoint(args.project or 'arenavoca')
+        return Provider(model=args.model or 'gemini-3.8-flash', project=args.project or 'arenavoca')
+    except ValueError as error:
+        parser.error(str(error))
+
+
+def main(argv=None):
+    provider = parse_provider(argv)
+    mode = 'local frames + local commentary' if provider.whisper_model else 'local frames only'
+    if provider.name == 'gemini': mode = 'Google Cloud / uploads video + audio'
+    print(f'Recorded-as-live on loopback:8788 / {provider.model} / {mode}. '
+          'Six model calls maximum; explicit Start required. No automatic fallback.', flush=True)
+    ThreadingHTTPServer(('127.0.0.1', 8788), handler(RunPolicy(), provider)).serve_forever()
+
+
+if __name__ == '__main__':
+    main()

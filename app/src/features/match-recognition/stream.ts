@@ -22,7 +22,12 @@ export interface MomentBatch {
   elapsedSeconds: number;
 }
 export interface RecognitionTransport {
-  start(position: number, signal: AbortSignal): Promise<string>;
+  configuration(): Promise<RecognitionConfiguration>;
+  start(
+    position: number,
+    signal: AbortSignal,
+    configuration: string,
+  ): Promise<string>;
   analyze(
     session: string,
     window: AnalysisWindow,
@@ -31,11 +36,46 @@ export interface RecognitionTransport {
   stop(session: string): Promise<void>;
 }
 
+export interface RecognitionConfiguration {
+  id: string;
+  provider: "gemini" | "ollama";
+  model: string;
+  evidence: "video-audio" | "frames" | "frames-transcript";
+}
+
+export function providerNotice(config: RecognitionConfiguration): string {
+  if (config.provider === "gemini")
+    return "Google Cloud / sends played video + audio to Google";
+  return config.evidence === "frames-transcript"
+    ? "Local AI / frames + local commentary / stays on your PC"
+    : "Local AI / frames only / no commentary / stays on your PC";
+}
+
 /** No playback commands. At most one request and three windows per explicit run. */
 export class RecordedStream {
   active = false;
   status = "Recorded-as-live / off";
   received = 0;
+  notice = "Check the analysis service before starting";
+  private configuration?: RecognitionConfiguration;
+  private connecting = false;
+  get startLabel() {
+    return this.configuration ? "Start analysis" : "Check service";
+  }
+  async connect() {
+    if (this.active || this.connecting) return;
+    this.connecting = true;
+    this.configuration = undefined;
+    this.notice = "Checking analysis service...";
+    try {
+      this.configuration = await this.transport.configuration();
+      this.notice = providerNotice(this.configuration);
+    } catch {
+      this.notice = "Service unavailable / check PC setup, then Check service";
+    } finally {
+      this.connecting = false;
+    }
+  }
   private session = "";
   private generation = 0;
   private request?: AbortController;
@@ -51,6 +91,11 @@ export class RecordedStream {
   ) {}
   async start(position: number) {
     if (this.active || !Number.isFinite(position) || position < 0) return;
+    // Checking a missing/stale configuration never also starts inference.
+    if (!this.configuration) {
+      await this.connect();
+      return;
+    }
     this.active = true;
     this.origin = this.lastPosition = position;
     this.nextEnd = position + 20;
@@ -59,9 +104,13 @@ export class RecordedStream {
     this.busy = true;
     const generation = ++this.generation;
     const request = (this.request = new AbortController());
-    this.status = "Connecting / sends played video + commentary to Google";
+    this.status = "Starting / " + this.notice;
     try {
-      const session = await this.transport.start(position, request.signal);
+      const session = await this.transport.start(
+        position,
+        request.signal,
+        this.configuration.id,
+      );
       if (generation !== this.generation) {
         void this.transport.stop(session).catch(() => {});
         return;
@@ -69,10 +118,14 @@ export class RecordedStream {
       this.session = session;
       this.status = "Watching / collecting 20 seconds";
     } catch {
-      if (generation === this.generation)
+      if (generation === this.generation) {
+        this.configuration = undefined;
+        this.notice =
+          "Service changed or unavailable / Check service before retrying";
         this.stop(
           "Analysis unavailable. Start the local analysis service, then retry.",
         );
+      }
     } finally {
       if (generation === this.generation) this.busy = false;
     }

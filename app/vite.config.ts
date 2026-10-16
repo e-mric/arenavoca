@@ -18,7 +18,8 @@ export default defineConfig({
       "/api/recognition": {
         target: "http://127.0.0.1:8788",
         changeOrigin: false,
-        timeout: 180000,
+        // Local transcription + vision can exceed the cloud-only wait.
+        timeout: 900000,
       },
     },
   },

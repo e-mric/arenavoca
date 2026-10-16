@@ -85,6 +85,7 @@ export class Experience {
     this.replaying = false;
     this.lab.saved = readLabSave(localStorage, this.lab.cards.card.id);
     this.lab.show();
+    if (this.recognitionEnabled) void this.recognition.connect();
     this.onChange();
   }
   closeLab() {
