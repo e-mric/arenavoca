@@ -230,6 +230,8 @@ class ProviderTests(unittest.TestCase):
                     ['--provider', 'ollama', '--visual-only', '--project', 'arenavoca'],
                     ['--provider', 'ollama', '--visual-only', '--model', 'qwen3-vl:8b-cloud'],
                     ['--provider', 'ollama', '--visual-only', '--fps', '4'],
+                    ['--provider', 'ollama', '--visual-only', '--context-tokens', '65536'],
+                    ['--context-tokens', '49152'],
                     ['--provider', 'ollama', '--visual-only', '--local-timeout', 'nan'],
                     ['--provider', 'ollama', '--whisper-model', 'missing-model']]
         with patch('sys.stderr', new_callable=io.StringIO):
@@ -246,16 +248,16 @@ class ProviderTests(unittest.TestCase):
                  patch('serve.cloud_token', side_effect=AssertionError('Cloud forbidden')):
                 provider.analyze('clip', {'source': 'fixture'}, path)
             local.assert_called_once_with('clip', {'source': 'fixture'}, 'football', 'qwen3-vl:4b', path,
-                                          fps=2, whisper_model=path, timeout=240)
+                                          fps=2, whisper_model=path, timeout=240, context_tokens=16384, time_labels=False, frame_width=640)
 
     def test_explicit_instruct_choice_reaches_local_adapter(self):
         provider = parse_provider(['--provider', 'ollama', '--visual-only',
-                                  '--model', 'qwen3-vl:8b-instruct', '--fps', '0.5'])
+                                  '--model', 'qwen3-vl:8b-instruct', '--fps', '2', '--context-tokens', '49152', '--frame-time-labels', '--frame-width', '960'])
         with patch('local_model.analyze_local', return_value={}) as local, \
              patch('serve.cloud_token', side_effect=AssertionError('Cloud forbidden')):
             provider.analyze('clip', {}, 'output')
         local.assert_called_once_with('clip', {}, 'football', 'qwen3-vl:8b-instruct', 'output',
-                                      fps=0.5, whisper_model=None, timeout=180)
+                                      fps=2, whisper_model=None, timeout=180, context_tokens=49152, time_labels=True, frame_width=960)
 
     def test_cloud_still_uses_explicit_project_and_original_adapter(self):
         with patch('serve.cloud_token', return_value='fixture') as token, \

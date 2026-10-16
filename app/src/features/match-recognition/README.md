@@ -97,7 +97,9 @@ ordered JPEG samples and optional locally transcribed commentary to Ollama on
 can miss a fast ball; this is a different input representation from Gemini video.
 It never reads cloud credentials, pulls a model, follows HTTP redirects, uses a
 system proxy or falls back to Gemini. Only installed `qwen3-vl:8b`,
-`qwen3-vl:4b` and `qwen3-vl:8b-instruct` are accepted, with vision capability and no remote-model metadata.
+`qwen3-vl:4b`, `qwen3-vl:8b-instruct`, `qwen3.5:9b` and `qwen3.5:27b` are accepted,
+with vision capability and no remote-model metadata. New models are explicit
+comparisons, not automatic fallbacks or changed defaults.
 Keep `OLLAMA_NO_CLOUD=1` enabled in the Ollama process as described in the PRD.
 
 ### Windows: first visual smoke test
@@ -120,7 +122,11 @@ only after inspecting memory use and quality. Sample times are clip-relative see
 targets and may round to a decoded frame boundary.
 
 The request uses a schema-constrained JSON response, deterministic generation
-settings, a 16,384-token context and a 2,048-token output cap. Truncated responses
+settings, a default 16,384-token context and a 2,048-token output cap. Local-only
+`--context-tokens 32768` or `--context-tokens 49152` explicitly increases context
+for denser evidence; it can substantially increase memory use and latency. The
+same option works in `serve.py`. It never changes sampling automatically, and
+unsupported context sizes fail before inference. Truncated responses
 are rejected. No automatic retry: lower sampling or investigate the failure
 before an explicit new run. `--local-timeout` defaults to 180 seconds, maximum 300;
 this bounds the HTTP wait, not a guarantee that Ollama stops GPU work immediately.
@@ -165,6 +171,48 @@ directory. Keep these private when transferring to Windows. Preparation writes
 - `draft.json`: only after successful validation. Replay/uncertain events are
   withheld; accepted cards still need factual and fluent Spanish review. Without
   a transcript, any asserted commentary causes rejection.
+
+Local prompt version 5 sends an ordered image batch with explicit clip-relative
+sample times. Football instructions distinguish runs, passes, cutbacks,
+shots and goals, and exclude subsequent celebrations/scoreboard changes as new
+goals; the football guidance does not enter F1 requests. These instructions are
+not a semantic guarantee: compare unchanged raw output against the footage. No
+player names, reference action sequence or known event boundaries are injected.
+
+### Accuracy follow-up: partial improvement, cutback unresolved
+
+The [dated comparison](../../../../docs/WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement)
+retains all failed and successful trials. No tested local configuration reliably
+recovered the complete run → cutback → finish sequence. The conservative 27B
+visual result identified the run/finish and classified celebration as `other`,
+but missed the cutback and took 272 seconds with CPU offload. It is an offline
+review experiment, not an accepted live provider or approved learning pack.
+
+To reproduce that bounded experiment after explicitly downloading
+`ollama pull qwen3.5:27b`, run from `app/`:
+
+```powershell
+.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/recognize.py --provider ollama --model qwen3.5:27b --visual-only --fps 2 --frame-time-labels --local-timeout 300 --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20 --analyze
+```
+
+`--frame-time-labels` preserves original samples, masks their top 32 pixels
+(broadcast clock/overlay), and makes additional samples labelled only with clip
+seconds. It needs a local Arial or DejaVu Sans font; missing fonts fail explicitly.
+It adds no sporting answers. `frames.json` records the transform, and input hashes
+refer to the labelled samples actually sent. `--frame-width 960` is an explicit
+higher-detail alternative to 640; it increases image tokens and was tested only
+on a four-second refinement segment. Neither option changes playback or sampling
+implicitly. Both work in `serve.py`, but do not select the slow 27B profile for a
+live demonstration based on this one clip.
+
+Local review policy v1 conservatively withholds a `goal` whose English visual
+evidence describes celebration, scoreboard changes or an already stationary ball
+without a new scoring transition. It preserves the raw goal label, times and
+evidence, adds `goal-aftermath-without-scoring-transition`, removes its candidate
+card and withholds a story referencing it. It does not cap goals at one or prove
+football truth; unfamiliar wording, negation and non-English evidence remain
+limitations. Policy-filtered candidates must not be counted as better raw model
+recognition. Human corrections and fluent Spanish/Quest acceptance remain pending.
 
 The original Mac verification used actual Alba excerpt/frame preparation plus synthetic
 responses through a loopback HTTP test server. **No real Ollama/Whisper model was

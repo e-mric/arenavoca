@@ -66,3 +66,47 @@ All paths below are under ignored `app/content-source/match-analysis/`:
 - `ollama-local-stderr.log`: explicit no-cloud startup and model diagnostics. `match-lab-actual-smoke.json`: actual browser journey evidence.
 
 Next: human review of the ball contacts and commentary, fluent Spanish review, then physical Quest acceptance. Investigate sampling/resolution/context tradeoffs and semantic rejection of celebration-as-goal before accepting fresh content. Compare cold and warm runs deliberately before making latency claims. No full-game run was launched.
+
+## Accuracy follow-up — partial improvement
+
+The user requested better recognition on the same 808–828 development sequence. All earlier run directories remain unchanged. This follow-up did **not** achieve reliable automatic run → cutback → finish recognition. It improved conservative run/finish output and added a separate rejection policy for obvious goal/aftermath contradictions. No expected player names, reference action list or known action boundaries entered the model requests. This is tuning on one development case, not held-out accuracy evidence.
+
+### What was tried, including failures
+
+All inference remained on loopback Ollama with cloud disabled. Model downloads and official model-library lookup were setup/research; recording, frames and commentary stayed local. Existing Qwen3-VL results/weights were retained; explicitly downloaded local Qwen3.5 9B and 27B vision models ([official model family](https://ollama.com/library/qwen3.5/tags)). Original defaults and runtime request budgets were not changed.
+
+| Private run directory under `recognition/` | Change and measured result |
+| --- | --- |
+| `windows-commentary-l7pwy7jf` | Prompt v2, same 8B/0.5 fps: 19.672 s total; still missed build-up and repeated goal labels. |
+| `windows-commentary-118z_1yt` | V3, timestamps beside each image message: 13.375 s total; one shot, but no run/cutback. |
+| `windows-commentary-rg6xnjdj` | Forty 320px images at 2 fps: 45,148 input tokens still exceeded 16,384 context; 9.047 s failed run. Lower resolution did not solve this model's token footprint. The 320px option was not retained. |
+| `windows-commentary-icoqsusl` | Same 8B with 49,152 context: 284.328 s total (275.797 s request), then rejected duplicate story references. Raw output invented goal-line technology. Not accepted. |
+| `segmented-pilot-zjb_vd0v/` | Four uniform five-second 8B segments at 2 fps. Recovered a run/pass/shot but mislabelled the cutback, repeated stationary-ball goals, and failed one story; final crowd segment was empty. Not adopted. |
+| `windows-commentary-2s1asfil` | Qwen3.5 9B, v3, 0.5 fps: 32.750 s total, all three observations withheld for stated uncertainty; still confused roles/outcomes. |
+| `windows-commentary-n7zvrkv0` | 9B, v3, 2 fps: 23.219 s total; run/shot recovered but goal was attached to a late scoreboard update. |
+| `windows-commentary-l5empp22` | 9B, ordered image batch (v4), 2 fps: 20.234 s; run and pass, but late finish and a celebration goal. |
+| `windows-visual-c8dxe4v0` | Same batch without commentary: 14.734 s; timing still wrong and celebration/crowd were sporting actions. |
+| `windows-visual-84jekur9` | 9B, forty 640px frames with clip-time labels and masked top overlay (v5): 19.500 s; better shot timing, one goal, but missed cutback and labelled celebration/crowd as runs. |
+| `windows-visual-bhxm6w90` | Explicit 27B preflight before its download completed: failed locally, zero inference requests. Retained as setup failure. |
+| `windows-visual-23_el86n` | 27B, same v5 labelled evidence: 272.172 s; run and finish candidates, celebration `other` withheld; no cutback. Most conservative whole-window result, not a complete solution. |
+| `focused-960-rr2xnubz` | Uniform 812–816 subwindow, 9B, 4 fps/960px: failed story-reference validation; raw output only a run. |
+| `focused-960-uzewp0bm` | Same subwindow with 27B: run 812–814.5 and shot 814.5–815.75, still no cutback. Model request 149.203 s. |
+| `transfer-audit-mqg0thm7`, `transfer-audit-2g01o2ga`, `transfer-direction-b6qwqumt` | Narrow 9B transfer-only/direction tasks: false later cutbacks, a broad generic pass, or wrong direction/jersey roles. Explicitly rejected; these attention-task variants were not shipped. |
+
+The retained local prompt is v5 (ordered batch, precise action definitions, optional visible time labels). Supported explicit context sizes are 16,384/32,768/49,152; optional frame widths are 640/960. Wider inputs and more context do not change sampling or choose another model automatically. Fonts are local system Arial/DejaVu; no new cloud/font service is used. Original unlabelled frames are retained alongside transformed inputs, with separate hashes and transform metadata.
+
+### Best conservative output versus footage
+
+27B raw output: run **808–815.5**, shot/finish **815.5–816.5**, celebration **820–824.5** labelled `other`. Shared review withheld the celebration and the story referencing it, leaving two candidate cards and no story. The frame audit still places the cutback around 813.4–814.6 and the finish around 814.6–816.2. Thus the run extends too far, the cutback is missing, and exact contact/foot/player-identity details remain uncertain. The focused 27B shot is closer in timing but is not evidence that the full sequence works. No corrected three-card pack was substituted or described as a model result.
+
+For the whole-window 27B run: excerpt preparation **2.156 s**, adapter/frame preparation **4.172 s**, transcription **0 s**, request **265.735 s**, total **272.172 s**. Reported request breakdown: load 10.311 s, prompt evaluation 165.193 s, generation 90.002 s; 9,956 input / 608 output tokens. Digest `64ae5b1d651fb2709d5928ccb8dcfb4bb2cc9c2c8001ac34497e36a6cf905b59`, Q4_K_M, about 18.31 GB model allocation with 13.71 GB VRAM allocation. Ollama reported **25% CPU / 75% GPU**. Whole-GPU sampling peaked at **15,634 MiB used**, **344 MiB minimum free**. This has inadequate demonstrated headroom/latency for concurrent immersive rendering or the 16-second live step. It was not selected as an accepted live provider. The labelled 9B comparison peaked at 10,724 MiB used with 5,254 MiB minimum free, but its content remained wrong.
+
+### Review policy is not raw-model accuracy
+
+Local policy v1 now withholds an English-evidence goal/aftermath contradiction: celebration, scoreboard update or ball already in the net without a described new ball-entry transition. Raw responses, action labels, timestamps and confidence remain untouched; candidate cards are withheld, and stories referencing withheld events are withheld as a whole. Tests allow multiple separately described real goals; there is no one-goal cap. This is a narrow wording-based veto, not a general semantic verifier. Negation, unfamiliar wording, non-English evidence and falsely described ball entries can still defeat it.
+
+Separate revalidation in `accuracy-reproduction-hiq_zcqc/` reduced the original visual baseline's **three goal-labelled candidates to one**, and the original commentary baseline's **two to one**. Raw file SHA-256 values were checked unchanged. These are policy results, not new model calls or improved raw recognition. That same directory records an exact request-fingerprint match between production preparation and the measured 27B request; no additional inference was needed for reproduction. `accuracy-preserved-artifacts.json` indexes baseline/early-trial artifacts privately. Human corrections remain empty, separate from the provisional AI audit.
+
+Automated verification for the follow-up: typecheck, 66 Python tests, 215 app tests, production build and eight affected browser tests passed. Optional image transforms/widths/context propagation and raw-preserving goal rejection have regression coverage. Actual new-profile delivery to a physical Quest was not tested; no new physical acceptance is claimed. No full-game run was launched.
+
+Next questions: can a detector/tracker or a temporally trained sports/video model resolve ball/player transfers more reliably than generic image-sequence VLMs? Establish an independent contact-time review before further tuning; benchmark misses/replays/ordinary play before promoting any profile. For now, keep the reviewed prepared pack for demonstrations and fresh outputs as unreviewed candidates.

@@ -6,6 +6,8 @@ The target is the user's Windows desktop with an RTX 5080 and 64 GB system RAM. 
 
 **Desktop pilot completed 16 October:** verified 16,303 MiB GPU capacity, recording hash/duration, installed local dependencies, and ran visual-only then local Whisper comparisons on 808–828. Use explicit `qwen3-vl:8b-instruct` at 0.5 fps for this tested configuration; the generic tag failed context/output bounds. Actual local-model-to-desktop Match Lab delivery passed after fixing a non-immersive pinned-face reset. Content quality is insufficient for approval, GPU headroom is narrow, and physical Quest acceptance remains pending. See [measured results and remaining questions](../WINDOWS_LOCAL_AI_2026-10-16.md).
 
+**Accuracy follow-up:** the local 27B labelled-frame profile improved conservative run/finish output and excluded celebration goals, but did not recover the cutback and took 272 seconds with CPU offload. It is an offline comparison, not a live upgrade. A separate raw-preserving review guard rejects obvious celebration/scoreboard-only goal candidates. Keep the prepared pack for demonstrations; see the [full trial record](../WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement) before selecting larger models or dense sampling.
+
 ## First session
 
 1. Pull the repository and read the [PRD current-state handoff](../../PRD.md#project-handoff-and-current-state), then [recognition lessons](recognition.md).

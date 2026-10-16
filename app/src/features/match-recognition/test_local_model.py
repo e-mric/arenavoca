@@ -40,15 +40,47 @@ class LocalTests(unittest.TestCase):
     def test_ordered_frames_and_bounded_transcript_without_known_answer(self):
         transcript = [{'start': 1, 'end': 2, 'text': 'A pass.'}]
         request = local.build_request(self.frames, self.output, self.source, 'football', MODEL, transcript)
-        evidence = json.loads(request['messages'][1]['content'])
+        evidence = json.loads(request['messages'][1]['content'].split('\nImages follow')[0])
         self.assertEqual(evidence['sampleTimesSeconds'], [0, 10])
         self.assertEqual(evidence['transcript'], transcript)
-        self.assertEqual(len(request['messages'][1]['images']), 2)
+        image_messages = [m for m in request['messages'] if m.get('images')]
+        self.assertEqual([len(m['images']) for m in image_messages], [2])
+        self.assertIn('sampleTimesSeconds order', image_messages[0]['content'])
         self.assertNotIn('Alba', json.dumps(request))
         self.assertNotIn('tools', request)
         self.assertFalse(request['stream'])
         self.assertIn('do not hear audio', request['messages'][0]['content'])
         self.assertEqual(request['format'], recognize.schema('football'))
+
+    def test_local_context_is_explicit_bounded_and_preserved_in_request(self):
+        request = local.build_request(self.frames, self.output, self.source, 'football', MODEL, [], 49152)
+        self.assertEqual(request['options']['num_ctx'], 49152)
+        for value in (0, 65536, True, 16384.0):
+            with self.assertRaises(ValueError):
+                local.build_request(self.frames, self.output, self.source, 'football', MODEL, [], value)
+
+    def test_football_phase_guidance_does_not_leak_into_f1_or_include_reference_answers(self):
+        football = local.build_request(self.frames, self.output, self.source, 'football', MODEL, [])
+        racing = local.build_request(self.frames, self.output, self.source, 'f1', MODEL, [], time_labels=True)
+        self.assertIn('not additional goals', football['messages'][0]['content'])
+        self.assertNotIn('attacking byline', racing['messages'][0]['content'])
+        for answer in ('Alba', 'Coutinho', '808', '814.6'):
+            self.assertNotIn(answer, football['messages'][0]['content'])
+
+    def test_labelled_frame_preparation_preserves_originals_and_hashes_transformed_inputs(self):
+        def encode(command, **_):
+            Path(command[-1]).write_bytes(str(command).encode())
+        source = {**self.source, 'durationSeconds': 2}
+        with patch.object(local.subprocess, 'run', side_effect=encode), \
+             patch.object(local, 'label_filter', side_effect=lambda t: f'time-only-{t:.3f}'):
+            rows = local.prepare_frames(self.output / 'clip.mp4', source, self.output, 1, time_labels=True, width=960)
+        self.assertTrue((self.output / 'frame-000.jpg').is_file())
+        self.assertEqual(rows[0]['file'], 'label-frame-000.jpg')
+        self.assertEqual(rows[0]['sha256'], local.sha256(self.output / rows[0]['file']))
+        metadata = json.loads((self.output / 'frames.json').read_text())
+        self.assertEqual(metadata['width'], 960)
+        self.assertIn('mask top 32px', metadata['transform'])
+        with self.assertRaises(ValueError): local.prepare_frames(None, source, self.output, width=1280)
 
     def test_invalid_frame_counts_times_and_changed_bytes_fail_closed(self):
         for duration, fps in [(20, 4), (20, float('nan')), (31, 1), (2, .5)]:
@@ -81,6 +113,29 @@ class LocalTests(unittest.TestCase):
         self.assertEqual(draft['story'], [])
         empty = local.parse_result(response({'events': [], 'story': []}), self.source, 'football', False)
         self.assertEqual(empty['cards'], [])
+
+    def test_goal_aftermath_is_withheld_without_rewriting_raw_output(self):
+        for evidence in ('Players hug and celebrate. The scoreboard changes to 1-0.',
+                         'The ball remains in the net. The goalkeeper is still on the ground.'):
+            data = result(); data['events'][0]['action'] = 'goal'
+            data['events'][0]['visualEvidence'] = evidence
+            raw = response(data); before = copy.deepcopy(raw)
+            draft = local.parse_result(raw, self.source, 'football')
+            self.assertEqual(raw, before)
+            self.assertEqual(draft['observations'][0]['action'], 'goal')
+            self.assertEqual(draft['observations'][0]['status'], 'withheld')
+            self.assertIn('goal-aftermath-without-scoring-transition', draft['observations'][0]['withheldReasons'])
+            self.assertEqual(draft['cards'], [])
+            self.assertEqual(draft['story'], [])
+
+    def test_distinct_scoring_transitions_are_not_limited_to_one_goal(self):
+        data = result(); event = data['events'][0]
+        event.update(action='goal', startSeconds=1, endSeconds=3,
+                     visualEvidence='The ball crosses the goal line and teammates celebrate.')
+        data['events'].append({**event, 'startSeconds': 12, 'endSeconds': 14,
+                               'visualEvidence': 'A second shot sends the ball into the net; the scoreboard updates.'})
+        draft = local.parse_result(response(data), self.source, 'football')
+        self.assertEqual(len(draft['cards']), 2)
 
     def test_rejects_bad_json_truncation_remote_output_and_invented_commentary(self):
         bad = response(); bad['message']['content'] = 'not JSON'
@@ -203,7 +258,7 @@ class LocalHttpTests(unittest.TestCase):
                                         whisper_model=self.output)
         self.assertEqual(draft['cards'][0]['spanish'], 'El jugador pasa hacia atrás.')
         sent = next(payload for path, payload in self.calls if path == '/api/chat')
-        self.assertEqual(json.loads(sent['messages'][1]['content'])['transcript'], transcript)
+        self.assertEqual(json.loads(sent['messages'][1]['content'].split('\nImages follow')[0])['transcript'], transcript)
 
     def test_missing_audio_does_not_silently_fall_back(self):
         self.source['hasAudio'] = False
@@ -251,6 +306,16 @@ class LocalHttpTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.client.preflight(MODEL)
         self.assertNotIn('/api/chat', [path for path, _ in self.calls])
         with self.assertRaises(ValueError): self.client.preflight('qwen3-vl:8b-cloud')
+
+    def test_qwen35_variants_require_local_vision_metadata_too(self):
+        for model in ('qwen3.5:9b', 'qwen3.5:27b'):
+            with self.subTest(model=model):
+                tags = {'models': [{'name': model, 'digest': 'local-digest'}]}
+                with patch.object(self.client, 'request', side_effect=[tags, {'capabilities': ['vision']}, {'version': 'fixture'}]):
+                    self.assertEqual(self.client.preflight(model)['model'], model)
+                with patch.object(self.client, 'request', side_effect=[tags, {'capabilities': ['vision'], 'remote_host': 'https://remote.invalid'}]):
+                    with self.assertRaises(ValueError): self.client.preflight(model)
+                with self.assertRaises(ValueError): self.client.preflight(model + '-cloud')
 
     def test_invalid_output_is_preserved_but_not_published_as_draft(self):
         self.raw = response(); self.raw['message']['content'] = '{invalid'

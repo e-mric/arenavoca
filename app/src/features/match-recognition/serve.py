@@ -34,13 +34,17 @@ class Provider:
     fps: float = 1
     whisper_model: Path | None = None
     timeout: float = 180
+    context_tokens: int = 16384
+    time_labels: bool = False
+    frame_width: int = 640
 
     def analyze(self, clip, source, output):
         if self.name == 'ollama':
             from local_model import analyze_local
             return analyze_local(clip, source, 'football', self.model, output,
                                  fps=self.fps, whisper_model=self.whisper_model,
-                                 timeout=self.timeout)
+                                 timeout=self.timeout, context_tokens=self.context_tokens,
+                                 time_labels=self.time_labels, frame_width=self.frame_width)
         if self.name != 'gemini':
             raise ValueError('Unsupported inference provider.')
         return analyze(clip, source, 'football', self.model, cloud_token(self.project),
@@ -243,23 +247,29 @@ def parse_provider(argv=None):
     audio.add_argument('--whisper-model', type=Path, help='Complete local faster-whisper model folder.')
     parser.add_argument('--fps', type=float, default=1)
     parser.add_argument('--local-timeout', type=float, default=180)
+    parser.add_argument('--context-tokens', type=int, default=16384)
+    parser.add_argument('--frame-time-labels', action='store_true')
+    parser.add_argument('--frame-width', type=int, choices=(640, 960), default=640)
     args = parser.parse_args(argv)
     try:
         if args.provider == 'ollama':
-            from local_model import MODELS, sample_times, OllamaClient
+            from local_model import MODELS, sample_times, OllamaClient, validate_context
             if args.project or not (args.visual_only or args.whisper_model):
                 raise ValueError('Local mode requires --visual-only or --whisper-model, and no --project.')
             model = args.model or 'qwen3-vl:8b'
             if model not in MODELS:
                 raise ValueError('Choose an installed local model: ' + ', '.join(MODELS))
             sample_times(20, args.fps)
+            validate_context(args.context_tokens)
             OllamaClient(timeout=args.local_timeout)  # Validate only; no network request.
             if args.whisper_model and not all((args.whisper_model / name).is_file()
                     for name in ('model.bin', 'config.json', 'tokenizer.json')):
                 raise ValueError('Whisper needs a complete local model folder; see README.')
             return Provider(name='ollama', model=model, project='', fps=args.fps,
-                            whisper_model=args.whisper_model, timeout=args.local_timeout)
-        if args.visual_only or args.whisper_model or args.fps != 1 or args.local_timeout != 180:
+                            whisper_model=args.whisper_model, timeout=args.local_timeout,
+                            context_tokens=args.context_tokens, time_labels=args.frame_time_labels,
+                            frame_width=args.frame_width)
+        if args.visual_only or args.whisper_model or args.fps != 1 or args.local_timeout != 180 or args.context_tokens != 16384 or args.frame_time_labels or args.frame_width != 640:
             raise ValueError('Local evidence options require --provider ollama.')
         cloud_endpoint(args.project or 'arenavoca')
         return Provider(model=args.model or 'gemini-3.8-flash', project=args.project or 'arenavoca')

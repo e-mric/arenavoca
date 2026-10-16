@@ -305,6 +305,9 @@ def main(argv=None):
     local_audio.add_argument('--whisper-model', type=Path, help='Complete local faster-whisper model directory.')
     parser.add_argument('--fps', type=float, default=1, help='Local frame sampling; at most 48 frames.')
     parser.add_argument('--local-timeout', type=float, default=180)
+    parser.add_argument('--context-tokens', type=int, default=16384, help='Local context: 16384, 32768 or 49152; more uses more memory.')
+    parser.add_argument('--frame-time-labels', action='store_true', help='Mask top 32px overlay and print clip-relative seconds on local frames.')
+    parser.add_argument('--frame-width', type=int, choices=(640, 960), default=640)
     parser.add_argument('--project', help='Use Google Cloud ADC and this project instead of an AI Studio key.')
     parser.add_argument('--analyze', action='store_true', help='Run the selected provider (Gemini uploads; Ollama stays local).')
     args = parser.parse_args(argv)
@@ -325,10 +328,11 @@ def main(argv=None):
             if model not in local.MODELS:
                 raise ValueError('Choose an installed local model: ' + ', '.join(local.MODELS))
             local.sample_times(args.duration, args.fps)
+            local.validate_context(args.context_tokens)
             local.OllamaClient(timeout=args.local_timeout)  # Validate settings; makes no requests.
         else:
-            if args.visual_only or args.whisper_model:
-                raise ValueError('Local audio options require --provider ollama.')
+            if args.visual_only or args.whisper_model or args.context_tokens != 16384 or args.frame_time_labels or args.frame_width != 640:
+                raise ValueError('Local evidence/context options require --provider ollama.')
             if args.project: cloud_endpoint(args.project)
             key = (cloud_token(args.project) if args.project else api_key()) if args.analyze else ''
             if args.analyze and not key: raise ValueError('GEMINI_API_KEY is not configured.')
@@ -338,12 +342,18 @@ def main(argv=None):
         output = Path(tempfile.mkdtemp(prefix='run-', dir=OUTPUT_ROOT))
         clip, source = prepare(args.video, output, args.start, args.duration, args.source_id)
         print(f'Prepared local video + audio excerpt: {output}', flush=True)
-        frames = local.prepare_frames(clip, source, output, args.fps) if local and not args.analyze else None
+        frames = None
+        if local and not args.analyze:
+            frames = (local.prepare_frames(clip, source, output, args.fps, time_labels=args.frame_time_labels, width=args.frame_width)
+                      if args.frame_time_labels or args.frame_width != 640
+                      else local.prepare_frames(clip, source, output, args.fps))
         if args.analyze:
             if local:
                 result = local.analyze_local(clip, source, args.sport, model, output,
                                             fps=args.fps, whisper_model=args.whisper_model,
-                                            timeout=args.local_timeout, frames=frames)
+                                            timeout=args.local_timeout, frames=frames,
+                                            context_tokens=args.context_tokens, time_labels=args.frame_time_labels,
+                                            frame_width=args.frame_width)
             else:
                 result = analyze(clip, source, args.sport, model, key, output, project=args.project)
             print(f"Draft only: {len(result['observations'])} observations, {len(result['cards'])} reviewable cards.")

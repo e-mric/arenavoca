@@ -24,6 +24,12 @@ Reviewed: 2026-10-16
 
 The [feature README](../../app/src/features/match-recognition/README.md) owns commands, options, model configuration, and test details. A service on localhost can still call a cloud model: check the selected provider rather than interpreting “local service” as “local inference.” The current local path has no automatic cloud fallback.
 
+### Same-clip accuracy follow-up
+
+The [follow-up trials](../WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement) did not solve the complete run → cutback → finish sequence. Clearer prompting, timestamp-labelled frames, denser sampling, larger context, short segments and local Qwen3.5 9B/27B comparisons were retained, including failures. The most conservative 27B result catches run/finish and withholds celebration as `other`, but still misses the cutback, takes 272 seconds and leaves very little GPU headroom. It is not an accepted live profile.
+
+Local review policy v1 separately rejects explicit goal/aftermath contradictions. Revalidating the unchanged original raw results reduced visual goal candidates from three to one and commentary goal candidates from two to one. This is filtering, not better raw model accuracy or a calibrated semantic guarantee. Production preparation reproduces the measured 27B request fingerprint. Original raw outputs, separate policy-review files and provisional AI annotations stay private; no human correction or physical Quest approval is implied.
+
 ## How this can lead to live viewing
 
 Work on bounded recorded windows first, with realistic processing order and no future information. Then measure event correctness, timestamp alignment, useful Spanish content, latency, and resource usage. The same evidence contract can later accept live segments, but capture, delivery, synchronization, and operations still need implementation.
