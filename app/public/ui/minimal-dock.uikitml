@@ -1,0 +1,37 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+.dock { width: 360px; padding: 16px; gap: 10px; background-color: #fffaf2; border-radius: 58px; flex-direction: column; font-family: 'Atkinson'; }
+.row { flex-direction: row; gap: 8px; justify-content: center; }
+.item { width: 96px; align-items: center; flex-direction: column; gap: 7px; }
+.btn { min-width: 0px; min-height: 0px; flex-shrink: 0; width: 56px; height: 56px; background-color: #ddd8ff; border-radius: 28px; align-items: center; justify-content: center; padding: 0px; }
+.label { font-size: 15px; color: #142352; }
+.icon { width: 24px; height: 24px; color: #ffffff; }
+.small { height: 42px; width: 158px; background-color: #ece8fc; border-radius: 18px; }
+</style>
+<div class="dock">
+<div class="row">
+<div class="item"><Button id="minimal-play" class="btn" style="background-color: #142352"><Play id="menu-play-icon" class="icon"/><Pause id="menu-pause-icon" class="icon" style="display: none"/></Button><span id="minimal-play-label" class="label">Play</span></div>
+<div class="item"><Button id="minimal-open" class="btn" style="background-color: #1646ed"><Layers class="icon"/><div id="moment-badge" style="position-type: absolute; position-top: -2px; position-right: -2px; width: 14px; height: 14px; border-radius: 7px; background-color: #ff8f88; border-color: #fffaf2; border-width: 2px; display: none"/></Button><span id="minimal-open-label" class="label">Moments</span></div>
+<div class="item"><Button id="minimal-more" class="btn"><div style="flex-direction: row; gap: 4px"><div style="width: 4px; height: 4px; border-radius: 2px; background-color: #142352"/><div style="width: 4px; height: 4px; border-radius: 2px; background-color: #142352"/><div style="width: 4px; height: 4px; border-radius: 2px; background-color: #142352"/></div></Button><span class="label">More</span></div>
+</div>
+<span id="minimal-status" style="display: none; font-size: 15px; color: #142352; text-align: center">Palm up for controls / A or X on controller</span>
+<div id="minimal-options" style="display: none; flex-direction: column; gap: 8px">
+<div class="row">
+<Button id="minimal-pregame" class="small"><ButtonLabel class="label">Before kick-off</ButtonLabel></Button>
+<Button id="minimal-jump" class="small"><ButtonLabel class="label">Skip to moment</ButtonLabel></Button>
+</div>
+<div class="row">
+<Button id="minimal-previous" class="small"><ButtonLabel class="label">Previous card</ButtonLabel></Button>
+<Button id="minimal-next" class="small"><ButtonLabel class="label">Next card</ButtonLabel></Button>
+</div>
+<div class="row">
+<Button id="minimal-flip" class="small"><ButtonLabel class="label">Flip card</ButtonLabel></Button>
+<Button id="minimal-story" class="small"><ButtonLabel id="minimal-story-label" class="label">Story</ButtonLabel></Button>
+</div>
+<div class="row">
+<Button id="minimal-close" class="small"><ButtonLabel class="label">Close card</ButtonLabel></Button>
+<Button id="minimal-recenter" class="small"><ButtonLabel class="label">Recenter screen</ButtonLabel></Button>
+</div>
+<div class="row"><Button id="minimal-mute" class="small"><ButtonLabel id="minimal-mute-label" class="label">Mute match</ButtonLabel></Button><Button id="minimal-hide" class="small"><ButtonLabel class="label">Hide menu</ButtonLabel></Button></div>
+</div>
+</div>

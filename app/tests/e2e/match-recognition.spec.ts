@@ -59,7 +59,7 @@ test("local drafts enter Match Lab without replacing a pinned card or controllin
       },
     });
   });
-  await page.goto("/?recognition=1");
+  await page.goto("/?preview=1&recognition=1");
   await page.locator("#start").click();
   const video = page.locator("#video-mount video");
   await video.evaluate((v: HTMLVideoElement) => {

@@ -26,24 +26,33 @@ function paragraph(
   text: string,
   y: number,
   size: number,
+  serif = false,
+  bottom = Infinity,
 ) {
-  ctx.font = `${size}px Atkinson, sans-serif`;
-  let line = "";
-  for (const word of text.split(" ")) {
-    const candidate = line ? `${line} ${word}` : word;
-    if (ctx.measureText(candidate).width > 668 && line) {
-      ctx.fillText(line, 50, y);
-      y += size * 1.3;
-      line = word;
-    } else line = candidate;
-  }
-  ctx.fillText(line, 50, y);
+  let lines: string[] = [];
+  const width = serif ? 620 : 668;
+  do {
+    ctx.font = serif ? `700 ${size}px ArenaCard, Georgia, serif` : `${size}px Atkinson, sans-serif`;
+    lines = [];
+    let line = "";
+    for (const word of text.split(" ")) {
+      const candidate = line ? `${line} ${word}` : word;
+      if (ctx.measureText(candidate).width > width && line) { lines.push(line); line = word; }
+      else line = candidate;
+    }
+    lines.push(line);
+    if (y + (lines.length - 1) * size * 1.25 <= bottom || size <= 28) break;
+    size -= 2;
+  } while (true);
+  for (const line of lines) { ctx.fillText(line, 50, y); y += size * 1.25; }
+
 }
 /** Two real surfaces: wrist rotation exposes English; no camera-facing billboard. */
 export function attachHandheldCard(
   world: World,
   e: Experience,
   windows: SpatialWindows,
+  minimal = false,
 ) {
   const card = world.requireSceneObject<Group>("window-moment-card");
   const front = card.getObjectByName("Spanish face") as Mesh;
@@ -90,41 +99,35 @@ export function attachHandheldCard(
       for (let i = 0; i < 2; i++) {
         const f = faces[i],
           ctx = f.context;
-        ctx.fillStyle = i === 0 ? "#fff4ed" : "#17453e";
+        ctx.fillStyle = minimal
+          ? "#fffaf2"
+          : i === 0
+            ? "#fff4ed"
+            : "#17453e";
         ctx.fillRect(0, 0, 768, 1076);
-        ctx.fillStyle = i === 0 ? "#341e2c" : "#fff4ed";
-        ctx.font = "bold 30px sans-serif";
+        ctx.fillStyle = minimal ? "#142352" : i === 0 ? "#341e2c" : "#fff4ed";
+        const clock = (time: number) =>
+          `${Math.floor(time / 60)}:${String(Math.floor(time % 60)).padStart(2, "0")}`;
+        ctx.font = "bold 26px Atkinson, sans-serif";
+        ctx.fillStyle = minimal ? "#596487" : ctx.fillStyle;
         ctx.fillText(
-          cards.card.draft
-            ? "AI DRAFT / REVIEW NEEDED"
-            : i === 0
-              ? "ARENAVOCA / ESPAÑOL"
-              : "ARENAVOCA / ENGLISH",
-          50,
-          62,
+          cards.card.draft ? "AI DRAFT · REVIEW NEEDED" :
+          cards.card.context ? "BEFORE KICK-OFF · 28 OCT 2018" :
+          i === 0 ? `MATCH MOMENT · ${clock(cards.card.evidence.endSeconds)}` : "ENGLISH · TRANSLATION",
+          50, i === 0 ? 550 : 110,
         );
-        ctx.font = "24px sans-serif";
-        ctx.fillText(
-          `MATCH MOMENT ${cards.index + 1} / ${cards.count}`,
-          50,
-          108,
-        );
-        paragraph(
-          ctx,
-          i === 0 ? cards.spanish : cards.english,
-          i === 0 ? 605 : 255,
-          cards.storyMode ? 38 : 46,
-        );
-        ctx.font = "25px sans-serif";
-        ctx.fillText(
-          i === 0
-            ? "Turn me over for the translation"
-            : "Turn back and say it in Spanish",
-          50,
-          991,
-        );
-        ctx.font = "22px sans-serif";
-        ctx.fillText(`Match clock ${cards.card.evidence.matchClock}`, 50, 1032);
+        ctx.fillStyle = minimal ? "#142352" : ctx.fillStyle;
+        paragraph(ctx, i === 0 ? cards.spanish : cards.english,
+          i === 0 ? 630 : 220, cards.storyMode ? 38 : minimal ? 56 : 42,
+          minimal, i === 0 ? 770 : 440);
+        if (i === 1) paragraph(ctx, cards.card.hint, 520, 30, false, 700);
+        // Source details are on the reverse; the front stays focused on the sentence.
+        if (i === 1) {
+          ctx.font = "22px Atkinson, sans-serif";
+          ctx.fillText(cards.card.context?.source ??
+            `Recording ${clock(cards.card.evidence.startSeconds)}–${clock(cards.card.evidence.endSeconds)}`,
+            50, 1025);
+        }
         f.texture.needsUpdate = true;
       }
       contentKey = key;

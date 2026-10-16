@@ -143,9 +143,10 @@ export class Experience {
     this.lab.saved = saveLabPhrase(
       localStorage,
       this.lab.view === "cards" ? this.lab.cards.card.id : cutback.id,
+      this.lab.view === "cards" ? this.lab.cards.card : undefined,
     );
     this.lab.notice = this.lab.saved
-      ? "Phrase saved in Match Lab on this device."
+      ? "Moment saved on this device."
       : "Could not save on this device. Try again.";
     this.onChange();
   }

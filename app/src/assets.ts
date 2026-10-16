@@ -1,46 +1,16 @@
-import { teamStadium, teamCelebration } from "./features/match-lab/atmosphere.scene-asset";
+import { minimalScreen } from "./features/tabletop-reveal/table.scene-asset";
 import { AssetType, defineAssets } from "@iwsdk/core";
-import {
-  matchScreen,
-  matchFrame,
-  passDiagram,
-  traceDiagram,
-} from "./features/xr/surfaces.scene-asset";
 import {
   windowGrip,
   windowMove,
   windowResize,
   momentCard,
-  practiceCard,
 } from "./features/spatial-windows/objects.scene-asset";
-import theater from "./scene-assets/theater.scene-asset";
-import arena from "./features/branding/arena.scene-asset";
 import { assetUrl } from "./features/content/model";
-import {
-  labBoard,
-  labPawn,
-  labBall,
-  labReplay,
-  tabletopBallRing,
-  tabletopAim,
-} from "./features/match-lab/lab.scene-asset";
+import pregameArt from "./features/recap/artwork/res/drawable-nodpi/playmaker_football.png";
 export default defineAssets({
-  teamStadium,
-  teamCelebration,
-  tabletopPlayer: {
-    url: assetUrl("models/match-lab/player.glb?v=playmaker-3"),
-    type: AssetType.GLTF,
-  },
-  tabletopPitch: {
-    url: assetUrl("models/match-lab/pitch.glb?v=playmaker-3"),
-    type: AssetType.GLTF,
-  },
-  labBoard,
-  labPawn,
-  labBall,
-  labReplay,
-  tabletopBallRing,
-  tabletopAim,
+  minimalScreen,
+  "lab-art-pregame": { url: pregameArt, type: AssetType.Texture },
   "lab-art-draft": {
     url: assetUrl("branding/favicon.png"),
     type: AssetType.Texture,
@@ -58,28 +28,12 @@ export default defineAssets({
       { url: assetUrl(`artwork/match-lab/${id}.png`), type: AssetType.Texture },
     ]),
   ),
-  matchScreen,
-  matchFrame,
-  passDiagram,
-  traceDiagram,
   windowGrip,
   windowMove,
   windowResize,
   momentCard,
-  practiceCard,
-  theater,
-  arena,
   ...Object.fromEntries(
-    [
-      "watch-controls",
-      "learning",
-      "explore",
-      "welcome",
-      "karaoke",
-      "coach",
-      "match-lab",
-      "tabletop-lesson",
-    ].map((id) => [
+    ["minimal-dock", "moment-actions", "moment-notice"].map((id) => [
       id,
       {
         url: assetUrl(`ui/${id}.uikitml`),

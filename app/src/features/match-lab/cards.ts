@@ -2,10 +2,11 @@ import type { MomentBatch } from "../match-recognition/stream";
 import pack from "../stories/content/barca-2018-opening.json";
 import generated from "./content/alba-generated.json";
 
-type Card = (typeof pack.cards)[number] & {
+export type Card = (typeof pack.cards)[number] & {
   artworkCardId?: string;
   storyCardId?: string;
   draft?: boolean;
+  context?: { source: string; url: string; asOf: string; kind: string };
   replayPath?: string;
 };
 // Only this reviewed batch is published. Raw model responses stay private.
@@ -24,8 +25,20 @@ type Story = Pick<
 export class MomentCards {
   private readonly items = [...labCards];
   private readonly stories: Story[] = [...preparedStories];
+  addContext(cards: readonly Card[]) {
+    for (const card of cards)
+      if (!this.items.some((item) => item.id === card.id))
+        this.items.push(card);
+  }
+  select(id: string) {
+    const index = this.items.findIndex((card) => card.id === id);
+    if (index < 0) return false;
+    this.index = index;
+    this.storyMode = this.flipped = false;
+    return true;
+  }
   get draftCount() {
-    return this.items.length - labCards.length;
+    return this.items.filter((card) => card.draft).length;
   }
   get artworkPath() {
     return this.card.draft
@@ -37,7 +50,7 @@ export class MomentCards {
   }
   showDrafts() {
     if (!this.draftCount) return;
-    this.index = labCards.length;
+    this.index = this.items.findIndex((card) => card.draft);
     this.storyMode = this.flipped = false;
   }
   append(batch: MomentBatch) {
@@ -127,7 +140,7 @@ export class MomentCards {
       : this.card.english;
   }
   get audioId() {
-    if (this.card.draft) return null;
+    if (this.card.draft || this.card.context) return null;
     return this.storyMode
       ? `lab-story-${this.story.id}-${this.storyIndex + 1}`
       : this.generated

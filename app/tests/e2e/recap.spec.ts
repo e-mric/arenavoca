@@ -16,7 +16,7 @@ for (const sport of ["football", "f1"] as const) {
         },
       }),
     );
-    await page.goto("/");
+    await page.goto("/?preview=1");
     await page.locator("#start").click();
     await page.locator("#library").click();
     await expect(page.locator("#recap-export")).toBeDisabled();

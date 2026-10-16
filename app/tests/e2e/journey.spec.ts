@@ -3,7 +3,7 @@ async function ready(page: Page) {
   await page.goto("/?sample=1");
   await expect(page.locator("#start")).toBeEnabled();
   await expect(page.locator("#xr-status")).toContainText(
-    /Quest 3:|Desktop preview|VR could not initialize/,
+    /Quest 3:|Quest Browser|VR could not initialize/,
     { timeout: 30000 },
   );
 }
@@ -289,7 +289,7 @@ test("football and F1 team choices change the design and survive reopening", asy
   const racingRadius = await page
     .locator("#team-mclaren")
     .evaluate((b) => getComputedStyle(b).borderRadius);
-  expect(racingRadius).not.toBe(footballRadius);
+  expect(racingRadius).toBe(footballRadius); // Shared Playmaker shapes across sports.
   await page.reload();
   await expect(page.locator("#start")).toBeEnabled();
   await expect(page.locator("#team-mclaren")).toHaveAttribute(

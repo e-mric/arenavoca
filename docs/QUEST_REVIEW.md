@@ -230,3 +230,43 @@ In both immersive VR and passthrough, choose FC Barcelona, enter Match Lab → T
 - Repeat with the match explicitly paused: toggling atmosphere must not resume it. Check that the added button fits the card and that edge grabbing/flipping still works.
 
 Physical hand tracking, two-hand scaling, comfort and performance remain for Quest testing. Prototype Spanish/audio still await fluent Spanish review. Automated/model and controller-emulation evidence is recorded in IMPLEMENTATION.md.
+
+
+## Minimal reset with table reveal · 16 October 2026
+
+Historical table-reveal review, superseded by the card-only checks below. Earlier cinema/atmosphere checks are historical; `?sample=1` keeps the original calibration video and browser journey, with the minimal XR playback layout. Device acceptance is **pending**.
+
+1. Open the secure development URL, choose FC Barcelona and **My room · Passthrough**, enter VR, then **Start match** in the dock. Expect one large screen and compact controls; no cinema, stadium window, banner or celebration. The table starts clear.
+2. On a clear table with enough space for a roughly 80 × 51cm board, rest both open hands 18–65cm apart. With usable surface data, hold still for about 0.8 seconds: lavender outline, then pitch/card. Confirm it fits the actual table. This infers proximity and stability, not pressure.
+3. If nothing appears, use **Adjust → Use hand height**, then hold both hands still at table height. This is explicit calibration, not room recognition. Alternatively **Place manually**, then adjust the board using its handles. Check small tables, poor tracking and unavailable room permissions; never silently present a manual position as a detected surface.
+4. Lift your hands, look around and grab a player/card: the board stays fixed. Close: it must not instantly reopen under resting hands. Lift both hands clearly above the table, then rest them again. Tracking loss alone must not rearm it.
+5. Move a teammate, pull/release the ball away from the target along its guide, complete the backward pass, select **Next: shoot** in the dock, then take the shot. **Flip card** is also in the dock; the physical card face is for reading and rotation. Test ray/target fallback too. Finger kicking is not implemented in this slice.
+6. Choose **Cards**, grab the edge, rotate for English, try Flip, Replay, Listen, Save, Story and Next. One physical card remains selected while the match advances. **Try the pass** returns to the exercise. Prototype Spanish/audio await fluent review.
+7. Move and resize screen, board and card; recenter the screen from Adjust. Repeat seated in Quiet space and passthrough. Check text reach, unintended grabs, double-video frame rate and recovery after removing/replacing the headset.
+8. Repeat open/flip/practice/close with the main match playing and explicitly paused. Learning must not pause, seek, dim or resume it. Record actual device/browser, observed failures and comfort before marking acceptance.
+
+Automated and managed-emulator evidence is recorded in the feature guide. It does not establish physical table detection, hand-only operation or performance.
+
+### Retired-panel removal acceptance · 16 October 2026
+
+- In the editor hierarchy and asset catalogue, confirm that the old welcome, watch, learning, explore, karaoke, coach and Match Lab dashboards and stadium are absent. Only the compact dock and physical practice card use spatial UI.
+- On Quest 3, enter both Quiet space and passthrough, start the match, place the table, switch to Cards and close/reopen it. Confirm no old panels, dark screen frame, stadium or celebration appears, and playback stays independent.
+- Open `?sample=1`, verify the original 30-second clip in the browser and XR. No Alba cards or tabletop invitation should appear for that unrelated sample. Physical-device acceptance is pending.
+
+
+## Card-only match moments · 17 October 2026 · Quest acceptance pending
+
+Current experience: large match screen, rounded physical moment card and a compact gesture menu. Tabletop, stadium and old dashboards are absent. Replay/Listen/Save are on both card faces. The palm gesture and animation have automated coverage; browser controller emulation does not establish physical-device acceptance.
+
+1. Enter Quiet space, then repeat in passthrough. Play the local recording before 03:07: a small Before kick-off invitation should appear, rather than opening a card automatically. Select it for sourced historical context. No outcome spoilers.
+2. Turn your left palm up and hold about 0.35 seconds: a cream pill shows Play/Pause, Moments and More. Turn away for about 0.45 seconds to hide. Controller A/X is the fallback. Test accidental activation while holding a card, tracking loss and comfortable seated reach. The menu stays placed while choosing.
+3. More → close card → Skip to moment, then watch through the action end. A single New moment pill should rise, briefly overshoot and settle, with one lavender glow. It disappears after six seconds, while unread moments remain under Moments with a coral badge. Selecting it opens the card without interrupting playback. Test reduced-motion preference: no rise/pop/glow.
+4. Keep a card open while later moments arrive: its text and orientation stay pinned. Seeking ahead unlocks history quietly; seeking back does not repeatedly announce it. The original sample must receive no unrelated Barça cards.
+5. Grab the cream edge, move/resize and physically rotate for English; use More → Flip card as fallback. Verify broad rounded outer corners and rounded artwork, cream front/back and a softly bevelled 20mm edge at authored scale, with no square overlays. Check Replay, Listen and Save as separate circular targets, with labels below and blue Listen. Keep fingers clear of action buttons when grabbing.
+6. Replay uses the card's independent clip. Listen reports Playing; Save shows a checked bookmark and Saved on this device. Repeat all actions with the main match playing and explicitly paused. No learning action may pause, seek, dim or resume the match. Pregame replay/audio remain disabled when absent.
+7. More → Mute match must silence the broadcast and alternate commentary while Listen still speaks Spanish. Unmute must restore match audio without seeking or pausing.
+8. Open More to expose placement handles; hiding it removes them. Confirm screen/card resizing and recovery after taking off the headset. Test text legibility, occlusion, accidental presses, audio overlap, two-video performance and the six-second invitation duration.
+
+Automatic phone sync, physical phone/printed-card overlays, Quest hand comfort and fluent Spanish/audio review remain pending. See the [visual comparison](design/wrist-menu-2026-10-16/comparison.md) for implementation evidence and differences from the concept.
+
+17 October verification: typecheck, 284 unit tests and build passed; final browser suite 35 passed, 2 skipped. Controller emulation verified invitation selection, Replay/Listen/Save feedback, menu/mute, squeeze-grab relocation and reverse-face visibility after a physical controller rotation. Hands-only acceptance remains pending.

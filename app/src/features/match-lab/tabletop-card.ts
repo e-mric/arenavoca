@@ -14,6 +14,7 @@ export function attachPracticeCard(
   e: Experience,
   fonts: unknown,
   windows: SpatialWindows,
+  minimal = false,
 ) {
   const p = e.lab.tabletop;
   const card = world.requireSceneObject<Group>("window-tabletop-lesson");
@@ -32,6 +33,9 @@ export function attachPracticeCard(
     revision = -1;
   const caches = faces.map(() => new Map<string, string>());
   for (const panel of faces) {
+    if (minimal)
+      for (const id of ["table-atmosphere", "table-actions", "table-nav"])
+        panel.requireElementById(id).setProperties({ display: "none" });
     panel.document.rootElement.setProperties({ fontFamilies: fonts as never });
     panel.document.setTargetDimensions(0.35, 0.462);
     const actions: Record<string, () => void> = {

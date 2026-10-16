@@ -4,6 +4,28 @@ Updated 16 October 2026. Official submission requirements below were last review
 
 Progress, 16 October: local benchmark preparation now runs on the Mac. The actual recording produced 373 planned windows and an unreviewed worksheet, with no inference or upload. [Usage and evidence](../app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). The short-excerpt Ollama adapter and optional local Whisper path are also implemented with fixture/HTTP tests; [Windows commands](../app/src/features/match-recognition/README.md#local-ollama-adapter--16-october-2026) are ready. Match Lab now routes to the same local adapter with an explicit provider notice and no cloud fallback; [Windows service launch and Quest checks](../app/src/features/match-recognition/README.md#match-lab-local-service--16-october-2026) are documented. The subsequent [Windows pilot and accuracy follow-up](WINDOWS_LOCAL_AI_2026-10-16.md) measured actual local inference and verified desktop Match Lab delivery. Raw action/timing errors remain; a larger-model comparison still missed the cutback and was too slow for the live step. Keep the reviewed prepared pack for demonstrations. Physical Quest acceptance, fluent Spanish review, and full-game evaluation remain open.
 
+## Current XR priority: virtual moment cards
+
+Decision, 16 October 2026: keep the large match screen and virtual illustrated cards. The tabletop is deferred. Implement Replay, Listen and Save on the card, physical flipping for translation, and a small palm-revealed Play/Pause, Moments, More menu with a controller fallback. Validate hand tracking, accidental activation, near selection, readable text, grabbing and two-hand resizing on Quest 3 before expanding the interaction scope. Local Save preserves source identity, timing and learning content; automatic mobile synchronization is a separate delivery item.
+
+### Later experiment: physical card surfaces
+
+These are optional research prototypes, not dependencies for either submission and not implemented:
+
+- **Printed card:** track a known marker on each face and align the Spanish/English virtual card to it. Start with one matte card; compare tactile flipping against the virtual-only baseline.
+- **Phone:** track a marker shown on the screen or attached to a case. Consider optional touchscreen controls only after alignment works. Pairing the phone does not by itself provide its spatial pose.
+- **Feasibility gate:** verify camera access and marker pose estimation in the exact Quest Browser/IWSDK deployment before committing to a platform change. Camera access is not automatic arbitrary-object tracking. [Meta camera overview](https://developers.meta.com/vr/documentation/unity/unity-pca-overview/).
+- **Acceptance:** measure jitter, latency, occlusion by fingers, recovery when flipped or out of view, reflections, comfort and frame rate. Use markers on both faces for a flip trial. Hide an unreliable overlay instead of leaving it attached to the wrong place; retain a virtual-card fallback.
+- **Decision:** only promote the experiment if it makes reading/flipping more useful without making setup or tracking noticeably worse. The virtual-only experience stays complete.
+
+### Saved moments on mobile
+
+- [ ] Add explicit pairing/account ownership and a versioned cross-device saved-moment contract.
+- [ ] Sync source IDs, recording ranges, text, artwork references and learning progress with offline retry and deduplication.
+- [ ] Resolve replay availability on mobile separately; a local recording path is not a transferable video URL.
+- [ ] Show local-save success separately from successful phone sync; test replay access and deletion on both devices.
+
+
 ## Official requirements and dates
 
 ### Meta VR Start Developer Competition 2026
@@ -80,6 +102,8 @@ After the protected submission work; not a prerequisite for the recorded-match d
 
 ## Tabletop Match Lab delivery
 
+**Active reset, later 16 October:** the approved first implementation slice now replaces the primary recorded-match XR layout. The user selected the [minimal storyboard](design/vr-reset-2026-10-16/README.md) with a large screen and a tabletop revealed by resting both hands. The prior implementation/checklists below describe the old build, not approval to extend its atmosphere. Next acceptance gate: test the implemented reveal/keep-open/close flow and one pass/shot on physical Quest. Optional finger kicking remains a separate experiment. Preserve manual/controller fallbacks. Stadium windows, banners, cinema scenery and decorative celebrations are retired from the active design.
+
 Requested 16 October: execute Spanish instructions using miniature football characters and F1 cars. [Product requirements and action catalogue](../PRD.md#tabletop-match-lab-direction--16-october-2026) · [Design/tooling notes](wiki/tabletop-match-lab.md). The original player/pitch pass-and-shot slice is implemented and emulator/browser checked; the full action catalogue and physical Quest acceptance remain pending.
 
 - [ ] **First football slice — implementation ready for device review:** minimal miniature pitch, two grabbable teammates in the selected team kit, ball, goal and one physical bilingual card; backward pass and shot with pull/release aim assistance, fallback selection, deterministic feedback, retry and reset. Mobile Playmaker surfaces and minimal VR/passthrough are implemented. Listening/demonstration remain in the original cutback activity; new tabletop voice is deferred. Preserve the independent main match and existing prepared-card fallback. Prioritize this within the existing 23–31 October interaction work; cut breadth if necessary to protect the November Quest rehearsal.
@@ -105,6 +129,6 @@ Use one codebase with an immutable competition deployment and a separate evolvin
 
 If time runs short, reduce content quantity, cosmetic work and optional coach features first. Preserve useful hand interaction, playback independence, a complete recall loop, reviewable evidence and stable access. Keep live ingest, paid sports APIs, camera recognition, model training, additional headset ports and automatic sync after the submission milestones. Continue the same timestamped observation pipeline when later adding live sources; do not redesign the product around the application form.
 
-### Optional team atmosphere · 16 October
+### Historical team atmosphere · 16 October · superseded by design reset
 
-Implemented for the football tabletop slice: movable/resizable stadium diorama, selected-team banner, silent success celebration, and session-retained Minimal mode. The atmosphere never controls match playback. Before demo acceptance, run the [team atmosphere Quest checks](QUEST_REVIEW.md#team-atmosphere--16-october-2026--device-acceptance-pending), especially two-hand resizing, readable banner colors, and full-match frame rate. F1 atmosphere and real-room anchoring remain deferred.
+Implemented for the football tabletop slice: movable/resizable stadium diorama, selected-team banner, silent success celebration, and session-retained Minimal mode. The atmosphere never controls match playback. The retired design had proposed [team atmosphere Quest checks](QUEST_REVIEW.md#team-atmosphere--16-october-2026--device-acceptance-pending), especially two-hand resizing, readable banner colors, and full-match frame rate. F1 atmosphere and real-room anchoring remain deferred.

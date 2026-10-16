@@ -1,0 +1,7 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+</style>
+<Button id="notice-open" style="width: 230px; height: 58px; border-radius: 29px; background-color: #fffaf2; flex-direction: row; gap: 12px; align-items: center; justify-content: center; font-family: 'Atkinson'">
+<Sparkles style="width: 22px; height: 22px; color: #142352"/>
+<ButtonLabel id="notice-label" style="font-size: 20px; color: #142352">New moment</ButtonLabel>
+</Button>

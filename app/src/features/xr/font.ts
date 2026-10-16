@@ -17,3 +17,9 @@ export async function loadCompanionFont() {
   const font = Object.values(family)[0];
   return { Atkinson: { "400": font, normal: font } };
 }
+
+/** Canvas cards use a bundled serif; no dependency on the headset's system fonts. */
+export async function loadCardTypeface() {
+  const face = new FontFace("ArenaCard", `url(${assetUrl("fonts/LibreBaskerville.ttf")})`, { weight: "400 700" });
+  document.fonts.add(await face.load());
+}

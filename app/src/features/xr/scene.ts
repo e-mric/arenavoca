@@ -31,6 +31,13 @@ export function attachXR(
   fontFamilies: Awaited<ReturnType<typeof import("./font").loadCompanionFont>>,
   getViewingMode: () => ViewingMode = () => "theater",
 ) {
+  for (const child of world.requireSceneObject<Group>("viewing-space").children)
+    if (
+      /^(window-minimal|table-placement-outline|quiet-table|minimal-.*handle)/.test(
+        child.name,
+      )
+    )
+      child.visible = false;
   const s = experience.session;
   const windows = new SpatialWindows(world);
   const renderLab = attachMatchLab(world, experience, fontFamilies, windows);

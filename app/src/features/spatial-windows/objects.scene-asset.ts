@@ -4,7 +4,7 @@ import {
   Group,
   Mesh,
   MeshBasicMaterial,
-  PlaneGeometry,
+  ShapeGeometry,
   Shape,
   ExtrudeGeometry,
 } from "@iwsdk/core";
@@ -25,25 +25,35 @@ export const windowResize = new Mesh(
   new MeshBasicMaterial({ color: "#e6c178" }),
 );
 windowResize.name = "Pull corner to resize";
-// A 52 × 72 cm learning card, 12 mm thick, with rounded corners and two readable faces.
-const shape = new Shape(),
-  w = 0.52,
-  h = 0.72,
-  r = 0.025;
-shape.moveTo(-w / 2 + r, -h / 2);
-shape.lineTo(w / 2 - r, -h / 2);
-shape.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
-shape.lineTo(w / 2, h / 2 - r);
-shape.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
-shape.lineTo(-w / 2 + r, h / 2);
-shape.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
-shape.lineTo(-w / 2, -h / 2 + r);
-shape.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+// A 52 × 72 cm learning card, 20 mm thick, with rounded corners and two readable faces.
+function roundedShape(w: number, h: number, r: number) {
+  const shape = new Shape();
+  shape.moveTo(-w / 2 + r, -h / 2);
+  shape.lineTo(w / 2 - r, -h / 2);
+  shape.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+  shape.lineTo(w / 2, h / 2 - r);
+  shape.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+  shape.lineTo(-w / 2 + r, h / 2);
+  shape.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+  shape.lineTo(-w / 2, -h / 2 + r);
+  shape.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+  return shape;
+}
+// UVs preserve the full image; the actual silhouette clips its corners.
+function roundedFace(w: number, h: number, r: number) {
+  const geometry = new ShapeGeometry(roundedShape(w, h, r), 12);
+  const position = geometry.getAttribute("position"),
+    uv = geometry.getAttribute("uv");
+  for (let i = 0; i < position.count; i++)
+    uv.setXY(i, position.getX(i) / w + 0.5, position.getY(i) / h + 0.5);
+  return geometry;
+}
+const shape = roundedShape(0.52, 0.72, 0.055);
 export const momentCard = new Group();
 momentCard.name = "Handheld moment card";
 const shell = new Mesh(
   new ExtrudeGeometry(shape, {
-    depth: 0.008,
+    depth: 0.016,
     bevelEnabled: true,
     bevelThickness: 0.002,
     bevelSize: 0.002,
@@ -51,18 +61,18 @@ const shell = new Mesh(
     steps: 1,
     curveSegments: 5,
   }),
-  new MeshBasicMaterial({ color: "#e5b7a6" }),
+  new MeshBasicMaterial({ color: "#f3e6d3" }),
 );
-shell.position.z = -0.004;
+shell.position.z = -0.008;
 shell.name = "Rounded card edge";
 momentCard.add(shell);
 for (const [name, z, angle] of [
-  ["Spanish face", 0.007, 0],
-  ["English face", -0.007, Math.PI],
+  ["Spanish face", 0.011, 0],
+  ["English face", -0.011, Math.PI],
 ] as const) {
   const face = new Mesh(
-    new PlaneGeometry(0.498, 0.698),
-    new MeshBasicMaterial({ color: "#fff4ed" }),
+    roundedFace(0.498, 0.698, 0.045),
+    new MeshBasicMaterial({ color: "#fffaf2" }),
   );
   face.name = name;
   face.position.z = z;
@@ -70,11 +80,11 @@ for (const [name, z, angle] of [
   momentCard.add(face);
 }
 const image = new Mesh(
-  new PlaneGeometry(0.458, 0.258),
+  roundedFace(0.458, 0.3, 0.038),
   new MeshBasicMaterial({ color: "#d8c1c9" }),
 );
 image.name = "Moment illustration or replay";
-image.position.set(0, 0.12, 0.009);
+image.position.set(0, 0.182, 0.013);
 momentCard.add(image);
 
 // A single, pocket-sized instruction card. UI lives on its two opposing faces.

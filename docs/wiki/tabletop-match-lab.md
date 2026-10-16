@@ -1,6 +1,22 @@
 # Tabletop Match Lab
 
-Reviewed: 2026-10-16
+Reviewed: 2026-10-17
+
+## Approved card controls · 16 October 2026
+
+The user chose virtual cards with Replay/Listen/Save and physical translation flipping, plus a gesture-revealed menu. Phone and printed-card overlays are deferred research in the [roadmap](../SUBMISSION_ROADMAP.md#later-experiment-physical-card-surfaces). Local saved moments retain evidence timing and text; phone synchronization remains pending. See the [design board](../design/wrist-menu-2026-10-16/README.md) and [Quest review](../QUEST_REVIEW.md) for the acceptance boundary. Rounded virtual cards and the three-circle menu now follow the approved reference; source-timed arrivals use an optional six-second invitation. See the [comparison](../design/wrist-menu-2026-10-16/comparison.md). Earlier tabletop sections below are historical.
+
+## Current direction: timed cards; tabletop deferred
+
+**Editor cleanup, 16 October:** the retired dashboards and stadium are now removed from the active scene and asset catalogue, rather than hidden only at runtime. All XR sources use the minimal screen/dock; the original sample retains its recording and browser journey, without unrelated Alba content. See the [feature guide](../../app/src/features/tabletop-reveal/README.md) and [Quest removal checks](../QUEST_REVIEW.md#retired-panel-removal-acceptance--16-october-2026).
+
+**Latest decision, 16 October:** the user has deferred tabletop play in favour of timed match cards and sourced pregame stories. The active [PRD](../../PRD.md#active-xr-design-reset--16-october-2026) supersedes the tabletop sections below. The proposed wrist menu and on-card Replay/Listen/Save are awaiting a design choice; automatic phone sync is not built.
+
+**Earlier decision, 16 October:** the user rejected the accumulated VR design and selected the warm tabletop storyboard with one large screen and minimal Playmaker controls. Stadium windows, team banners, cinema scenery and decorative celebrations below are historical iterations, not active requirements. Implementation was subsequently authorized and the first minimal slice is built; Quest acceptance is pending.
+
+The initial interaction implementation reveals practice when the user deliberately rests both hands on the table; once revealed, the board stays fixed while the hands lift for play. The user's finger-football photos motivate an optional two-finger pass/shot experiment. [PRD](../../PRD.md#active-xr-design-reset--16-october-2026) owns the updated behavior and fallback requirements; the [design flow](../design/vr-reset-2026-10-16/README.md) records imagery and interactions.
+
+**Evidence boundary:** the exact reveal effect in the linked live-build video is user-reported, not independently verified in this update. Official surface/hand capabilities make this a plausible design to test, not a proven table-contact detector. Next check is physical Quest verification of deliberate activation, stable placement, lifting hands without hiding the board, false triggers, tracking loss and finger kicks. The older automated evidence below applies only to the prior build.
 
 ## Why the user requested it
 
@@ -62,3 +78,16 @@ See [immersive lessons](immersive-lessons.md) for the physical test boundary, an
 **Implementation:** original procedural geometry follows the selected football kit. A successful practice action triggers a brief silent celebration; switching to Minimal cancels it and hides the decorations. Session preference survives closing/reopening practice. Match playback and practice state are independent. Source: [atmosphere asset](../../app/src/features/match-lab/atmosphere.scene-asset.ts), [state tests](../../app/src/features/match-lab/atmosphere.test.ts), and [PRD](../../PRD.md).
 
 **Evidence and next check:** automated playback-preservation tests and managed controller checks are recorded in the [implementation record](../IMPLEMENTATION.md). Physical comfort, hand tracking and simultaneous match performance remain open in the [Quest checklist](../QUEST_REVIEW.md#team-atmosphere--16-october-2026--device-acceptance-pending). The claim that team identity improves engagement is still a hypothesis.
+
+
+## Hands-on-table implementation boundary
+
+What we expected → a clear table can become a learning surface without another permanent panel.
+
+What happened → optional WebXR surface observations and two stable hands now place the pitch once. Explicit calibration/manual placement covers missing surfaces. The primary route has a large screen and Playmaker controls; original sample behavior remains separate. IWSDK 1.0.1 was already the latest published package set when checked.
+
+What we learned → a resting pose is an inferred intention, not physical contact sensing. Missing tracking must not imply that hands deliberately left. A placed board must stop following the hands so they can manipulate pieces/cards.
+
+Evidence → 250 unit tests, typecheck/build, 23 affected browser checks and managed XR control checks; see [feature evidence and limits](../../app/src/features/tabletop-reveal/README.md). Browser checks establish playback contracts, not physical hand reliability. Finger-football remains an experiment, not a delivered input mode.
+
+Next check → [Quest reveal checklist](../QUEST_REVIEW.md#minimal-reset-with-table-reveal--16-october-2026): surface availability, false activation, tracking loss, readability and seated reach in passthrough first. Spanish/audio still await fluent review.

@@ -131,6 +131,19 @@ export class Session {
       this.emit();
     } else await this.play();
   }
+  /** Explicit viewer action only; card delivery never invokes this method. */
+  async seekTo(position: number) {
+    if (!this.matchActive || !Number.isFinite(position)) return;
+    const playing = this.player.playing;
+    this.halt();
+    this.player.restore(
+      Math.max(0, Math.min(this.content.duration - 0.1, position)),
+    );
+    this.tick();
+    this.persist();
+    if (playing) await this.play();
+    this.emit();
+  }
   private halt() {
     this.command++;
     this.pendingPlay = false;

@@ -1,12 +1,30 @@
 # ArenaVoca PRD
 
-Version 8 · Local-model Match Lab integration and dual-submission plan · 16 October 2026
+Version 10 · Virtual moment cards and gesture menu · 16 October 2026
 
 ## Project Handoff And Current State
 
 This PRD contains the complete product requirements, technical specification, implementation preferences, build checklist, future roadmap, research context, and visual design brief. It is the primary planning reference for the new project. The dated submission schedule and operational checklists are maintained in [docs/SUBMISSION_ROADMAP.md](docs/SUBMISSION_ROADMAP.md); this PRD remains the product authority.
 
 The project already exists at `https://github.com/e-mric/arenavoca.git`. Application code lives in `app/`. Read repository and scoped `AGENTS.md` instructions before implementation. The handoff below is the current priority and supersedes conflicting early-prototype statements elsewhere in this document; older dated sections remain historical context.
+
+### Active XR design reset · 16 October 2026
+
+The tabletop is deferred. The active XR slice is a large curved match screen and grabbable, flippable illustrated cards using the mobile palette. Remove the pitch, toy players, ball, practice card and table-placement controls from the scene and editor catalogue. Keep both quiet-space and passthrough viewing, independent main playback and movable/resizable cards.
+
+Prepared action cards become available when their source recording window ends. Announce arrivals with a small rounded New moment invitation (brief rise/pop/glow, reduced-motion alternative, six-second lifetime); opening the full card is optional. Maintain an unread badge in Moments after the invitation fades. Use recording seconds, not the broadcast match clock. A currently open card, translation and story stay pinned while later arrivals queue. Opening cards never changes playback. On seek/resume, unlock elapsed history quietly rather than flooding the view; replaying a section does not duplicate notifications during the same session. Navigation must not reveal future action cards or future story scenes. An explicitly labelled Skip to moment control may seek; no learning action does so.
+
+At the start of the recording, offer a small Before kick-off collection: recent results, team news and starting-lineup highlights, in simple Spanish with English on the reverse. Keep source attribution and historical dates. For the 28 October 2018 match these are historical editorial notes, not fresh live news or extracted commentary. No outcome spoilers. Reviewed prepared action content covers seven selected moments, not the full match. Prototype Spanish/audio await fluent review. The original sample and other recordings receive no unrelated Barça cards.
+
+**Approved control design:** implement the [illustrated card and lighter menu](docs/design/wrist-menu-2026-10-16/README.md). Replay/Listen/Save belong on the card; turning it physically reveals English and the vocabulary hint. Keep a Flip fallback under More. The palm-up gesture reveals Play/Pause, Moments and More after a deliberate hold; turning away hides it. Freeze the menu in place while selecting rather than following hand jitter. Controller A/X toggles the same menu. Keep main playback independent; hide unavailable audio/replay functionality honestly for historical pregame cards. Test actual hand tracking and accidental activation on Quest 3 before device acceptance. Physical phone/printed-card surfaces are deferred experiments in the roadmap.
+
+**Save moment / mobile follow-up:** save the source-linked moment and its learning content so it can be revisited in the phone’s Saved moments collection. Distinguish local persistence from confirmed sync. Saving now retains the selected card, source timing and replay reference locally, alongside the existing recap-compatible saved marker. Manual recap transfer exists; automatic cross-device sync remains unimplemented. Preserve explicit pairing/account and offline retry as future requirements.
+
+The previous tabletop reveal and finger-football concepts remain historical experiments and must not be shown as active onboarding.
+
+### Web entry · Playmaker continuity
+
+The web entry shares the mobile companion’s cream/navy/electric-blue palette, rounded controls and original football/F1 artwork. One primary **Enter VR** action launches the selected **My room** (passthrough) or **Quiet space** mode. Let users choose either space on desktop; disable immersive entry when the selected mode is unsupported and explain how to use Quest Browser or the separate emulator; the main site is a setup/launch page only. The old flat Watch & Learn page is removed from the primary flow; keep it only in the original `?sample=1` and explicit `?preview=1` development routes. Start playback inside VR. On exit return to setup with a compact explicit pause/resume control, preserving the current playback position. Changing a viewing choice or entering an immersive session must not restart or seek the match. Team identity accents remain within the shared palette. F1 tabletop practice is still future scope. Team choices show the matching kit/livery preview and vocabulary beside the controls. Sport cards explicitly describe preview versus loaded recording; the former YouTube browser demo and its links are retired. Old `watch.html` URLs redirect to the XR launcher without loading YouTube. Do not offer a chant toggle without matching lyrics. Selection controls stay disabled until their handlers and content are ready.
 
 ### Current delivery priority: two submissions · 15 October 2026
 
@@ -1171,3 +1189,7 @@ The sample MP4 is 1280×720 at 30 fps, exactly 30 seconds, and 512,507 bytes. Sp
 Trace settings are provisional: corridor 0.09 normalized units, maximum forward step 0.16, start radius 0.10, and plane depth ±0.08 metres. Actual hand usability and comfort require Quest tuning. No site was published. The root workspace and feature-based app are the implementation destination.
 
 Milestone A remains the next gate. The user will perform the morning Quest review before the full six-minute content is produced.
+
+### Retired XR panels · 16 October 2026
+
+Remove the old welcome, watch controls, learning, trace/explore, karaoke, coach and Match Lab dashboards from the active scene and editor asset catalogue, along with the former screen frame, cinema, arena branding, team stadium and celebration. Keep the minimal curved screen, compact cream dock, two-player pitch and grabbable physical cards. The original `?sample=1` retains its recording and browser learning flow; its XR view uses the same minimal playback layout, without Alba content from a different match. Historical source modules are not active scene entries.

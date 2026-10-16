@@ -3,6 +3,8 @@ import { connectCoach } from "./features/coach/elevenlabs";
 import { World, SessionMode } from "@iwsdk/core";
 import projectOptions from "virtual:iwsdk-project";
 import "./styles.css";
+import "./features/launcher/styles.css";
+import { prepareLauncher, enableLauncher } from "./features/launcher/launcher";
 import { loadContent } from "./features/content/model";
 import { MatchPlayer } from "./features/playback/player";
 import { ProgressStore, PROGRESS_KEY } from "./features/progress/store";
@@ -16,9 +18,10 @@ import { Commentary } from "./features/audio/commentary";
 import { Session } from "./features/session/session";
 import { Experience } from "./features/session/experience";
 import { bindDesktop } from "./features/session/desktop";
-import { loadCompanionFont } from "./features/xr/font";
-import { attachXR } from "./features/xr/scene";
+import { loadCompanionFont, loadCardTypeface } from "./features/xr/font";
+import { attachMinimalXR } from "./features/match-moments/xr";
 import { element } from "./shared/dom";
+prepareLauncher();
 async function boot() {
   const retry = element("retry");
   retry.hidden = true;
@@ -81,7 +84,7 @@ async function boot() {
         : "CALIBRATION CLIP / 30 SECONDS";
     if (source.kind === "video") {
       element("source-guidance").textContent =
-        "Choose your team colours, then enter Theater or My room (passthrough). Spanish practice stays in floating panels beside the game.";
+        "Choose your team colours, then enter Quiet space or My room (passthrough). Read pre-match stories, then receive cards as the action happens.";
       element("commentary-guidance").textContent =
         "The match keeps its source commentary. Choose Listen for Spanish pronunciation. Practice concepts are selected manually; they are not detected events in the recording.";
     }
@@ -111,30 +114,32 @@ async function boot() {
       ]);
       const nativeXR = nativeVR || nativeAR;
       if (!nativeXR && !import.meta.env.DEV) {
-        element("enter-theater").textContent =
-          "Open in Quest Browser to enter the theater";
+        element("enter-theater").textContent = "Enter VR →";
+        enableLauncher(false, false, () => {});
         element("xr-status").textContent =
-          "Desktop preview · Open the secure test URL in Quest Browser to enter VR.";
+          "Open the secure test URL in Quest Browser to enter VR.";
       } else {
         world = await World.create(element("scene-container"), projectOptions);
         const fontFamilies = await loadCompanionFont();
+        await loadCardTypeface();
         let viewingMode: ViewingMode = "theater";
-        renderXR = attachXR(world, experience, fontFamilies, () => viewingMode);
+        renderXR = attachMinimalXR(
+          world,
+          experience,
+          fontFamilies,
+          () => viewingMode,
+        );
         const vr = element<HTMLButtonElement>("enter-vr");
-        const enter = element<HTMLButtonElement>("enter-theater");
+        if (source.kind !== "sample") vr.textContent = "Quiet space ↗";
         const supported =
           await navigator.xr?.isSessionSupported("immersive-vr");
         const passthrough = element<HTMLButtonElement>("enter-passthrough");
         passthrough.disabled =
           !(await navigator.xr?.isSessionSupported("immersive-ar"));
         vr.disabled = !supported;
-        enter.disabled = !supported;
-        enter.textContent = supported
-          ? "Enter the immersive theater →"
-          : "Immersive theater requires Quest Browser";
         element("xr-status").textContent = supported
-          ? "Choose Theater or My room (passthrough), then point and pinch to select."
-          : "Desktop preview · Open the secure test URL in Quest Browser to enter VR.";
+          ? "Choose Quiet space or My room (passthrough), then point and pinch to select."
+          : "Open the secure test URL in Quest Browser to enter VR.";
         const launch = async (mode: ViewingMode) => {
           viewingMode = mode;
           renderXR();
@@ -153,13 +158,14 @@ async function boot() {
           }
         };
         vr.addEventListener("click", () => void launch("theater"));
-        enter.addEventListener("click", () => void launch("theater"));
+        enableLauncher(!!supported, !passthrough.disabled, launch);
         passthrough.addEventListener("click", () => void launch("passthrough"));
       }
     } catch (e) {
+      enableLauncher(false, false, () => {});
       console.error("XR initialization failed", e);
       element("xr-status").textContent =
-        "VR could not initialize. Desktop preview is available. Reload to retry VR.";
+        "VR could not initialize. Reload to retry or open this page in Quest Browser.";
     }
     world?.onXRFrame((_frame, delta) => experience.frame(delta));
     document.addEventListener("visibilitychange", () => {

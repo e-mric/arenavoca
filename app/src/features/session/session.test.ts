@@ -262,3 +262,17 @@ it("Spanish captions follow the same video clock without affecting playback", as
   expect(player.playing).toBe(true);
   expect(player.position).toBe(7);
 });
+
+it("explicit skip preserves playing or paused intent and rejects invalid positions", async () => {
+  const { s, player } = setup();
+  await s.start();
+  await s.seekTo(15);
+  expect(player.position).toBe(15);
+  expect(player.playing).toBe(true);
+  await s.togglePlayback();
+  await s.seekTo(20);
+  expect(player.position).toBe(20);
+  expect(player.playing).toBe(false);
+  await s.seekTo(NaN);
+  expect(player.position).toBe(20);
+});

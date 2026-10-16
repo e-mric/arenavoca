@@ -11,12 +11,12 @@ export class LabReplay {
     video.preload = "none";
     video.dataset.labReplay = "true";
     video.addEventListener("ended", () => {
-      this.status = "Moment finished. Try the pass on the board.";
+      this.status = "Moment finished. Replay or flip the card.";
     });
     video.addEventListener("error", () => {
       this.stop();
       this.error = this.status =
-        "Replay unavailable. You can still use the teaching board.";
+        "Replay unavailable. You can still read and flip this card.";
     });
   }
   async play(cardId = "alba-cutback", replayPath?: string) {
@@ -33,7 +33,7 @@ export class LabReplay {
     } catch {
       if (request === this.generation) {
         this.error = this.status =
-          "Replay unavailable. You can still use the teaching board.";
+          "Replay unavailable. You can still read and flip this card.";
         this.visible = false;
       }
     }

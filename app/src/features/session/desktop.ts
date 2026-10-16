@@ -1,3 +1,5 @@
+import { hasBrowserCompanion } from "../launcher/route";
+import { bindSelectionPreview } from "../launcher/selection-view";
 import { bindLabDesktop } from "../match-lab/desktop";
 import { element, time } from "../../shared/dom";
 import {
@@ -20,6 +22,8 @@ function hidden(node: HTMLElement, value: boolean) {
 }
 export function bindDesktop(experience: Experience) {
   const s = experience.session;
+  const browserCompanion = hasBrowserCompanion(location.search);
+  const renderSelection = bindSelectionPreview(s.content);
   element("video-mount").append(experience.player.video);
   const companion = element("companion");
   companion.append(element("explore-view"), element("library-view"));
@@ -36,6 +40,8 @@ export function bindDesktop(experience: Experience) {
     "coach-end": () => experience.coach?.stop(),
     "coach-close": () => experience.coach?.close(),
     start: () => s.start(),
+    "launcher-play": () =>
+      s.mode === "Suspended" ? s.resume() : s.togglePlayback(),
     "resume-saved": () => s.start(true),
     play: () => s.togglePlayback(),
     restart: () => s.restart(),
@@ -170,14 +176,31 @@ export function bindDesktop(experience: Experience) {
       loaded = mode !== "Loading" && mode !== "Error";
     hidden(
       element("intro"),
-      mode !== "Onboarding" && mode !== "Loading" && mode !== "Error",
+      browserCompanion &&
+        mode !== "Onboarding" &&
+        mode !== "Loading" &&
+        mode !== "Error",
     );
-    hidden(element("experience"), !loaded || mode === "Onboarding");
+    hidden(
+      element("experience"),
+      !browserCompanion || !loaded || mode === "Onboarding",
+    );
+    hidden(element("start"), !browserCompanion);
+    hidden(
+      element("launcher-play"),
+      browserCompanion || !loaded || mode === "Onboarding",
+    );
+    text(
+      element("launcher-play"),
+      s.player.playing ? "Pause match" : "Resume match",
+    );
     element<HTMLButtonElement>("start").disabled = !loaded;
     text(element("start"), loaded ? "Start match →" : "Preparing your match…");
     hidden(
       element("resume-saved"),
-      !s.snapshot.resumableSession || s.snapshot.resumableSession.completed,
+      !browserCompanion ||
+        !s.snapshot.resumableSession ||
+        s.snapshot.resumableSession.completed,
     );
     hidden(element("watch-layout"), mode === "Suspended");
     const coach = experience.coach;
@@ -256,15 +279,17 @@ export function bindDesktop(experience: Experience) {
         ? "Panel higher"
         : "Panel lower",
     );
-    for (const team of Object.keys(teamThemes))
+    for (const team of Object.keys(teamThemes)) {
+      element<HTMLButtonElement>(`team-${team}`).disabled = !loaded;
       element(`team-${team}`).setAttribute(
         "aria-pressed",
         String(s.snapshot.preferences.team === team),
       );
+    }
     const preferences = s.snapshot.preferences;
     for (const sport of ["football", "f1"]) {
       element<HTMLButtonElement>(`sport-${sport}`).disabled =
-        !!s.content.manualPractice && s.content.sport !== sport;
+        !loaded || (!!s.content.manualPractice && s.content.sport !== sport);
       element(`sport-${sport}`).setAttribute(
         "aria-pressed",
         String(preferences.sport === sport),
@@ -273,7 +298,13 @@ export function bindDesktop(experience: Experience) {
     }
     hidden(element("team-blue"), !!s.content.manualPractice);
     hidden(element("team-amber"), !!s.content.manualPractice);
-    hidden(element("karaoke-toggle"), !!s.content.manualPractice);
+    element<HTMLButtonElement>("karaoke-toggle").disabled = !loaded;
+    renderSelection(
+      preferences.sport,
+      preferences.team,
+      preferences.karaokeEnabled,
+      loaded,
+    );
     for (const language of ["english", "spanish"])
       element(`commentary-${language}`).setAttribute(
         "aria-pressed",

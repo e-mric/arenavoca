@@ -7,7 +7,7 @@ test("the full local match is a real media source; learning never pauses it", as
     !fs.existsSync("public/media/user/barca-2018-h264.mp4"),
     "The full recording is private demo media.",
   );
-  await page.goto("/");
+  await page.goto("/?preview=1");
   await expect(page.locator("#start")).toBeEnabled();
   await expect(page.locator("#media-source-label")).toContainText("Barcelona");
   expect(
@@ -60,7 +60,7 @@ test("a configured F1 recording uses the overtake pack and keeps source audio", 
       },
     }),
   );
-  await page.goto("/");
+  await page.goto("/?preview=1");
   await expect(page.locator("#start")).toBeEnabled();
   await page.locator("#start").click();
   await expect(page.locator("#phrase-card h2")).toHaveText(
@@ -86,7 +86,7 @@ test("unavailable configured media offers an explicit calibration fallback", asy
       },
     }),
   );
-  await page.goto("/");
+  await page.goto("/?preview=1");
   await expect(page.locator("#use-sample")).toBeVisible();
   await page.locator("#use-sample").click();
   await expect(page.locator("#start")).toBeEnabled();

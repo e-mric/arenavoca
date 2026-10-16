@@ -92,15 +92,28 @@ export function attachTabletop(
   e: Experience,
   fontFamilies: unknown,
   windows: SpatialWindows,
+  minimal = false,
 ) {
   const practice = e.lab.tabletop;
-  const renderAtmosphere = attachTeamAtmosphere(world, e, windows);
+  const renderAtmosphere = minimal
+    ? () => {}
+    : attachTeamAtmosphere(world, e, windows);
+  if (!minimal)
+    world.requireSceneObject<Group>("tabletop-pitch").visible = true;
+  world.requireSceneObject<Group>("minimal-pitch").visible = minimal;
+  if (minimal) practice.atmosphere.mode = "minimal";
   const field = world.requireSceneObject<Group>("tabletop-field");
   const ball = world.requireSceneObject<Group>("tabletop-ball");
   const ring = world.requireSceneObject<Group>("tabletop-ball-ring");
   const player = world.requireSceneObject<Group>("tabletop-player-source");
   const teammate = world.requireSceneObject<Group>("tabletop-player-receiver");
-  const renderCard = attachPracticeCard(world, e, fontFamilies, windows);
+  const renderCard = attachPracticeCard(
+    world,
+    e,
+    fontFamilies,
+    windows,
+    minimal,
+  );
   const aim = world.requireSceneObject<Group>("tabletop-aim");
   const receiverRing = world.requireSceneObject<Group>(
     "tabletop-receiver-ring",

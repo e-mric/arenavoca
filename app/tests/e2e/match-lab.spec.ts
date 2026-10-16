@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
     !fs.existsSync("public/media/user/barca-2018-h264.mp4"),
     "Private recording required",
   );
-  await page.goto("/");
+  await page.goto("/?preview=1");
   await expect(page.locator("#start")).toBeEnabled();
   await page.locator("#start").click();
 });

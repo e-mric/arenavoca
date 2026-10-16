@@ -73,3 +73,29 @@ Updated the tabletop topic and authoritative requirements/checklists for grabbab
 ## [2026-10-16] ingest | Optional team atmosphere
 
 Updated [Tabletop Match Lab](tabletop-match-lab.md) with the user-approved stadium window, team banner, short success celebration and retained Minimal option. Linked original source, test evidence and pending Quest acceptance. No room scanning or learning-outcome improvement is claimed.
+
+## [2026-10-16] ingest | VR design reset and hands-on-table reveal
+
+Recorded the user's rejection of the accumulated VR design and selection of the minimal large-screen/tabletop reference. Updated the PRD, design flow, roadmap and [tabletop topic](tabletop-match-lab.md) to retire cinema/stadium/banner decoration from the active direction. Hands resting on the table should reveal practice; lifting hands must leave it stable. Two-finger football remains an optional physical-device experiment. The video effect is user-reported; surface and hand APIs are capability references only. Implementation remains paused; no application behavior or acceptance status changed.
+
+
+## [2026-10-16] ingest | Implemented minimal XR reveal
+
+Implementation resumed after the user's explicit request. Updated the PRD, design status, roadmap and [tabletop topic](tabletop-match-lab.md) for the new large-screen route, stable two-hand reveal and manual/calibration fallbacks. Recorded automated and managed-emulator evidence separately from pending Quest surface/hand/comfort checks. The earlier pause entry describes the previous design-only turn; finger kicking remains proposed.
+
+## [2026-10-16] ingest | Remove retired XR editor content
+
+Expected the minimal runtime to leave a clean authoring scene; the user’s editor screenshots showed the hidden legacy dashboards and stadium still present. Removed their scene entries and manifest registrations, unified XR entry on the minimal adapter, and restored displaced dock/card content to its parent. Lesson: hiding an object during playback does not remove it from the editor. Scene contract tests and managed-emulator checks cover the cleanup; physical acceptance remains pending in [Quest review](../QUEST_REVIEW.md#retired-panel-removal-acceptance--16-october-2026). The original sample media and browser learning journey remain available.
+
+## [2026-10-16] ingest | Timed cards and lighter control proposal
+
+The user deferred tabletop play and requested cards at the matching recording moments, plus historical pregame news and lineup stories. Timed delivery is being verified; a gesture wrist menu and illustrated Replay/Listen/Save card are design proposals, not implemented interactions. Saving moments for mobile revisiting is a requirement; automatic cross-device sync remains pending. See the [design proposal](../design/wrist-menu-2026-10-16/README.md) and current [PRD](../../PRD.md#active-xr-design-reset--16-october-2026).
+
+
+## [2026-10-16] ingest | Virtual cards approved; physical surfaces deferred
+
+User approved on-card Replay/Listen/Save, physical translation flipping and the lighter gesture menu. Retained phone/printed-marker approaches as optional roadmap experiments, with camera/pose verification and tracking-loss gates. Local save and successful mobile sync remain separate. Product behavior and device acceptance are owned by the PRD and Quest review; see [current direction](tabletop-match-lab.md#approved-card-controls--16-october-2026).
+
+## [2026-10-17] ingest | Card silhouette and quiet arrivals
+
+Compared the supplied concept with the runtime: replaced tile buttons with circles, rounded the card faces and illustration geometry, and added an optional animated New moment invitation. Playback remains independent. See [comparison](../design/wrist-menu-2026-10-16/comparison.md) and [Quest checks](../QUEST_REVIEW.md); no physical-device acceptance claimed.

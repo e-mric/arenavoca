@@ -1,0 +1,17 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+.actions { width: 440px; height: 130px; gap: 10px; flex-direction: column; align-items: center; font-family: 'Atkinson'; }
+.row { flex-direction: row; gap: 28px; justify-content: center; }
+.item { width: 106px; align-items: center; flex-direction: column; gap: 7px; }
+.btn { min-width: 0px; min-height: 0px; flex-shrink: 0; width: 66px; height: 66px; background-color: #ddd8ff; border-radius: 33px; padding: 0px; align-items: center; justify-content: center; }
+.icon { width: 32px; height: 32px; color: #1646ed; }
+.label { font-size: 19px; color: #142352; }
+</style>
+<div class="actions">
+<div class="row">
+<div class="item"><Button id="card-replay" class="btn"><Play class="icon"/></Button><span class="label">Replay</span></div>
+<div class="item"><Button id="card-listen" class="btn" style="background-color: #1646ed"><Volume2 class="icon" style="color: #ffffff"/></Button><span id="card-listen-label" class="label">Listen</span></div>
+<div class="item"><Button id="card-save" class="btn"><Bookmark id="card-bookmark" class="icon"/><BookmarkCheck id="card-bookmark-saved" class="icon" style="display: none"/></Button><span id="card-save-label" class="label">Save</span></div>
+</div>
+<span id="card-status" style="font-size: 17px; color: #142352; text-align: center">Flip for English</span>
+</div>

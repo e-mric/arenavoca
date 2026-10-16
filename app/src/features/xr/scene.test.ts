@@ -2,15 +2,35 @@ import { it, expect } from "vitest";
 import fs from "node:fs";
 import config from "../../../iwsdk.config.json";
 import scene from "../../../public/scenes/main.iwsdk.scene.json";
-it("requires hands, disables locomotion and keeps the seated scene stationary", () => {
-  expect(config.world.xr.features.handTracking).toEqual({ required: true });
+it("allows controller fallback, disables locomotion and keeps the seated scene stationary", () => {
+  expect(config.world.xr.features.handTracking).toEqual({ required: false });
+  expect(config.world.xr.features).not.toHaveProperty("planeDetection");
   expect(config.world.features.locomotion).toBe(false);
   expect(config.world.features.grabbing).toBe(true);
   expect(config.world.xr.offer).toBe("once");
   expect(config.world.xr.features.gazeTracking).toBe(true);
 });
-it("keeps every panel clickable inside its own movable window", () => {
-  const roots = scene.nodes[0].children;
+type SceneNode = {
+  id: string;
+  transform?: {
+    position?: number[];
+    rotationDeg?: number[];
+    scale?: number | number[];
+  };
+  components?: Record<string, unknown>;
+  content?: { asset?: string };
+  children?: SceneNode[];
+};
+const roots: SceneNode[] = scene.nodes[0].children ?? [];
+function flatten(nodes: SceneNode[]): SceneNode[] {
+  return nodes.flatMap((node) => [node, ...flatten(node.children ?? [])]);
+}
+it("removes retired panels and scenery from the editor scene and asset catalogue", () => {
+  const nodes = flatten(roots);
+  const manifest = fs.readFileSync(
+    new URL("../../assets.ts", import.meta.url),
+    "utf8",
+  );
   for (const id of [
     "welcome",
     "learning",
@@ -19,37 +39,67 @@ it("keeps every panel clickable inside its own movable window", () => {
     "karaoke",
     "coach",
     "match-lab",
+    "team-stadium",
+    "screen",
   ]) {
-    const anchor = roots.find((n) => n.id === `window-${id}`);
-    expect(anchor, id).toBeDefined();
-    const children = (
-      anchor as { children?: { id: string; components?: unknown }[] }
-    ).children;
-    expect(children?.find((n) => n.id === id)?.components).toHaveProperty(
-      "RayInteractable",
-    );
+    expect(
+      nodes.some(
+        (node) =>
+          node.id === id ||
+          node.id === `window-${id}` ||
+          node.id.startsWith(`${id}-handle-`),
+      ),
+      id,
+    ).toBe(false);
+    expect(manifest).not.toContain(`"${id}"`);
+  }
+  for (const asset of [
+    "teamStadium",
+    "teamCelebration",
+    "theater",
+    "arena",
+    "matchScreen",
+    "matchFrame",
+    "labBoard",
+    "labPawn",
+    "passDiagram",
+    "traceDiagram",
+    "tabletopPitch",
+    "minimalPitch",
+    "quietTable",
+    "placementOutline",
+    "tabletopPlayer",
+    "practiceCard",
+  ]) {
+    expect(
+      nodes.some((node) => node.content?.asset === asset),
+      asset,
+    ).toBe(false);
+    expect(manifest).not.toMatch(new RegExp(`\\b${asset}\\b`));
   }
 });
-it("each floating window has separate near-grab, far-move and resize targets", () => {
-  const roots = scene.nodes[0].children;
-  for (const id of [
-    "welcome",
-    "learning",
-    "explore",
-    "watch-controls",
-    "karaoke",
-    "coach",
-    "match-lab",
-    "screen",
-    "moment-card",
-  ]) {
+it("keeps the minimal dock clickable and keeps the scene free of tabletop assets", () => {
+  const nodes = flatten(roots);
+  expect(nodes.find((n) => n.id === "minimal-dock")?.components).toHaveProperty(
+    "RayInteractable",
+  );
+  expect(nodes.find((n) => n.id === "minimal-screen")?.content?.asset).toBe(
+    "minimalScreen",
+  );
+  expect(
+    nodes.some((n) =>
+      /tabletop|quiet-table|table-placement-outline/.test(n.id),
+    ),
+  ).toBe(false);
+});
+it("each retained floating window has separate near-grab, far-move and resize targets", () => {
+  for (const id of ["moment-card", "minimal-screen", "minimal-dock"]) {
     for (const kind of [0, 1, 2]) {
+      const direct = ["moment-card", "tabletop-lesson"].includes(id);
       const target = roots.find(
         (n) =>
           n.id ===
-          (kind === 0 && id === "moment-card"
-            ? "window-moment-card"
-            : `${id}-handle-${kind}`),
+          (kind === 0 && direct ? `window-${id}` : `${id}-handle-${kind}`),
       );
       expect(target?.components).toHaveProperty(
         kind === 0 ? "TwoHandsGrabbable" : "DistanceGrabbable",
@@ -61,48 +111,44 @@ it("each floating window has separate near-grab, far-move and resize targets", (
     }
   }
 });
-it("has real UIKitML controls for every essential action", () => {
-  const markup = [
-    "watch-controls",
-    "learning",
-    "explore",
-    "welcome",
-    "karaoke",
-    "coach",
-  ]
-    .map((id) =>
-      fs.readFileSync(
-        new URL(`../../../public/ui/${id}.uikitml`, import.meta.url),
-        "utf8",
-      ),
-    )
-    .join("");
+it("keeps global controls in the menu and moment actions on both card faces", () => {
+  const markup = fs.readFileSync(
+    new URL("../../../public/ui/minimal-dock.uikitml", import.meta.url),
+    "utf8",
+  );
   for (const id of [
-    "xr-reset-layout",
-    "xr-coach-open",
-    "xr-coach-close",
-    "xr-coach-mic",
-    "xr-coach-end",
-    "xr-start",
-    "xr-play",
-    "xr-explore",
-    "xr-trace-left",
-    "xr-trace-right",
-    "xr-replay",
-    "xr-listen",
-    "xr-save",
-    "xr-back",
-    "xr-resume",
-    "xr-exit",
-    "xr-panel-distance",
-    "xr-panel-height",
-    "xr-explore-play",
-    "xr-team-blue",
-    "xr-team-amber",
-    "xr-team-neutral",
-    "xr-karaoke-toggle",
-    "xr-karaoke-hide",
+    "minimal-play",
+    "minimal-open",
+    "minimal-close",
+    "minimal-pregame",
+    "minimal-jump",
+    "minimal-previous",
+    "minimal-recenter",
+    "minimal-flip",
+    "minimal-more",
+    "minimal-hide",
+    "minimal-story",
+    "minimal-next",
   ])
     expect(markup).toContain(`id="${id}"`);
   expect(markup).toContain("../fonts/AtkinsonHyperlegible-Regular.ttf");
+  for (const action of ["replay", "listen", "save"])
+    expect(markup).not.toContain(`id="minimal-${action}"`);
+  const actions = fs.readFileSync(
+    new URL("../../../public/ui/moment-actions.uikitml", import.meta.url),
+    "utf8",
+  );
+  for (const action of ["replay", "listen", "save"])
+    expect(actions).toContain(`id="card-${action}"`);
+  const card = roots.find((n) => n.id === "window-moment-card")!;
+  expect(card.children).toHaveLength(2);
+  for (const child of card.children!)
+    expect(child.components).toHaveProperty("RayInteractable");
+});
+
+it("keeps dock content centered in its movable anchor", () => {
+  const dock = roots.find((n) => n.id === "window-minimal-dock")!;
+  expect(
+    dock.children?.find((n) => n.id === "minimal-dock"),
+  ).not.toHaveProperty("transform");
 });

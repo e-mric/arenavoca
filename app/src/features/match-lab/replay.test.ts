@@ -59,5 +59,5 @@ it("missing replay media leaves a useful recovery message", async () => {
   video.play.mockRejectedValue(new Error());
   await replay.play();
   expect(replay.visible).toBe(false);
-  expect(replay.status).toContain("teaching board");
+  expect(replay.status).toContain("read and flip this card");
 });
