@@ -1,0 +1,30 @@
+import * as THREE from 'three';
+import { scene, onDispose, isPreview } from '@drawcall/glts';
+// Original ArenaVoca figurine. Metres, +Y up, +Z forward, soles at y=0.
+const root = new THREE.Group(); root.name = 'ArenaVoca player'; scene.add(root);
+const materials = Object.fromEntries(Object.entries({shirt:'#2854ed',trim:'#ff8a73',shorts:'#18264b',skin:'#b97550',hair:'#30241f',sock:'#fff4df',boot:'#152039'}).map(([k,color])=>[k,new THREE.MeshStandardMaterial({color,roughness:.8})]));
+function part(name, geo, mat, pos, parent=root) {
+ if(geo.index){ const ids=[],p=geo.attributes.position,a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(); for(let i=0;i<geo.index.count;i+=3){const ix=[geo.index.getX(i),geo.index.getX(i+1),geo.index.getX(i+2)];a.fromBufferAttribute(p,ix[0]);b.fromBufferAttribute(p,ix[1]).sub(a);c.fromBufferAttribute(p,ix[2]).sub(a);if(b.cross(c).lengthSq()>1e-20)ids.push(...ix);}geo.setIndex(ids); }
+ const m=new THREE.Mesh(geo,materials[mat]); m.name=name; m.position.set(...pos); m.castShadow=true; parent.add(m); return m; }
+function limb(name, a, b, r, mat, parent=root) { const start=new THREE.Vector3(...a), end=new THREE.Vector3(...b), axis=end.clone().sub(start); const m=part(name,new THREE.CapsuleGeometry(r,Math.max(.001,axis.length()-2*r),4,8),mat,start.add(end).multiplyScalar(.5).toArray(),parent); m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),axis.normalize()); return m; }
+// Tapered jersey is one continuous form; small limbs make the stance readable.
+part('Jersey',new THREE.CylinderGeometry(.029,.023,.057,12),'shirt',[0,.119,0]);
+part('Collar',new THREE.TorusGeometry(.012,.003,4,12),'trim',[0,.149,0]).rotation.x=Math.PI/2;
+part('Shorts',new THREE.CylinderGeometry(.025,.029,.026,12),'shorts',[0,.082,0]);
+part('Neck',new THREE.CylinderGeometry(.009,.01,.012,10),'skin',[0,.154,0]);
+part('Head',new THREE.SphereGeometry(.022,16,10),'skin',[0,.178,0]).scale.set(.88,1.12,.9);
+part('Hair',new THREE.SphereGeometry(.0225,16,8,0,Math.PI*2,0,Math.PI*.48),'hair',[0,.184,-.001]).scale.set(.9,1,.94);
+part('Nose',new THREE.SphereGeometry(.0045,8,6),'skin',[0,.177,.019]);
+for (const side of [-1,1]) {
+ const tag=side<0?'Left':'Right';
+ const arm=new THREE.Group(); arm.name=tag+' arm'; arm.position.set(side*.026,.139,0); root.add(arm);
+ limb(tag+' sleeve',[0,0,0],[side*.014,-.022,.002],.012,'shirt',arm);
+ limb(tag+' forearm',[side*.014,-.022,.002],[side*.019,-.041,.015],.008,'skin',arm);
+ part(tag+' hand',new THREE.SphereGeometry(.009,10,8),'skin',[side*.019,-.042,.016],arm);
+ const leg=new THREE.Group(); leg.name=tag+' leg'; root.add(leg);
+ limb(tag+' thigh',[side*.015,.078,0],[side*.019,.051,side*.006],.012,'skin',leg);
+ limb(tag+' sock',[side*.019,.049,side*.006],[side*.022,.019,.002],.010,'sock',leg);
+ part(tag+' boot',new THREE.SphereGeometry(1,12,8),'boot',[side*.022,.009,.009],leg).scale.set(.013,.009,.023);
+}
+if(isPreview){ scene.background=new THREE.Color('#e9e2d6'); scene.add(new THREE.HemisphereLight(0xffffff,0x6d7291,2));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(1,2,3);scene.add(light); }
+onDispose(()=>{root.traverse(o=>{if(o.isMesh)o.geometry.dispose()});Object.values(materials).forEach(m=>m.dispose());});

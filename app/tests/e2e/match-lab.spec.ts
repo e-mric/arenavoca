@@ -136,3 +136,65 @@ test("the generated shot replays its own excerpt and joins the three-scene story
   expect(final - initial).toBeLessThan(20);
   expect(await page.locator(mainVideo).evaluate((v) => v.paused)).toBe(false);
 });
+
+test("tabletop pass and shot, correction, translation and reset preserve live playback", async ({
+  page,
+}) => {
+  const video = page.locator(mainVideo);
+  await page.locator("#match-lab-open").click();
+  await page.locator("#lab-tabletop").click();
+  const practice = page.locator("#tabletop-practice");
+  await expect(practice.locator("[data-prompt]")).toContainText("hacia atrás");
+  const before = await video.evaluate((v) => v.currentTime);
+  await page.locator("#table-goal").click();
+  await expect(page.locator("#table-ball")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  await page.locator("#table-ball").click();
+  await page.locator("#table-goal").click();
+  await expect(practice.locator("[data-feedback]")).toContainText(
+    "That was a shot",
+  );
+  await page.locator("#table-primary").click();
+  await page.locator("#table-translation").click();
+  await expect(practice.locator("[data-hint]")).toHaveText(
+    "Pass the ball back.",
+  );
+  await page.locator("#table-ball").click();
+  await page.locator("#table-teammate").click();
+  await expect(page.locator("#table-primary")).toHaveText("Next: shoot");
+  await page.locator("#table-primary").click();
+  await expect(practice.locator("[data-prompt]")).toHaveText(
+    "Dispara a portería.",
+  );
+  await page.locator("#table-ball").click();
+  await page.locator("#table-goal").click();
+  await expect(practice.locator("[data-feedback]")).toContainText("¡Gol!");
+  await page.locator("#table-cards").click();
+  await expect(page.locator("#match-lab [data-face]")).toHaveText(
+    "El jugador pasa el balón hacia atrás dentro del área.",
+  );
+  expect(await video.evaluate((v) => v.paused)).toBe(false);
+  expect(await video.evaluate((v) => v.currentTime)).toBeGreaterThan(before);
+});
+test("closing a selected tabletop ball preserves explicit pause and reopening resets it", async ({
+  page,
+}) => {
+  await page.locator("#play").click();
+  const before = await page.locator(mainVideo).evaluate((v) => v.currentTime);
+  await page.locator("#match-lab-open").click();
+  await page.locator("#lab-tabletop").click();
+  await page.locator("#table-ball").click();
+  await page.locator("#table-dismiss").click();
+  await page.locator("#match-lab-open").click();
+  await page.locator("#lab-tabletop").click();
+  await expect(page.locator("#table-ball")).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  expect(await page.locator(mainVideo).evaluate((v) => v.paused)).toBe(true);
+  expect(
+    await page.locator(mainVideo).evaluate((v) => v.currentTime),
+  ).toBeCloseTo(before, 1);
+});

@@ -286,3 +286,11 @@ Verification after the Cloud adapter: typecheck, 190 Vitest tests (including 17
 Python checks), production build and six Match Lab/theater browser tests passed.
 Existing font-coverage and bundle-size build warnings remain. No device acceptance
 or billing verification is inferred from those checks.
+
+## 16 October 2026 — Original tabletop pass/shot slice
+
+Match Lab now opens an independent miniature football practice area and instruction window in the shared theater/passthrough scene. One original player design is reused for two teammates. Drawcall GLTS source and local GLB exports are retained under `app/content-source/drawcall/` and `app/public/models/match-lab/`; generator access was denied after login, so no AI-generated model is claimed. No new app dependency or renderer was added.
+
+Practice rules evaluate ball selection, teammate/goal choice and bounded near-hand release coordinates. Passing and shooting have separate prompts, wrong-action feedback, optional translation and reset. Near grabbing uses IWSDK; distance selection uses a separate coral ring because the grabbable ball did not respond reliably as a ray target. The table and instruction card reuse spatial-window move/resize controls. This is assisted placement rather than throwing physics. Cards and old cutback practice remain available and the match playback authority is untouched.
+
+Typecheck, 222 unit tests, production build and nine affected browser tests passed. Managed emulator input completed a near-grab backward pass, then ray-selected passes/shots and spatial Next. Scene render validation and visual inspection passed. Physical device cases are recorded in `docs/QUEST_REVIEW.md`; no Quest acceptance, live-camera support or learning efficacy is claimed. Existing build warnings remain.

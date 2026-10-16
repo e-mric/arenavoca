@@ -1,0 +1,18 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+.card { font-family: 'Atkinson'; font-weight: 400; width: 800px; height: 700px; padding: 28px; gap: 18px; background-color: #281922; border-radius: 28px; flex-direction: column; }
+.copy { font-size: 30px; color: #efd7d4; }
+.title { font-size: 42px; color: #fff4ed; }
+.row { flex-direction: row; gap: 14px; }
+.action { background-color: #432c36; min-height: 66px; padding: 14px; border-radius: 22px; }
+.label { font-size: 30px; color: #fff4ed; }
+</style>
+<div class="card">
+<span id="table-step" class="copy">1 / PASS BACK</span>
+<span id="table-phrase" class="title">Pasa el balón hacia atrás.</span>
+<span id="table-translation" class="copy">Reveal the translation when you need it</span>
+<div id="table-feedback" style="min-height: 190px; padding: 16px; background-color: #432c36; border-radius: 20px"><span id="table-message" class="copy">Select the ball, then your teammate.</span></div>
+<div class="row"><Button id="table-hint" class="action"><ButtonLabel id="table-hint-label" class="label">Translation</ButtonLabel></Button><Button id="table-retry" class="action"><ButtonLabel id="table-primary" class="label">Reset ball</ButtonLabel></Button></div>
+<div class="row"><Button id="table-back" class="action"><ButtonLabel class="label">Moment cards</ButtonLabel></Button><Button id="table-close" class="action"><ButtonLabel class="label">Close lab</ButtonLabel></Button></div>
+<span class="copy">Authored practice / attacking the coral goal</span>
+</div>

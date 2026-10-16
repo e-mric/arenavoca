@@ -190,3 +190,16 @@ Reload the app, then test in both **Theater** and **My room**. Device acceptance
 8. Repeat while explicitly paused, then during playback. Background and return, switch input hands/controllers, and temporarily lose hand tracking. No stuck grab, unintended playback, unintentional answer or persistent invisible target should remain.
 
 Check seated reach, text size, near/far pointer transitions, two-hand comfort and Quest frame rate. The screenshot/emulator evidence does not establish these. Speech still awaits fluent Spanish review.
+
+## Tabletop pass and shot · 16 October 2026 · device acceptance pending
+
+Open the full local match, enter **Theater**, then **Match Lab → Tabletop: pass + shoot**. The pitch starts in front of you at about table height; the instruction card sits to its left. Repeat the full check in **My room · Passthrough**. There is no automatic real-table detection: move the virtual table to a comfortable clear position yourself.
+
+1. Read `Pasa el balón hacia atrás.` Pinch the white ball, move it to the teammate on the left (away from the coral goal), then release near their feet. With controllers, use squeeze for this near grab. Check the backward-pass feedback.
+2. Select **Next: shoot**. Read `Dispara a portería.` Move/release the ball into the coral goal. This first assisted exercise evaluates target placement, not throw velocity or realistic kicking physics.
+3. Try the distance alternative: point at the **coral ring beneath the ball**, select it, then select the teammate or the coral goal. The ball should animate to that target. Selecting a target before the ball must do nothing. Choosing the goal during the pass instruction must show a correction, not success.
+4. Reveal/hide **Translation**, reset after an off-target release, repeat both actions, then return to **Moment cards**. The original selected card should remain selected. Listening and demonstration are still available in the original cutback activity; this new slice has text instructions and feedback.
+5. Move the pitch and instruction card independently using their blue handles; resize with the gold corners. Use peach grips for near manipulation and two-hand scaling. Repeat both actions after moving, rotating and resizing. Use **Reset layout** in playback controls to restore defaults.
+6. Try while the match plays and while explicitly paused. Practice must never pause, seek, resume or dim it. Close while holding the ball, reopen, background/return, and temporarily lose tracking: no stuck grab or accidental completion should remain.
+
+Emulator evidence: controller near grab/move/release produced backward-pass feedback; coral-ring ray selection, teammate selection, spatial Next button and goal selection completed both actions. Browser tests cover mistakes, optional translation, reset, close/reopen and playing/paused match independence. These do not establish real hand tracking, comfortable reach, passthrough alignment, resizing usability, Quest frame rate or language learning effectiveness. Spanish remains provisional.

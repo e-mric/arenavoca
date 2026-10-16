@@ -16,6 +16,7 @@ import { MatchLabInput } from "./input";
 import { labFeedbackColor, labPrimaryLabel, labStep } from "./presentation";
 import type { SpatialWindows } from "../spatial-windows/windows";
 import { attachHandheldCard } from "./handheld";
+import { attachTabletop } from "./tabletop-spatial";
 import { cutback } from "./lab";
 /** Scene-authored board, markers and controls all follow the same world anchor. */
 export function attachMatchLab(
@@ -33,6 +34,7 @@ export function attachMatchLab(
   const replay = world.requireSceneObject<Mesh>("lab-replay-screen");
   const layout = world.requireSceneObject<Group>("window-match-lab");
   windows.bind("match-lab", panel, 1.15, 1.15 * 1.46);
+  const renderTabletop = attachTabletop(world, e, fontFamilies, windows);
   const renderCard = attachHandheldCard(world, e, windows);
   panel.document.rootElement.setProperties({
     fontFamilies: fontFamilies as never,
@@ -55,6 +57,7 @@ export function attachMatchLab(
   };
   const cleanups: (() => void)[] = [];
   const actions: Record<string, () => unknown> = {
+    "lab-tabletop": () => e.openTabletop(),
     "lab-analysis": () => e.toggleRecognition(),
     "lab-drafts": () => e.showRecognitionDrafts(),
     "lab-flip": () => e.changeLabCard("flip"),
@@ -151,11 +154,12 @@ export function attachMatchLab(
       );
   function render() {
     const lab = e.lab;
-    panel.visible = lab.open && e.session.matchActive;
+    panel.visible = lab.open && e.session.matchActive && !lab.tabletop.active;
+    renderTabletop();
     renderCard();
     const showingReplay = !!e.labReplay?.visible;
     const cards = lab.view === "cards";
-    const height = (cards ? 950 : 1460) + (e.recognitionEnabled ? 220 : 0);
+    const height = (cards ? 1040 : 1550) + (e.recognitionEnabled ? 220 : 0);
     board.visible = ball.visible =
       panel.visible && !cards && lab.phase !== "observe" && !showingReplay;
     for (const player of players) player.visible = board.visible;

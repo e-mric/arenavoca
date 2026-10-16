@@ -88,6 +88,12 @@ export class Experience {
     if (this.recognitionEnabled) void this.recognition.connect();
     this.onChange();
   }
+  openTabletop() {
+    if (!this.lab.open || !this.session.matchActive) return;
+    this.labReplay?.stop();
+    this.lab.tabletop.start();
+    this.onChange();
+  }
   closeLab() {
     this.lab.close();
     this.onChange();

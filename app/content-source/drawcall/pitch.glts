@@ -1,0 +1,20 @@
+import * as THREE from 'three';
+import { scene, onDispose, isPreview } from '@drawcall/glts';
+// Original tabletop. 1.24 x .80 m, playing surface y=0, attack +X.
+const root=new THREE.Group();root.name='ArenaVoca tabletop pitch';scene.add(root);
+const materials=Object.fromEntries(Object.entries({rim:'#17283d',grass:'#207957',stripe:'#278360',line:'#fff2d5',goal:'#ffb79b',net:'#a7bfba'}).map(([k,color])=>[k,new THREE.MeshStandardMaterial({color,roughness:.85})]));
+function box(name,size,pos,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(...size),materials[mat]);m.name=name;m.position.set(...pos);m.receiveShadow=true;root.add(m);return m;}
+function line(name,a,b,r=.003,mat='line'){const v=new THREE.Vector3(...b).sub(new THREE.Vector3(...a));const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,v.length(),6),materials[mat]);m.name=name;m.position.copy(new THREE.Vector3(...a).add(new THREE.Vector3(...b)).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.normalize());root.add(m);}
+box('Table edge',[1.24,.045,.80],[0,-.03,0],'rim');box('Turf',[1.18,.014,.74],[0,-.007,0],'grass');
+for(let i=0;i<6;i++) box('Mown stripe '+i,[.09,.001,.72],[-.50+i*.20,.0006,0],'stripe');
+for(const z of [-.34,.34])line('Touchline '+z,[-.55,.003,z],[.55,.003,z]);
+for(const x of [-.55,0,.55])line('Pitch line '+x,[x,.003,-.34],[x,.003,.34]);
+const circle=new THREE.Mesh(new THREE.TorusGeometry(.115,.003,4,40),materials.line);circle.name='Centre circle';circle.rotation.x=Math.PI/2;circle.position.y=.003;root.add(circle);
+for(const side of [-1,1]){const x=side*.55, inner=side*.36;line('Penalty box front '+side,[inner,.003,-.20],[inner,.003,.20]);for(const z of [-.20,.20])line('Penalty box side '+side+z,[inner,.003,z],[x,.003,z]);}
+// The coral goal identifies our attacking end without club branding.
+for(const z of [-.13,.13]){line('Goal post '+z,[.55,0,z],[.55,.15,z],.008,'goal');line('Goal rear '+z,[.65,0,z],[.65,.15,z],.004,'net');line('Goal roof '+z,[.55,.15,z],[.65,.15,z],.004,'net');}
+line('Crossbar',[.55,.15,-.13],[.55,.15,.13],.008,'goal');
+for(let i=0;i<=8;i++){const z=-.13+i*.0325;line('Rear net vertical '+i,[.65,0,z],[.65,.15,z],.0015,'net');}
+for(let i=0;i<=5;i++){const y=i*.03;line('Rear net horizontal '+i,[.65,y,-.13],[.65,y,.13],.0015,'net');}
+if(isPreview){scene.background=new THREE.Color('#e9e2d6');scene.add(new THREE.HemisphereLight(0xffffff,0x6d7291,2));const l=new THREE.DirectionalLight(0xffffff,3);l.position.set(1,2,3);scene.add(l);}
+onDispose(()=>{root.traverse(o=>{if(o.isMesh)o.geometry.dispose()});Object.values(materials).forEach(m=>m.dispose());});

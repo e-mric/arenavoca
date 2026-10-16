@@ -1,3 +1,4 @@
+import { TabletopPractice } from "./tabletop";
 import { MomentCards } from "./cards";
 import pack from "../stories/content/barca-2018-opening.json";
 export const cutback = pack.cards.find((card) => card.id === "alba-cutback")!;
@@ -28,6 +29,7 @@ export const arrangements = [
 export class MatchLab {
   open = false;
   view: "cards" | "activity" = "cards";
+  readonly tabletop = new TabletopPractice();
   readonly cards = new MomentCards();
   round = 0;
   armed = false;
@@ -57,15 +59,18 @@ export class MatchLab {
     this.open = true;
   }
   browse() {
+    this.tabletop.close();
     this.view = "cards";
     this.armed = false;
   }
   close() {
+    this.tabletop.close();
     this.open = false;
     this.armed = false;
     this.onClose();
   }
   begin() {
+    this.tabletop.close();
     if (!this.open) return;
     this.notice = "";
     this.view = "activity";
@@ -133,6 +138,7 @@ export class MatchLab {
     this.begin();
   }
   frame(delta: number) {
+    this.tabletop.frame(delta);
     if (
       this.open &&
       this.selected !== null &&

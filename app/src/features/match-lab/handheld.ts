@@ -79,6 +79,7 @@ export function attachHandheldCard(
     visibility.visible = card.visible =
       world.renderer.xr.isPresenting &&
       e.lab.open &&
+      !e.lab.tabletop.active &&
       e.lab.view === "cards" &&
       e.session.matchActive;
     if (!card.visible) return;

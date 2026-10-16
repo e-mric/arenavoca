@@ -19,12 +19,22 @@ import {
   labPawn,
   labBall,
   labReplay,
+  tabletopBallRing,
 } from "./features/match-lab/lab.scene-asset";
 export default defineAssets({
+  tabletopPlayer: {
+    url: assetUrl("models/match-lab/player.glb"),
+    type: AssetType.GLTF,
+  },
+  tabletopPitch: {
+    url: assetUrl("models/match-lab/pitch.glb"),
+    type: AssetType.GLTF,
+  },
   labBoard,
   labPawn,
   labBall,
   labReplay,
+  tabletopBallRing,
   "lab-art-draft": {
     url: assetUrl("branding/favicon.png"),
     type: AssetType.Texture,
@@ -61,6 +71,7 @@ export default defineAssets({
       "karaoke",
       "coach",
       "match-lab",
+      "tabletop-lesson",
     ].map((id) => [
       id,
       {

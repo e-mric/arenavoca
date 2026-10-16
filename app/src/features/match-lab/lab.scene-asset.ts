@@ -85,3 +85,9 @@ export const labReplay = mesh(
   new PlaneGeometry(0.98, 0.55125),
   white,
 );
+// A broad ray target stays separate from the ball's near-grab interaction.
+export const tabletopBallRing = mesh(
+  "Select ball ring",
+  new CylinderGeometry(0.065, 0.065, 0.006, 24),
+  coral,
+);

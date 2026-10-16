@@ -1625,6 +1625,442 @@
               0.7
             ]
           }
+        },
+        {
+          "id": "window-tabletop",
+          "name": "window-tabletop",
+          "transform": {
+            "position": [
+              0,
+              0.82,
+              -0.9
+            ],
+            "rotationDeg": [
+              -90,
+              0,
+              0
+            ]
+          },
+          "children": [
+            {
+              "id": "tabletop-field",
+              "name": "tabletop-field",
+              "transform": {
+                "rotationDeg": [
+                  90,
+                  0,
+                  0
+                ]
+              },
+              "children": [
+                {
+                  "id": "tabletop-pitch",
+                  "name": "tabletop-pitch",
+                  "content": {
+                    "type": "asset",
+                    "asset": "tabletopPitch"
+                  }
+                },
+                {
+                  "id": "tabletop-player-source",
+                  "name": "tabletop-player-source",
+                  "content": {
+                    "type": "asset",
+                    "asset": "tabletopPlayer"
+                  },
+                  "transform": {
+                    "position": [
+                      0.24,
+                      0,
+                      0.1
+                    ],
+                    "rotationDeg": [
+                      0,
+                      90,
+                      0
+                    ]
+                  }
+                },
+                {
+                  "id": "tabletop-player-receiver",
+                  "name": "tabletop-player-receiver",
+                  "content": {
+                    "type": "asset",
+                    "asset": "tabletopPlayer"
+                  },
+                  "transform": {
+                    "position": [
+                      -0.29,
+                      0,
+                      0.05
+                    ],
+                    "rotationDeg": [
+                      0,
+                      90,
+                      0
+                    ]
+                  },
+                  "components": {
+                    "RayInteractable": {},
+                    "TabletopTarget": {
+                      "kind": 1
+                    }
+                  }
+                },
+                {
+                  "id": "tabletop-ball",
+                  "name": "tabletop-ball",
+                  "content": {
+                    "type": "asset",
+                    "asset": "labBall"
+                  },
+                  "transform": {
+                    "position": [
+                      0.24,
+                      0.035,
+                      0.16
+                    ],
+                    "scale": [
+                      0.8,
+                      0.8,
+                      0.8
+                    ]
+                  },
+                  "components": {
+                    "OneHandGrabbable": {},
+                    "TabletopTarget": {
+                      "kind": 0
+                    }
+                  }
+                },
+                {
+                  "id": "tabletop-goal",
+                  "name": "tabletop-goal",
+                  "content": {
+                    "type": "asset",
+                    "asset": "labReplay"
+                  },
+                  "transform": {
+                    "position": [
+                      0.55,
+                      0.08,
+                      0
+                    ],
+                    "rotationDeg": [
+                      0,
+                      -90,
+                      0
+                    ],
+                    "scale": [
+                      0.27,
+                      0.27,
+                      0.27
+                    ]
+                  },
+                  "components": {
+                    "RayInteractable": {},
+                    "TabletopTarget": {
+                      "kind": 2
+                    }
+                  }
+                },
+                {
+                  "id": "tabletop-ball-ring",
+                  "name": "tabletop-ball-ring",
+                  "content": {
+                    "type": "asset",
+                    "asset": "tabletopBallRing"
+                  },
+                  "components": {
+                    "RayInteractable": {},
+                    "TabletopTarget": {
+                      "kind": 0
+                    }
+                  },
+                  "transform": {
+                    "position": [
+                      0.24,
+                      0.005,
+                      0.16
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "window-tabletop-lesson",
+          "name": "window-tabletop-lesson",
+          "transform": {
+            "position": [
+              -0.9,
+              1.3,
+              -1.35
+            ],
+            "rotationDeg": [
+              0,
+              30,
+              0
+            ]
+          },
+          "children": [
+            {
+              "id": "tabletop-lesson",
+              "name": "tabletop-lesson",
+              "content": {
+                "type": "asset",
+                "asset": "tabletop-lesson"
+              },
+              "components": {
+                "RayInteractable": {}
+              }
+            }
+          ]
+        },
+        {
+          "id": "tabletop-handle-0",
+          "name": "tabletop / handle 0",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "tabletop-handle-1",
+          "name": "tabletop / handle 1",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.605
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "tabletop-handle-2",
+          "name": "tabletop / handle 2",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.63,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "tabletop-lesson-handle-0",
+          "name": "tabletop-lesson / handle 0",
+          "content": {
+            "type": "asset",
+            "asset": "windowGrip"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop-lesson",
+              "kind": 0
+            },
+            "TwoHandsGrabbable": {
+              "translate": true,
+              "rotate": true,
+              "scale": true,
+              "scaleMin": [
+                0.45,
+                0.45,
+                0.45
+              ],
+              "scaleMax": [
+                2.2,
+                2.2,
+                2.2
+              ]
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "tabletop-lesson-handle-1",
+          "name": "tabletop-lesson / handle 1",
+          "content": {
+            "type": "asset",
+            "asset": "windowMove"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop-lesson",
+              "kind": 1
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.0,
+              0.4705,
+              -3.605
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "tabletop-lesson-handle-2",
+          "name": "tabletop-lesson / handle 2",
+          "content": {
+            "type": "asset",
+            "asset": "windowResize"
+          },
+          "components": {
+            "SpatialWindow": {
+              "window": "tabletop-lesson",
+              "kind": 2
+            },
+            "DistanceGrabbable": {
+              "movementMode": "MoveFromTarget",
+              "returnToOrigin": false,
+              "detachOnGrab": false,
+              "rotate": false,
+              "scale": false
+            }
+          },
+          "transform": {
+            "position": [
+              3.63,
+              0.4705,
+              -3.65
+            ],
+            "rotationDeg": [
+              0,
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
         }
       ]
     }
