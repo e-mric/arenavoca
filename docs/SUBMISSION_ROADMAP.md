@@ -78,6 +78,16 @@ After the protected submission work; not a prerequisite for the recorded-match d
 - [ ] If a usable capture path exists, evaluate TV framing, glare, resolution, latency, commentary acquisition and video/audio timing separately from action recognition. Require explicit capture intent and document where frames/audio are processed and retained before connecting inference.
 - [ ] If the browser exposes no suitable input, record the blocker and evaluate a separately supported capture integration. Do not promise real-TV recognition on Quest or future glasses without device evidence. Keep the recorded-video provider path working independently.
 
+## Tabletop Match Lab delivery
+
+Requested 16 October: execute Spanish instructions using miniature football characters and F1 cars. [Product requirements and action catalogue](../PRD.md#tabletop-match-lab-direction--16-october-2026) · [Design/tooling notes](wiki/tabletop-match-lab.md). This extends the existing cutback board; the full tabletop playground is not implemented.
+
+- [ ] **First football slice:** original miniature pitch, two teammates, ball and goal; backward pass/cutback and shot with optional translation/listening, demonstration, deterministic feedback, retry and reset. Preserve the independent main match and existing prepared-card fallback. Prioritize this within the existing 23–31 October interaction work; cut breadth if necessary to protect the November Quest rehearsal.
+- [ ] **Asset trial:** evaluate one original character/pitch asset using Drawcall Design or existing procedural tooling. Establish source ownership, editable output, compatible lifecycle and Quest performance before adopting a new dependency. No framework migration or paid-service dependency is required by this plan.
+- [ ] **Verification:** unit tests for action rules and misleading gestures, browser tests for exercise/card/playback independence, and physical hands-only trials in theater and passthrough. Manual tabletop placement first; automatic real-table alignment is a separate capability. Measure language help separately from motor assistance and get fluent review of instructions.
+- [ ] **Football expansion after acceptance:** running with the ball, keeper saves and deliberate celebration. Add meaningful completion criteria for each; do not count an animation triggered by the wrong action as comprehension.
+- [ ] **F1 follow-on:** reuse exercise state/feedback contracts for overtaking and pit entry, then braking and celebration with distinct track/vehicle rules. Keep a coherent original visual style. Full F1 parity is not required for the first football submission loop and must not displace its acceptance work.
+
 ## No Excuses preparation checklist
 
 - [ ] Working `.tech` product with clear entry instructions, appropriate content, functioning saved-card/recall flow and stable hosting. Test from a fresh device/network.

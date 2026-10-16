@@ -50,3 +50,10 @@ Append entries at the end. This log records knowledge changes, not a replacement
 - Integrated remote commits `cf5b857` and `839b6e0`, preserving the actual Windows pilot, accuracy follow-up, and raw-output limitations. Resolved overlapping wiki edits and replaced the roadmap's stale no-local-run statement with the measured report.
 - Rechecked 93 local links/anchors after integration. Typecheck, 215 app tests, 66 Python tests, production build, and eight affected browser tests passed. Existing build warnings remain.
 - The first browser run hit an unrelated application on port 4173 and was stopped. Reran against ArenaVoca on isolated port 4273 using a temporary configuration, then removed it. The other application was left running. These results do not establish physical Quest or camera acceptance.
+
+## [2026-10-16] ingest | Tabletop sports actions and Drawcall investigation
+
+- Recorded the user's requested miniature football/F1 interaction in the [PRD](../../PRD.md#tabletop-match-lab-direction--16-october-2026), with proposed Spanish prompts, action rules, accessible input alternatives, and staged [roadmap work](../SUBMISSION_ROADMAP.md#tabletop-match-lab-delivery). Interpreted F1 “stand” as pit entry, explicitly marked as an assumption.
+- Inspected the current cutback board/rules to distinguish existing selectable-marker behavior from the requested character-based playground. No tabletop runtime changes were made.
+- Added [Drawcall findings](tabletop-match-lab.md) from its official site, Codex guide and GLTS repository. Candidate use is original asset authoring and visual refinement; runtime integration, export, dependency compatibility and device performance remain untested. No tool was installed or connected, and no asset or private recording was uploaded.
+- Verification: 105 local wiki/roadmap links and anchors resolved; whitespace check, typecheck, 215 app unit tests and build passed. Existing build warnings remain. No product behavior changed or additional browser/device acceptance was claimed.

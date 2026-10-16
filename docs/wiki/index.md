@@ -10,6 +10,7 @@ Start here to understand why the project works this way and what remains unprove
 | --- | --- |
 | [Architecture and boundaries](architecture.md) | Why IWSDK and KMP? Where does each responsibility belong? |
 | [Lessons from immersive viewing](immersive-lessons.md) | What makes VR useful? What can we learn from the IWSDK live build and Quest testing? |
+| [Tabletop Match Lab](tabletop-match-lab.md) | How could miniature football/F1 actions teach Spanish, and where might Drawcall help? |
 | [Recognition and evidence](recognition.md) | What did Alba teach us? What is ready for local AI, and why is camera access a separate gate? |
 | [Learning and the demo](learning-and-demo.md) | How do match moments become Spanish practice, and how do we explain our learning? |
 | [Windows continuation](windows-continuation.md) | What should the next desktop session read, transfer, and verify? |

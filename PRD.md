@@ -27,6 +27,32 @@ The private Alba/Barça recording remains the development benchmark. It is not a
 
 Live broadcasts, paid sports feeds, headset-camera recognition, model training, automatic account sync and additional XR platforms remain after these submissions unless the current core is already accepted. No change of XR framework is planned. The five-minute English community presentation remains separate from competition materials and uses its own script and media review.
 
+### Tabletop Match Lab direction · 16 October 2026
+
+The user wants a miniature football field on a table, with small character players and a floating Spanish instruction card. The learner demonstrates comprehension by executing the requested action with the pieces. Apply the same pattern to a miniature F1 circuit. This is a new requested direction, not completed implementation: the current cutback activity uses a tactical board with selectable markers and two arrangements, rather than the full character/action playground.
+
+Use the same exercise rules in theater and passthrough. In passthrough, let the user place/resize the virtual tabletop over a real table; manual placement is the initial proposal, with automatic surface detection or anchoring requiring separate implementation and evidence. In theater, provide a reachable virtual support. Keep cards/windows movable and resizable, cards physically grabbable/flippable, and pieces usable with hands. Provide a select-and-place alternative to precise dragging so language comprehension does not depend on fast or accurate motor control.
+
+Proposed Spanish prompts and interaction mappings below require fluent review. Use fictional players/cars and original coherent art across both packs; small animated figures should visibly perform the action rather than act only as anonymous markers.
+
+| Pack/action | Draft instruction | Proposed tabletop execution and completion evidence |
+| --- | --- | --- |
+| Football pass/cutback | Pasa el balón hacia atrás. | Select the ball carrier and send the ball to a teammate behind them relative to the attack direction; require a valid release/transfer, not merely touching the receiver. |
+| Football run | Corre con el balón hasta la zona marcada. | Move the ball-carrying figure along the field to the target zone; show a running animation while it travels. |
+| Football shot | Dispara a portería. | Aim and release a controlled shot toward the goal; distinguish taking a shot from scoring, so a saved shot is not marked as a failure to shoot. |
+| Football save | Para el balón con el portero. | Move the keeper into a slowly demonstrated shot path and intercept the ball before the goal line; allow a slower, untimed mode. |
+| Football celebration | Celebra el gol. | After a scripted goal, select a player and activate its celebration pose with a deliberate interaction; do not classify arbitrary movement as a celebration or require the learner to jump. |
+| F1 overtake | Adelanta al coche de delante. | Move the controlled car around its rival in a legal track corridor and finish ahead; check trajectory/order change, not only final placement after teleporting through a rival. |
+| F1 pit entry | Entra en boxes. | Guide the car through pit entry into the marked box. Interpret the user's “going to the stand” as the pits, pending any correction. |
+| F1 braking | Frena antes de la curva. | Use a simple speed control to slow before the marked corner; observe speed and position rather than inferring braking from a still car. |
+| F1 celebration | Celebra la victoria. | After a scripted finish, move the driver to the podium and deliberately trigger celebration. |
+
+Exercise loop: read/listen in Spanish → optionally flip for translation or request a demonstration → execute → get action-specific feedback → retry or continue → recall the phrase without the hint. Separate assisted and unassisted attempts; a wrong manipulation is not automatically evidence of poor Spanish. Keep success rules deterministic and testable. A generated match observation may select a supported exercise template only after validation/review; it must not generate executable interaction code or invent unsupported action logic. Label authored practice and simplified reconstructions honestly, separately from timestamped broadcast evidence.
+
+Keep the main match playing independently and the selected learning item pinned. A reset restores only the tabletop exercise. Bound the exercise's simulation, animations and audio; pause its simulation on lost visibility/tracking as appropriate without inventing match playback commands. Review character scale, reach, accidental grabs and simultaneous video performance on physical Quest.
+
+Proposed first implementation slice: one original football tabletop, two teammates, ball and goal; pass/cutback followed by a shot, with a complete hint/retry/feedback loop. Expand to running, keeper saves and celebration after the first slice is comfortable. Build the shared exercise contract to support an F1 overtake/pit-entry slice next; full F1 parity is not a new submission blocker. Existing prepared cards and the original sample remain available. The [roadmap](docs/SUBMISSION_ROADMAP.md#tabletop-match-lab-delivery) tracks this staged work; [wiki design notes](docs/wiki/tabletop-match-lab.md) record the rationale and tooling investigation.
+
 ### Resume here: recorded-match evaluation on Windows · 15 October 2026
 
 **Windows pilot update · 16 October:** the PC now has a verified RTX 5080 with 16,303 MiB GPU memory, Python 3.11.9, FFmpeg 9.0.2, Ollama 0.40.5 and local Whisper. Recording hash/duration match the handoff. Generic Qwen3-VL 8B failed context/output limits; explicit local `qwen3-vl:8b-instruct` at 0.5 fps completed visual and commentary runs on 808–828. Both raw outputs remain unreviewed and contain action/timing errors. Actual local provider delivery to desktop Match Lab passed, including pinned face and uninterrupted playback, after fixing non-immersive spatial orientation writes. Physical Quest and fluent Spanish acceptance remain pending. The [dated evidence report](docs/WINDOWS_LOCAL_AI_2026-10-16.md) supersedes the unmeasured-local-model statements in the older handoff below; the [feature guide](app/src/features/match-recognition/README.md) owns updated pilot commands. No full-game inference was launched.
