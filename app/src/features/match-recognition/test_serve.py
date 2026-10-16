@@ -248,6 +248,15 @@ class ProviderTests(unittest.TestCase):
             local.assert_called_once_with('clip', {'source': 'fixture'}, 'football', 'qwen3-vl:4b', path,
                                           fps=2, whisper_model=path, timeout=240)
 
+    def test_explicit_instruct_choice_reaches_local_adapter(self):
+        provider = parse_provider(['--provider', 'ollama', '--visual-only',
+                                  '--model', 'qwen3-vl:8b-instruct', '--fps', '0.5'])
+        with patch('local_model.analyze_local', return_value={}) as local, \
+             patch('serve.cloud_token', side_effect=AssertionError('Cloud forbidden')):
+            provider.analyze('clip', {}, 'output')
+        local.assert_called_once_with('clip', {}, 'football', 'qwen3-vl:8b-instruct', 'output',
+                                      fps=0.5, whisper_model=None, timeout=180)
+
     def test_cloud_still_uses_explicit_project_and_original_adapter(self):
         with patch('serve.cloud_token', return_value='fixture') as token, \
              patch('serve.analyze', return_value={'observations': []}) as cloud, \

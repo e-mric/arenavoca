@@ -29,6 +29,8 @@ Live broadcasts, paid sports feeds, headset-camera recognition, model training, 
 
 ### Resume here: recorded-match evaluation on Windows · 15 October 2026
 
+**Windows pilot update · 16 October:** the PC now has a verified RTX 5080 with 16,303 MiB GPU memory, Python 3.11.9, FFmpeg 9.0.2, Ollama 0.40.5 and local Whisper. Recording hash/duration match the handoff. Generic Qwen3-VL 8B failed context/output limits; explicit local `qwen3-vl:8b-instruct` at 0.5 fps completed visual and commentary runs on 808–828. Both raw outputs remain unreviewed and contain action/timing errors. Actual local provider delivery to desktop Match Lab passed, including pinned face and uninterrupted playback, after fixing non-immersive spatial orientation writes. Physical Quest and fluent Spanish acceptance remain pending. The [dated evidence report](docs/WINDOWS_LOCAL_AI_2026-10-16.md) supersedes the unmeasured-local-model statements in the older handoff below; the [feature guide](app/src/features/match-recognition/README.md) owns updated pilot commands. No full-game inference was launched.
+
 #### Confirmed direction and immediate objective
 
 Build and evaluate against the user's recorded full football match first. Once recognition, learning quality, latency and operating cost are measured and acceptable, adapt the same event pipeline to live matches and races. Do not start a live-broadcast integration or buy a sports-data subscription as part of this next step.

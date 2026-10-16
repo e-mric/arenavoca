@@ -77,7 +77,10 @@ export function attachHandheldCard(
   return () => {
     const cards = e.lab.cards;
     visibility.visible = card.visible =
-      e.lab.open && e.lab.view === "cards" && e.session.matchActive;
+      world.renderer.xr.isPresenting &&
+      e.lab.open &&
+      e.lab.view === "cards" &&
+      e.session.matchActive;
     if (!card.visible) return;
     const key = `${cards.index}/${cards.storyMode}`;
     if (key !== contentKey) {

@@ -251,7 +251,7 @@ def parse_provider(argv=None):
                 raise ValueError('Local mode requires --visual-only or --whisper-model, and no --project.')
             model = args.model or 'qwen3-vl:8b'
             if model not in MODELS:
-                raise ValueError('Choose an installed qwen3-vl:8b or qwen3-vl:4b.')
+                raise ValueError('Choose an installed local model: ' + ', '.join(MODELS))
             sample_times(20, args.fps)
             OllamaClient(timeout=args.local_timeout)  # Validate only; no network request.
             if args.whisper_model and not all((args.whisper_model / name).is_file()

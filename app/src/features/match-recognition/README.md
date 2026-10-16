@@ -83,26 +83,35 @@ Windows”. No automatic cloud fallback is authorised for local-only mode.
 
 ## Local Ollama adapter · 16 October 2026
 
+**Measured Windows pilot:** use the explicit local `qwen3-vl:8b-instruct` tag and
+`--fps 0.5` for this 20-second smoke test. Generic `:8b` at 1 fps exceeded the
+16,384-token context; at 0.5 fps its thinking output exhausted the output cap.
+The instruct variant completed both evidence modes, but the cards contain
+football/timing errors and remain unreviewed. See the [dated report](../../../../docs/WINDOWS_LOCAL_AI_2026-10-16.md)
+for raw-artifact locations, timings, GPU headroom and actual browser results.
+No full-game or physical Quest acceptance follows from this pilot.
+
 The adapter uses the existing event/card/story schema and review rules. It sends
 ordered JPEG samples and optional locally transcribed commentary to Ollama on
 `127.0.0.1:11434`. It does not send the MP4/audio to Qwen directly. Sampled frames
 can miss a fast ball; this is a different input representation from Gemini video.
 It never reads cloud credentials, pulls a model, follows HTTP redirects, uses a
-system proxy or falls back to Gemini. Only installed `qwen3-vl:8b` and
-`qwen3-vl:4b` are accepted, with vision capability and no remote-model metadata.
+system proxy or falls back to Gemini. Only installed `qwen3-vl:8b`,
+`qwen3-vl:4b` and `qwen3-vl:8b-instruct` are accepted, with vision capability and no remote-model metadata.
 Keep `OLLAMA_NO_CLOUD=1` enabled in the Ollama process as described in the PRD.
 
 ### Windows: first visual smoke test
 
 Install/start Ollama, explicitly download the selected model with
-`ollama pull qwen3-vl:8b`, and verify the recording/FFmpeg setup from the PRD.
+`ollama pull qwen3-vl:8b-instruct`, and verify the recording/FFmpeg setup from the PRD.
 From `app/`, using Python 3.12 (or your installed Python 3.11), prepare evidence:
 
 ```powershell
-py -3.12 src/features/match-recognition/recognize.py --provider ollama --visual-only --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20
+py -3.12 src/features/match-recognition/recognize.py --provider ollama --model qwen3-vl:8b-instruct --fps 0.5 --visual-only --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20
 ```
 
-This encodes the bounded excerpt and extracts **20 frames at 1 fps, 640 px wide**.
+This encodes the bounded excerpt and extracts **10 frames at 0.5 fps, 640 px wide**.
+The CLI default remains 1 fps for compatibility; pass the pilot setting explicitly.
 It makes no model calls, even if Ollama is running. Add `--analyze` to the same
 command for one local inference request. `--model qwen3-vl:4b` selects an explicitly
 installed alternative. `--fps` accepts 0.5–4 with 2–48 frames per excerpt; excessive
@@ -127,7 +136,7 @@ The virtual environment and weights below stay in the ignored analysis folder.
 py -3.12 -m venv content-source/match-analysis/.venv
 .\content-source\match-analysis\.venv\Scripts\python.exe -m pip install "faster-whisper>=1.2,<2"
 .\content-source\match-analysis\.venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download; snapshot_download('Systran/faster-whisper-small', local_dir='content-source/match-analysis/models/whisper-small')"
-.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/recognize.py --provider ollama --whisper-model content-source/match-analysis/models/whisper-small --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20 --analyze
+.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/recognize.py --provider ollama --model qwen3-vl:8b-instruct --fps 0.5 --whisper-model content-source/match-analysis/models/whisper-small --video public/media/user/barca-2018-h264.mp4 --source-id barca-2018-full --start 808 --duration 20 --analyze
 ```
 
 The folder must contain `model.bin`, `config.json` and `tokenizer.json`; a model
@@ -157,9 +166,10 @@ directory. Keep these private when transferring to Windows. Preparation writes
   withheld; accepted cards still need factual and fluent Spanish review. Without
   a transcript, any asserted commentary causes rejection.
 
-The Mac verification used actual Alba excerpt/frame preparation plus synthetic
+The original Mac verification used actual Alba excerpt/frame preparation plus synthetic
 responses through a loopback HTTP test server. **No real Ollama/Whisper model was
-run.** Windows dependency compatibility, model speed, GPU residency, Spanish
+run.** The [subsequent Windows pilot](../../../../docs/WINDOWS_LOCAL_AI_2026-10-16.md)
+measured dependency compatibility, short-window speed and GPU residency; Spanish
 quality and full-game accuracy remain unverified. Check `ollama ps` and
 `nvidia-smi` during the first PC run; telemetry is not automatically an accuracy or
 energy measurement. The three/six-request runtime limits and playback behaviour
@@ -178,13 +188,13 @@ After the recording, FFmpeg and Ollama setup above, run from `app/` in a separat
 Windows PowerShell terminal:
 
 ```powershell
-py -3.12 src/features/match-recognition/serve.py --provider ollama --visual-only
+py -3.12 src/features/match-recognition/serve.py --provider ollama --model qwen3-vl:8b-instruct --fps 0.5 --visual-only
 ```
 
 For commentary, use the environment/model folder already prepared above instead:
 
 ```powershell
-.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/serve.py --provider ollama --whisper-model content-source/match-analysis/models/whisper-small
+.\content-source\match-analysis\.venv\Scripts\python.exe src/features/match-recognition/serve.py --provider ollama --model qwen3-vl:8b-instruct --fps 0.5 --whisper-model content-source/match-analysis/models/whisper-small
 ```
 
 These are alternatives: stop the first service with Ctrl+C before starting the

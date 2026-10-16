@@ -227,6 +227,25 @@ class LocalHttpTests(unittest.TestCase):
                 self.client.preflight(MODEL)
         call.assert_called_once_with('/api/tags')
 
+    def test_explicit_instruct_model_keeps_install_vision_and_local_checks(self):
+        model = 'qwen3-vl:8b-instruct'
+        def metadata(path, payload=None):
+            if path == '/api/tags':
+                return {'models': [{'name': model, 'digest': 'instruct-digest'}]}
+            if path == '/api/show':
+                return {'capabilities': ['vision']}
+            return {'version': 'fixture'}
+        with patch.object(self.client, 'request', side_effect=metadata):
+            self.assertEqual(self.client.preflight(model)['digest'], 'instruct-digest')
+        with patch.object(self.client, 'request', return_value={'models': []}):
+            with self.assertRaisesRegex(ValueError, 'not installed locally'):
+                self.client.preflight(model)
+        for details in ({'capabilities': ['vision'], 'remote_model': model},
+                        {'capabilities': ['completion']}):
+            with patch.object(self.client, 'request', side_effect=[metadata('/api/tags'), details]):
+                with self.assertRaises(ValueError): self.client.preflight(model)
+        with self.assertRaises(ValueError): self.client.preflight(model + '-cloud')
+
     def test_remote_alias_rejected_before_sending_images(self):
         self.remote = True
         with self.assertRaises(ValueError): self.client.preflight(MODEL)

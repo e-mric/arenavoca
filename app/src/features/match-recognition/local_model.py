@@ -12,7 +12,7 @@ import urllib.request
 
 from recognize import prompt, review_draft, schema, sha256, validate_window
 
-MODELS = ('qwen3-vl:8b', 'qwen3-vl:4b')
+MODELS = ('qwen3-vl:8b', 'qwen3-vl:4b', 'qwen3-vl:8b-instruct')
 PROMPT_VERSION = 1
 MAX_RESPONSE = 2_000_000
 

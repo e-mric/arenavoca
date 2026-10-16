@@ -2,7 +2,9 @@
 
 Reviewed: 2026-10-16
 
-The next target is the user's Windows desktop with an RTX 5080 and 64 GB system RAM. GPU memory capacity and local inference performance still need verification. No remote connection was established in the recorded handoff.
+The target is the user's Windows desktop with an RTX 5080 and 64 GB system RAM. The original Mac handoff had not verified GPU capacity or local performance and established no remote connection; the desktop pilot below supplies the first measurements.
+
+**Desktop pilot completed 16 October:** verified 16,303 MiB GPU capacity, recording hash/duration, installed local dependencies, and ran visual-only then local Whisper comparisons on 808–828. Use explicit `qwen3-vl:8b-instruct` at 0.5 fps for this tested configuration; the generic tag failed context/output bounds. Actual local-model-to-desktop Match Lab delivery passed after fixing a non-immersive pinned-face reset. Content quality is insufficient for approval, GPU headroom is narrow, and physical Quest acceptance remains pending. See [measured results and remaining questions](../WINDOWS_LOCAL_AI_2026-10-16.md).
 
 ## First session
 

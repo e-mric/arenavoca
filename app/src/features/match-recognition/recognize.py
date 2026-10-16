@@ -323,7 +323,7 @@ def main(argv=None):
             if not args.visual_only and args.whisper_model is None:
                 raise ValueError('Choose --visual-only or --whisper-model explicitly for local analysis.')
             if model not in local.MODELS:
-                raise ValueError('Choose qwen3-vl:8b or qwen3-vl:4b, installed locally.')
+                raise ValueError('Choose an installed local model: ' + ', '.join(local.MODELS))
             local.sample_times(args.duration, args.fps)
             local.OllamaClient(timeout=args.local_timeout)  # Validate settings; makes no requests.
         else:
