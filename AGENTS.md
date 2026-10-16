@@ -2,6 +2,8 @@
 
 Read PRD.md before changing product behavior. Application code lives in app/.
 
+For project decisions, lessons, evidence, or cross-machine handoff, start at docs/wiki/index.md and follow only the relevant links. When updating the wiki, follow docs/wiki/AGENTS.md; keep detailed requirements and setup commands in their existing authoritative documents.
+
 - Organize product code by feature under app/src/features/. Keep tests alongside each feature; every new or changed behavior needs a meaningful automated test or a documented Quest-only verification case.
 - Follow the generated app/AGENTS.md and its scoped IWSDK instructions for the XR runtime, scene, and spatial UI.
 - Keep one match playback authority: the video position drives prompts and captions. Opening or closing Explore or the phrase library must not pause, seek, dim, or resume the match. Pause is an explicit playback choice; the selected learning item stays pinned while playback advances.
