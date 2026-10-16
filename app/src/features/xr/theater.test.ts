@@ -30,3 +30,16 @@ describe("viewing modes", () => {
     expect(renderer.setClearAlpha).toHaveBeenLastCalledWith(1);
   });
 });
+
+it("removes the cinema for minimal practice while keeping passthrough transparent", () => {
+  expect(viewingPolicy("theater", true)).toEqual({
+    roomVisible: false,
+    transparent: false,
+    sessionMode: "immersive-vr",
+  });
+  expect(viewingPolicy("passthrough", true)).toEqual({
+    roomVisible: false,
+    transparent: true,
+    sessionMode: "immersive-ar",
+  });
+});

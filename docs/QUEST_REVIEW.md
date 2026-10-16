@@ -203,3 +203,30 @@ Open the full local match, enter **Theater**, then **Match Lab → Tabletop: pas
 6. Try while the match plays and while explicitly paused. Practice must never pause, seek, resume or dim it. Close while holding the ball, reopen, background/return, and temporarily lose tracking: no stuck grab or accidental completion should remain.
 
 Emulator evidence: controller near grab/move/release produced backward-pass feedback; coral-ring ray selection, teammate selection, spatial Next button and goal selection completed both actions. Browser tests cover mistakes, optional translation, reset, close/reopen and playing/paused match independence. These do not establish real hand tracking, comfortable reach, passthrough alignment, resizing usability, Quest frame rate or language learning effectiveness. Spanish remains provisional.
+
+
+## Minimal tabletop revision · 16 October 2026 · Device acceptance pending
+
+Supersedes the placement-only gesture and large instruction panel described above. Open **Match Lab → Tabletop: pass + shoot**, in immersive VR and again in **My room · Passthrough**.
+
+1. Select Barça, then Madrid in a separate run. Both teammates should share that team's shirt/trim. Check cream/lavender Playmaker surfaces, one goal, one card, and no cinema walls during practice. In passthrough the real room must remain visible.
+2. Pinch a figure (controller: squeeze), lift and place it elsewhere on the pitch. Feet settle on the turf; the carrier's ball follows. Invalid/off-pitch or overlapping placements return to the previous position. Place the teammate ahead: a forward pass must not satisfy “hacia atrás”. Move pieces before selecting the ball.
+3. Grab the ball and pull it 4–30 cm **away** from the intended target. Release when the blue guide points to the teammate. Tiny pulls should cancel without completing the exercise. Repeat for **Next: shoot**, pulling away from the goal. Check that the assisted arc and arrival are predictable. This is assisted aim, not a physical throw.
+4. Try the fallback: select the ball's coral ring, then the ring by the teammate or the goal. Also try placing the held ball at a target. A wrong target must not advance the instruction.
+5. Grab the instruction card by its exposed edge, move it and turn it over for English. Try **Flip** by ray. Check both faces' buttons, readable text, and two-hand resizing. Advancing/retrying should not wrench the card out of a held orientation. The face itself prioritizes UI selection; its edge is the near-grab area.
+6. Move/rotate/resize the table with its handles and repeat a pass and shot. Check reach when seated, accidental figure/ball grabs, two-hand overlap, tracking loss, frame rate while the full match plays, and card readability against your real room. No actual Quest performance or hand-tracking acceptance yet.
+7. Close with **Done** while the match is playing and while explicitly paused. Playback position must not change except normal progress; usual playback controls return. Reopen: the drill resets; the selected replay card remains pinned. Spanish wording/audio still awaits fluent review.
+
+Managed controller emulation verified figure grab/reposition, carrier ball update, pull/release pass, spatial Next, pull/release goal, and card-edge grab/rotation. Automated evidence: 231 unit tests and nine affected browser tests, plus typecheck/build and scene validation. Emulation does not verify hands-only operation or physical-room placement.
+
+## Team atmosphere · 16 October 2026 · Device acceptance pending
+
+In both immersive VR and passthrough, choose FC Barcelona, enter Match Lab → Tabletop: pass + shoot:
+
+- Turn right: a small stadium window and readable FC Barcelona banner should use blue/red team colors. Repeat with Real Madrid to check the light kit/banner contrast.
+- Move the stadium with its blue handle; resize with its corner handle or two hands. Banner must move with the stadium. Check seated reach, legibility and frame rate while the full match plays. There is no automatic wall placement.
+- Use **Switch to Minimal** on either card face: stadium, banner and handles disappear immediately; playback and your current exercise stay unchanged. **Team atmosphere** restores them without restarting a celebration. Close/reopen practice: the chosen mode stays for this session.
+- Correct pass/shot: a small, silent confetti burst appears near the completed action and ends after about 1.6 seconds. Wrong target: no burst. Reset, Done or Minimal cancels any burst.
+- Repeat with the match explicitly paused: toggling atmosphere must not resume it. Check that the added button fits the card and that edge grabbing/flipping still works.
+
+Physical hand tracking, two-hand scaling, comfort and performance remain for Quest testing. Prototype Spanish/audio still await fluent Spanish review. Automated/model and controller-emulation evidence is recorded in IMPLEMENTATION.md.

@@ -1,3 +1,4 @@
+import { attachTeamAtmosphere } from "./atmosphere-spatial";
 import {
   createSystem,
   Grabbed,
@@ -5,8 +6,8 @@ import {
   Group,
   Mesh,
   MeshBasicMaterial,
+  MeshStandardMaterial,
   Pressed,
-  UIKitMLAsset,
   Vector3,
   VisibilityState,
   type World,
@@ -14,7 +15,9 @@ import {
 import type { Experience } from "../session/experience";
 import type { SpatialWindows } from "../spatial-windows/windows";
 import { TabletopTarget } from "./components";
-import type { TabletopPractice } from "./tabletop";
+import { goal, type TabletopPractice } from "./tabletop";
+import { footballKits } from "../theme/team-theme";
+import { attachPracticeCard } from "./tabletop-card";
 /** IWSDK owns grabbing; this adapter only evaluates releases in pitch coordinates. */
 export class TabletopInput extends createSystem({
   pressed: { required: [TabletopTarget, Pressed] },
@@ -24,15 +27,32 @@ export class TabletopInput extends createSystem({
   practice?: TabletopPractice;
   field?: Group;
   private point = new Vector3();
+  private cancelling = false;
   init() {
     this.queries.pressed.subscribe("qualify", (entity) => {
       const p = this.practice;
       if (!p?.active) return;
       const kind = entity.getValue(TabletopTarget, "kind");
-      if (kind === 0) p.pickBall();
-      else p.choose(kind === 1 ? "teammate" : "goal");
+      if (kind === 0) {
+        for (const held of this.queries.held.entities)
+          if ((held.getValue(TabletopTarget, "kind") ?? -1) >= 3) return;
+        p.pickBall();
+      } else if (kind === 1 || kind === 2)
+        p.choose(kind === 1 ? "teammate" : "goal");
     });
     this.queries.held.subscribe("qualify", (entity) => {
+      const kind = entity.getValue(TabletopTarget, "kind");
+      if (kind != null && kind >= 3 && this.practice?.phase !== "ready") {
+        this.world.getSystem(GrabSystem)!.forceRelease(entity);
+        return;
+      }
+      if (kind === 0)
+        for (const held of this.queries.held.entities) {
+          if ((held.getValue(TabletopTarget, "kind") ?? -1) >= 3) {
+            this.world.getSystem(GrabSystem)!.forceRelease(entity);
+            return;
+          }
+        }
       if (
         entity.getValue(TabletopTarget, "kind") === 0 &&
         !this.practice?.pickBall()
@@ -40,20 +60,31 @@ export class TabletopInput extends createSystem({
         this.world.getSystem(GrabSystem)!.forceRelease(entity);
     });
     this.queries.held.subscribe("disqualify", (entity) => {
-      if (
-        entity.getValue(TabletopTarget, "kind") !== 0 ||
-        !this.field ||
-        !this.practice?.active
-      )
-        return;
+      if (this.cancelling || !this.field || !this.practice?.active) return;
       entity.object3D!.getWorldPosition(this.point);
       this.field.worldToLocal(this.point);
-      this.practice.release([this.point.x, this.point.y, this.point.z]);
+      const kind = entity.getValue(TabletopTarget, "kind");
+      if (kind === 0)
+        this.practice.release([this.point.x, this.point.y, this.point.z]);
+      else if (kind === 3 || kind === 4) {
+        this.practice.movePlayer(kind === 3 ? "source" : "receiver", [
+          this.point.x,
+          this.point.y,
+          this.point.z + 0.06,
+        ]);
+        entity.object3D!.rotation.set(
+          0,
+          kind === 3 ? -Math.PI / 2 : Math.PI / 2,
+          0,
+        );
+      }
     });
   }
   releaseBall() {
+    this.cancelling = true;
     for (const entity of this.queries.held.entities)
       this.world.getSystem(GrabSystem)!.forceRelease(entity);
+    this.cancelling = false;
   }
 }
 export function attachTabletop(
@@ -63,12 +94,35 @@ export function attachTabletop(
   windows: SpatialWindows,
 ) {
   const practice = e.lab.tabletop;
+  const renderAtmosphere = attachTeamAtmosphere(world, e, windows);
   const field = world.requireSceneObject<Group>("tabletop-field");
   const ball = world.requireSceneObject<Group>("tabletop-ball");
   const ring = world.requireSceneObject<Group>("tabletop-ball-ring");
   const player = world.requireSceneObject<Group>("tabletop-player-source");
   const teammate = world.requireSceneObject<Group>("tabletop-player-receiver");
-  const panel = world.requireSceneObject<UIKitMLAsset>("tabletop-lesson");
+  const renderCard = attachPracticeCard(world, e, fontFamilies, windows);
+  const aim = world.requireSceneObject<Group>("tabletop-aim");
+  const receiverRing = world.requireSceneObject<Group>(
+    "tabletop-receiver-ring",
+  );
+  const point = new Vector3(),
+    direction = new Vector3(),
+    up = new Vector3(0, 1, 0);
+  const shirts: MeshStandardMaterial[] = [],
+    trims: MeshStandardMaterial[] = [];
+  for (const figure of [player, teammate])
+    figure.traverse((o) => {
+      if (
+        o instanceof Mesh &&
+        /Jersey|sleeve|Shorts|Shirt_stripe/.test(o.name)
+      ) {
+        const material = o.material.clone() as MeshStandardMaterial;
+        o.material = material;
+        (/Jersey|sleeve/.test(o.name) ? shirts : trims).push(material);
+        world.addCleanup(() => material.dispose());
+      }
+    });
+  let kitKey = "";
   const goalTarget = world.requireSceneObject<Group>("tabletop-goal");
   const goalMesh = goalTarget as unknown as Mesh;
   const goalMaterial = new MeshBasicMaterial({
@@ -80,30 +134,10 @@ export function attachTabletop(
   goalMesh.material = goalMaterial;
   world.addCleanup(() => goalMaterial.dispose());
   windows.bind("tabletop", field, 1.28, 0.82);
-  windows.bind("tabletop-lesson", panel, 0.65, 0.57);
-  panel.document.rootElement.setProperties({
-    fontFamilies: fontFamilies as never,
-  });
-  panel.document.setTargetDimensions(0.65, 0.57);
   world.registerSystem(TabletopInput);
   const input = world.getSystem(TabletopInput)!;
   input.practice = practice;
   input.field = field;
-  const node = (id: string) => panel.requireElementById(id);
-  const actions: Record<string, () => void> = {
-    "table-hint": () => {
-      practice.translation = !practice.translation;
-    },
-    "table-retry": () => {
-      practice.primary();
-    },
-    "table-back": () => e.lab.browse(),
-    "table-close": () => e.closeLab(),
-  };
-  for (const [id, fn] of Object.entries(actions)) {
-    node(id).addEventListener("click", fn);
-    world.addCleanup(() => node(id).removeEventListener("click", fn));
-  }
   world.addCleanup(
     world.visibilityState.subscribe((state) => {
       if (state !== VisibilityState.Visible) {
@@ -112,17 +146,19 @@ export function attachTabletop(
       }
     }),
   );
-  const values = new Map<string, string>();
-  const text = (id: string, value: string) => {
-    if (values.get(id) !== value) {
-      node(id).setProperties({ text: value });
-      values.set(id, value);
-    }
-  };
   let revision = -1;
   return () => {
     const visible = e.lab.open && e.session.matchActive && practice.active;
-    field.visible = panel.visible = visible;
+    const team = e.session.snapshot.preferences.team;
+    if (kitKey !== team) {
+      const kit = footballKits[team];
+      for (const material of shirts) material.color.set(kit.shirt);
+      for (const material of trims) material.color.set(kit.trim);
+      kitKey = team;
+    }
+    field.visible = visible;
+    renderCard(visible);
+    renderAtmosphere(visible);
     if (!visible) {
       input.releaseBall();
       return;
@@ -131,34 +167,47 @@ export function attachTabletop(
       input.releaseBall();
       revision = practice.revision;
     }
-    text(
-      "table-step",
-      practice.action === "pass" ? "1 / PASS BACK" : "2 / SHOOT AT GOAL",
-    );
-    text("table-phrase", practice.spanish);
-    text(
-      "table-translation",
-      practice.translation
-        ? practice.english
-        : "Reveal the translation when you need it",
-    );
-    text("table-message", practice.message);
-    text("table-primary", practice.primaryLabel);
-    text(
-      "table-hint-label",
-      practice.translation ? "Hide translation" : "Translation",
-    );
-    node("table-feedback").setProperties({
-      backgroundColor:
-        practice.phase === "feedback"
-          ? practice.success
-            ? "#24483a"
-            : "#61352e"
-          : "#432c36",
-    });
-    let held = false;
-    for (const entity of input.queries.held.entities)
+    let held = false,
+      sourceHeld = false,
+      teammateHeld = false;
+    for (const entity of input.queries.held.entities) {
       if (entity.object3D === ball) held = true;
+      if (entity.object3D === player) sourceHeld = true;
+      if (entity.object3D === teammate) teammateHeld = true;
+    }
+    if (!sourceHeld)
+      player.position.set(practice.source[0], 0, practice.source[2] - 0.06);
+    if (!teammateHeld)
+      teammate.position.set(
+        practice.receiver[0],
+        0,
+        practice.receiver[2] - 0.06,
+      );
+    receiverRing.position.set(
+      practice.receiver[0],
+      0.005,
+      practice.receiver[2] - 0.06,
+    );
+    receiverRing.visible = practice.phase === "aiming";
+    aim.visible = false;
+    if (held) {
+      ball.getWorldPosition(point);
+      field.worldToLocal(point);
+      const target = practice.aim([point.x, point.y, point.z]);
+      if (target) {
+        const end = target === "teammate" ? practice.receiver : goal,
+          start = practice.home;
+        direction.set(end[0] - start[0], 0, end[2] - start[2]);
+        aim.position.set(
+          (end[0] + start[0]) / 2,
+          0.009,
+          (end[2] + start[2]) / 2,
+        );
+        aim.scale.y = direction.length();
+        aim.quaternion.setFromUnitVectors(up, direction.normalize());
+        aim.visible = true;
+      }
+    }
     if (!held) {
       const t = practice.motion,
         a = practice.from,
@@ -174,8 +223,6 @@ export function attachTabletop(
     ring.position.set(ball.position.x, 0.005, ball.position.z);
     ring.visible = practice.phase === "ready" || practice.phase === "aiming";
     // A short kick and receiver response make actions visible without a physics dependency.
-    player.rotation.y = Math.PI * 0.5;
-    teammate.rotation.y = Math.PI * 0.5;
     const kicker = practice.action === "pass" ? player : teammate;
     const leg = kicker.getObjectByName("Right_leg");
     if (leg)

@@ -76,3 +76,12 @@ const image = new Mesh(
 image.name = "Moment illustration or replay";
 image.position.set(0, 0.12, 0.009);
 momentCard.add(image);
+
+// A single, pocket-sized instruction card. UI lives on its two opposing faces.
+export const practiceCard = new Group();
+practiceCard.name = "Pocket instruction card";
+const practiceShell = shell.clone();
+practiceShell.scale.set(0.71, 0.66, 1);
+practiceShell.name = "Cream rounded edge";
+practiceShell.material = new MeshBasicMaterial({ color: "#ddd8ff" });
+practiceCard.add(practiceShell);

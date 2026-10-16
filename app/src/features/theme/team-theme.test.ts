@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { teamThemes, themeFor, teamsFor } from "./team-theme";
+import { teamThemes, themeFor, teamsFor, footballKits } from "./team-theme";
 function luminance(hex: string) {
   const rgb = hex
     .slice(1)
@@ -33,3 +33,11 @@ it.each(Object.keys(teamThemes) as (keyof typeof teamThemes)[])(
     expect(contrast("#d8c1c9", t.panel)).toBeGreaterThanOrEqual(4.5);
   },
 );
+
+it("keeps the practice kit in the selected football identity", () => {
+  expect(footballKits.barcelona.trim).toBe(teamThemes.barcelona.stripe);
+  expect(footballKits.madrid.shirt).toBe(teamThemes.madrid.accent);
+  expect(footballKits.ferrari).toEqual(footballKits.neutral);
+  expect(contrast("#142352", "#fffaf2")).toBeGreaterThan(7);
+  expect(contrast("#142352", "#ddd8ff")).toBeGreaterThan(7);
+});

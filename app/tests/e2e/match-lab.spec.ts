@@ -154,7 +154,7 @@ test("tabletop pass and shot, correction, translation and reset preserve live pl
   await page.locator("#table-ball").click();
   await page.locator("#table-goal").click();
   await expect(practice.locator("[data-feedback]")).toContainText(
-    "That was a shot",
+    "Hacia atrás means backwards",
   );
   await page.locator("#table-primary").click();
   await page.locator("#table-translation").click();
@@ -198,3 +198,33 @@ test("closing a selected tabletop ball preserves explicit pause and reopening re
     await page.locator(mainVideo).evaluate((v) => v.currentTime),
   ).toBeCloseTo(before, 1);
 });
+
+for (const paused of [false, true])
+  test(`team atmosphere preserves ${paused ? "paused" : "playing"} playback and practice`, async ({
+    page,
+  }) => {
+    if (paused) await page.locator("#play").click();
+    const video = page.locator(mainVideo);
+    const before = await video.evaluate((v) => v.currentTime);
+    await page.locator("#match-lab-open").click();
+    await page.locator("#lab-tabletop").click();
+    const practice = page.locator("#tabletop-practice");
+    await expect(practice).toHaveAttribute("data-atmosphere", "team");
+    await page.locator("#table-ball").click();
+    await page.locator("#table-teammate").click();
+    await expect(practice).toHaveAttribute("data-celebrating", "true");
+    await page.locator("#table-atmosphere").click();
+    await expect(practice).toHaveAttribute("data-atmosphere", "minimal");
+    await expect(practice).toHaveAttribute("data-celebrating", "false");
+    await expect(page.locator("#table-primary")).toHaveText("Next: shoot");
+    await page.locator("#table-dismiss").click();
+    await page.locator("#match-lab-open").click();
+    await page.locator("#lab-tabletop").click();
+    await expect(practice).toHaveAttribute("data-atmosphere", "minimal");
+    await page.locator("#table-atmosphere").click();
+    await expect(practice).toHaveAttribute("data-celebrating", "false");
+    expect(await video.evaluate((v) => v.paused)).toBe(paused);
+    const after = await video.evaluate((v) => v.currentTime);
+    if (paused) expect(after).toBeCloseTo(before, 1);
+    else expect(after).toBeGreaterThan(before);
+  });

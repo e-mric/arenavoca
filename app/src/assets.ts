@@ -1,3 +1,4 @@
+import { teamStadium, teamCelebration } from "./features/match-lab/atmosphere.scene-asset";
 import { AssetType, defineAssets } from "@iwsdk/core";
 import {
   matchScreen,
@@ -10,6 +11,7 @@ import {
   windowMove,
   windowResize,
   momentCard,
+  practiceCard,
 } from "./features/spatial-windows/objects.scene-asset";
 import theater from "./scene-assets/theater.scene-asset";
 import arena from "./features/branding/arena.scene-asset";
@@ -20,14 +22,17 @@ import {
   labBall,
   labReplay,
   tabletopBallRing,
+  tabletopAim,
 } from "./features/match-lab/lab.scene-asset";
 export default defineAssets({
+  teamStadium,
+  teamCelebration,
   tabletopPlayer: {
-    url: assetUrl("models/match-lab/player.glb"),
+    url: assetUrl("models/match-lab/player.glb?v=playmaker-3"),
     type: AssetType.GLTF,
   },
   tabletopPitch: {
-    url: assetUrl("models/match-lab/pitch.glb"),
+    url: assetUrl("models/match-lab/pitch.glb?v=playmaker-3"),
     type: AssetType.GLTF,
   },
   labBoard,
@@ -35,6 +40,7 @@ export default defineAssets({
   labBall,
   labReplay,
   tabletopBallRing,
+  tabletopAim,
   "lab-art-draft": {
     url: assetUrl("branding/favicon.png"),
     type: AssetType.Texture,
@@ -60,6 +66,7 @@ export default defineAssets({
   windowMove,
   windowResize,
   momentCard,
+  practiceCard,
   theater,
   arena,
   ...Object.fromEntries(

@@ -91,3 +91,10 @@ export const tabletopBallRing = mesh(
   new CylinderGeometry(0.065, 0.065, 0.006, 24),
   coral,
 );
+
+// Unit-length Y axis; the input adapter aligns this narrow preview with the shot.
+export const tabletopAim = mesh(
+  "Assisted aim",
+  new CylinderGeometry(0.003, 0.003, 1, 6),
+  new MeshBasicMaterial({ color: "#1646ed" }),
+);

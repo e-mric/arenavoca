@@ -3,9 +3,9 @@ export const theaterName = "ArenaVoca viewing lounge";
 
 export type ViewingMode = "theater" | "passthrough";
 /** AR keeps the camera view clear; geometry and panels remain world anchored. */
-export function viewingPolicy(mode: ViewingMode) {
+export function viewingPolicy(mode: ViewingMode, minimal = false) {
   return {
-    roomVisible: mode === "theater",
+    roomVisible: mode === "theater" && !minimal,
     transparent: mode === "passthrough",
     sessionMode: mode === "passthrough" ? "immersive-ar" : "immersive-vr",
   } as const;
@@ -17,8 +17,9 @@ export function applyViewingMode<T>(
   room: { visible: boolean },
   renderer: { setClearAlpha: (value: number) => void },
   theaterBackground: T,
+  minimal = false,
 ) {
-  const policy = viewingPolicy(mode);
+  const policy = viewingPolicy(mode, minimal);
   room.visible = policy.roomVisible;
   scene.background = policy.transparent ? null : theaterBackground;
   renderer.setClearAlpha(policy.transparent ? 0 : 1);

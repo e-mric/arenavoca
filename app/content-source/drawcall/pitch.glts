@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { scene, onDispose, isPreview } from '@drawcall/glts';
 // Original tabletop. 1.24 x .80 m, playing surface y=0, attack +X.
 const root=new THREE.Group();root.name='ArenaVoca tabletop pitch';scene.add(root);
-const materials=Object.fromEntries(Object.entries({rim:'#17283d',grass:'#207957',stripe:'#278360',line:'#fff2d5',goal:'#ffb79b',net:'#a7bfba'}).map(([k,color])=>[k,new THREE.MeshStandardMaterial({color,roughness:.85})]));
+const materials=Object.fromEntries(Object.entries({rim:'#fffaf2',grass:'#ddd8ff',stripe:'#ece8fc',line:'#fffaf2',goal:'#ffc4b7',net:'#74788b'}).map(([k,color])=>[k,new THREE.MeshStandardMaterial({color,roughness:.85})]));
 function box(name,size,pos,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(...size),materials[mat]);m.name=name;m.position.set(...pos);m.receiveShadow=true;root.add(m);return m;}
 function line(name,a,b,r=.003,mat='line'){const v=new THREE.Vector3(...b).sub(new THREE.Vector3(...a));const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,v.length(),6),materials[mat]);m.name=name;m.position.copy(new THREE.Vector3(...a).add(new THREE.Vector3(...b)).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.normalize());root.add(m);}
 box('Table edge',[1.24,.045,.80],[0,-.03,0],'rim');box('Turf',[1.18,.014,.74],[0,-.007,0],'grass');

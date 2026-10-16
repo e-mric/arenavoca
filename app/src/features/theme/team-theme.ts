@@ -92,3 +92,14 @@ export function teamsFor(sport: Sport) {
     (team) => teamThemes[team].sport === sport,
   );
 }
+
+/** Fan-inspired practice kits shared by both teammates; no official badges. */
+export const footballKits: Record<Team, { shirt: string; trim: string }> = {
+  neutral: { shirt: "#1646ed", trim: "#142352" },
+  blue: { shirt: "#447bbe", trim: "#112235" },
+  amber: { shirt: "#edc079", trim: "#281c0d" },
+  barcelona: { shirt: "#1746a2", trim: "#bc244a" },
+  madrid: { shirt: "#f1f2f8", trim: "#d9bf79" },
+  ferrari: { shirt: "#1646ed", trim: "#142352" },
+  mclaren: { shirt: "#1646ed", trim: "#142352" },
+};

@@ -45,3 +45,20 @@ Next check → Emeric tries both actions, move/resize and recovery in theater an
 - The static GLB export loads in the pinned runtime; does its visual quality and performance hold up on the physical Quest?
 
 See [immersive lessons](immersive-lessons.md) for the physical test boundary, and [recognition](recognition.md) for why authored exercise rules must remain separate from uncertain model observations.
+
+
+## Minimal interaction revision
+
+**Decision, 16 October:** take Cubism's restraint and Demeo's tangible pieces as design references. Two cute teammates, one goal, one instruction card; defer the Track Craft-inspired F1 slice. The user's subsequent constraints keep surfaces in the mobile Playmaker palette and figures in the selected team's kit. No cinema scenery is shown during the exercise; passthrough keeps the real room.
+
+**What we expected →** a physical card and a small pull gesture would make practice more direct. **What happened →** controller emulation completed a relocated-player pass and shot; grabbing the card center reached its UI, while grabbing its exposed edge allowed wrist rotation. **What we learned →** UI selection and physical handling need distinct, discoverable areas on the same object. This is an AI-written implementation lesson, not a participant observation or learning-outcome result.
+
+**Evidence →** [implementation record](../IMPLEMENTATION.md), [pure gesture tests](../../app/src/features/match-lab/tabletop-aim.test.ts), and [original model source](../../app/content-source/drawcall/README.md). **Next check →** [Quest checklist](../QUEST_REVIEW.md#minimal-tabletop-revision--16-october-2026--device-acceptance-pending): hands-only edge grabbing, pull distance, resizing, room contrast and simultaneous full-match performance. These remain unaccepted on physical hardware.
+
+## Optional team atmosphere
+
+**Decision, 16 October:** add a small stadium window and team banner beside the exercise, preserving Minimal as a card toggle. This applies the user's Ocean Rift reference as a contained view into a world, without adding an enclosing cinema or room scanning.
+
+**Implementation:** original procedural geometry follows the selected football kit. A successful practice action triggers a brief silent celebration; switching to Minimal cancels it and hides the decorations. Session preference survives closing/reopening practice. Match playback and practice state are independent. Source: [atmosphere asset](../../app/src/features/match-lab/atmosphere.scene-asset.ts), [state tests](../../app/src/features/match-lab/atmosphere.test.ts), and [PRD](../../PRD.md).
+
+**Evidence and next check:** automated playback-preservation tests and managed controller checks are recorded in the [implementation record](../IMPLEMENTATION.md). Physical comfort, hand tracking and simultaneous match performance remain open in the [Quest checklist](../QUEST_REVIEW.md#team-atmosphere--16-october-2026--device-acceptance-pending). The claim that team identity improves engagement is still a hypothesis.

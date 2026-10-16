@@ -64,3 +64,12 @@ Append entries at the end. This log records knowledge changes, not a replacement
 - Implemented the pass/shot slice with optional translation, correction/retry, separate near-grab and distance-selection paths, movable/resizable pitch and instruction window, and an accessible browser alternative. Preserved prepared cards, old cutback activity, main playback authority and the original sample route.
 - Verification: typecheck, 222 unit tests, production build, nine affected browser tests on isolated port 4273, and scene schema/render validation passed. Emulator input proved ball grab/move/release, ring/teammate/goal selection and the spatial Next control. Material/clay and active-XR previews were inspected. Final player export removes zero-area pole triangles (2,480 triangles); the editor's cached initial preview reported pole degeneracies before that cleanup.
 - Physical Quest hands, resizing comfort, passthrough alignment and performance remain pending, along with fluent Spanish review. Existing build font-atlas and bundle/dependency warnings remain. Updated the PRD, roadmap, asset provenance and Quest checklist; local file links and Git whitespace checks passed. The temporary browser-test configuration was removed; unrelated port 4173 was left untouched.
+
+
+## [2026-10-16] ingest | Minimal tabletop and team identity
+
+Updated the tabletop topic and authoritative requirements/checklists for grabbable toy teammates, one physical bilingual card, assisted pull-and-release gestures, mobile Playmaker colors and selected football kits. Recorded automated/controller-emulator evidence and the card-edge interaction finding separately from pending physical Quest acceptance. F1 stays after the first football review.
+
+## [2026-10-16] ingest | Optional team atmosphere
+
+Updated [Tabletop Match Lab](tabletop-match-lab.md) with the user-approved stadium window, team banner, short success celebration and retained Minimal option. Linked original source, test evidence and pending Quest acceptance. No room scanning or learning-outcome improvement is claimed.

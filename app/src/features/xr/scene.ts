@@ -330,6 +330,8 @@ export function attachXR(
     renderLab();
     show("xr-lab-open", experience.labAvailable);
     const viewingMode = getViewingMode();
+    const minimal =
+      experience.lab.open && experience.lab.tabletop.active && s.matchActive;
     const mode = s.mode;
     const watching = [
         "Watching",
@@ -340,11 +342,11 @@ export function attachXR(
       library = mode === "PhraseLibrary";
     screen.visible = true;
     frame.visible = true;
-    watch.visible = s.matchActive;
+    watch.visible = s.matchActive && !minimal;
     learning.visible =
       (mode === "Watching" && !!s.prompt) || (library && !!s.phrase);
     const coach = experience.coach;
-    coachPanel.visible = !!coach?.open && watching;
+    coachPanel.visible = !!coach?.open && watching && !minimal;
     learning.visible &&= !coachPanel.visible && !experience.lab.open;
     if (coach) {
       text("xr-coach-status", coach.status);
@@ -393,16 +395,17 @@ export function attachXR(
     const side = s.snapshot.preferences.panelSide === "left" ? -1 : 1;
     const preferences = s.snapshot.preferences;
     const theme = themeFor(preferences.team, preferences.sport);
-    const themeKey = `${preferences.sport}/${preferences.team}/${viewingMode}`;
+    const themeKey = `${preferences.sport}/${preferences.team}/${viewingMode}/${minimal}`;
     if (themeKey !== appliedTheme) {
       applyViewingMode(
         viewingMode,
         world.scene,
         room,
         world.renderer,
-        new Color(theme.background),
+        new Color(minimal ? "#fffaf2" : theme.background),
+        minimal,
       );
-      frame.material.color.set(theme.stripe);
+      frame.material.color.set(minimal ? "#ddd8ff" : theme.stripe);
       for (const accent of accents) accent.material.color.set(theme.accent);
       for (const root of roots)
         root.document.rootElement.setProperties({
@@ -486,7 +489,7 @@ export function attachXR(
     watch.position.x = screen.position.x;
     karaoke.position.x = screen.position.x;
     const chant = s.chant;
-    karaoke.visible = !!chant;
+    karaoke.visible = !!chant && !minimal;
     if (chant) {
       const word = activeWord(chant, s.player.position);
       for (let i = 0; i < 4; i++) {
