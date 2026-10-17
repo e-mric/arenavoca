@@ -2,6 +2,8 @@
 
 These are fictional design personas, not interviewed participants or evidence of learning effectiveness. They translate the first prototype into observable tests. The names and backgrounds are illustrative.
 
+The journeys below describe the earlier sample/Explore prototype. Their user needs remain hypotheses; use the active card design in [the PRD](../PRD.md) and [current state](project-state.md) for present acceptance criteria.
+
 ## Alex, 32 — The fan who wants the match first
 
 Alex watches football every weekend, knows the game well, and knows almost no Spanish. He puts on his Quest while sitting on the sofa after work. He wants a football experience, and will leave if it feels like compulsory homework.

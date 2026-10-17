@@ -1,8 +1,8 @@
 # ArenaVoca project wiki
 
-Reviewed: 2026-10-16
+Reviewed: 2026-10-17
 
-Start here to understand why the project works this way and what remains unproven. These pages synthesize existing documents and development history; they do not replace the [PRD](../../PRD.md). This is a small Git-backed Markdown wiki: no service, plugin, or model is required to read it.
+Start each task at the [context index](../index.md) and [current state](../project-state.md). Use this topic index to understand why the project works this way and what remains unproven. These pages synthesize existing documents and development history; they do not replace the [PRD](../../PRD.md). This is a small Git-backed Markdown wiki: no service, plugin, or model is required to read it.
 
 ## Read by task
 
@@ -10,7 +10,7 @@ Start here to understand why the project works this way and what remains unprove
 | --- | --- |
 | [Architecture and boundaries](architecture.md) | Why IWSDK and KMP? Where does each responsibility belong? |
 | [Lessons from immersive viewing](immersive-lessons.md) | What makes VR useful? What can we learn from the IWSDK live build and Quest testing? |
-| [Tabletop Match Lab](tabletop-match-lab.md) | How could miniature football/F1 actions teach Spanish, and where might Drawcall help? |
+| [Tabletop Match Lab](tabletop-match-lab.md) | Deferred experiment: miniature actions and Drawcall investigation; not active onboarding |
 | [Recognition and evidence](recognition.md) | What did Alba teach us? What is ready for local AI, and why is camera access a separate gate? |
 | [Learning and the demo](learning-and-demo.md) | How do match moments become Spanish practice, and how do we explain our learning? |
 | [Windows continuation](windows-continuation.md) | What should the next desktop session read, transfer, and verify? |
@@ -21,7 +21,7 @@ Start here to understand why the project works this way and what remains unprove
 
 | Need | Read |
 | --- | --- |
-| Current product scope and handoff | [PRD current-state section](../../PRD.md#project-handoff-and-current-state) |
+| Product requirements / current handoff | [PRD](../../PRD.md) / [project state](../project-state.md) |
 | Project run/build instructions | [Repository README](../../README.md), [application README](../../app/README.md) |
 | Recognition setup, Windows commands, experiment details | [Recognition README](../../app/src/features/match-recognition/README.md) |
 | Implementation history and automated verification | [Implementation record](../IMPLEMENTATION.md) |

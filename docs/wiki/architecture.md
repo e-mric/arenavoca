@@ -1,6 +1,6 @@
 # Architecture and boundaries
 
-Reviewed: 2026-10-16
+Reviewed: 2026-10-17
 
 ## Decisions and reasons
 
@@ -28,3 +28,19 @@ Mobile progress currently stays on its device. Saved phrases can travel through 
 - What evidence is needed before supporting another headset beyond Quest 3?
 - Which data should eventually sync between viewing and mobile practice?
 - Can recognition remain timely enough for live viewing on the target PC? This needs measurement, not an architecture assumption.
+
+## Feature ownership
+
+Inspect these current entry points before changing a boundary:
+
+| Responsibility | Owner |
+| --- | --- |
+| Media timeline and explicit commands | `app/src/features/playback/`, `app/src/features/session/` |
+| Prepared moment delivery, pregame content, card actions and palm menu | `app/src/features/match-moments/` |
+| Independent window movement, grips and resizing | `app/src/features/spatial-windows/` |
+| Headset session and viewing-space behavior | `app/src/features/xr/`; runtime composition in `app/src/index.ts` |
+| Evidence/provider drafts and review | `app/src/features/match-recognition/`; feature README owns setup/tests |
+| Content, audio and persistence contracts | `content/`, `audio/`, `progress/`, `recap/` under features |
+| Native recap/stories and platform UI | Feature-owned `native/` directories; build wiring in `app/native/` |
+
+The current card flow still integrates selected `match-lab` services; the folder name does not make deferred tabletop UI active. Keep legacy compatibility isolated and change boundaries incrementally. Meaningful domain/application/adapter/presentation layers belong inside features when needed, not as empty mandatory folders. See [verification workflow](../AI_COLLABORATION.md#verification).

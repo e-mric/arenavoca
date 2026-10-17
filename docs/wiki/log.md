@@ -99,3 +99,10 @@ User approved on-card Replay/Listen/Save, physical translation flipping and the 
 ## [2026-10-17] ingest | Card silhouette and quiet arrivals
 
 Compared the supplied concept with the runtime: replaced tile buttons with circles, rounded the card faces and illustration geometry, and added an optional animated New moment invitation. Playback remains independent. See [comparison](../design/wrist-menu-2026-10-16/comparison.md) and [Quest checks](../QUEST_REVIEW.md); no physical-device acceptance claimed.
+
+## [2026-10-17] ingest | Shared development workflow and current handoff
+
+- Added the [context index](../index.md), [current-state handoff](../project-state.md) and [five chat starters](../chat-starters.md), reusing existing architecture, research, design and testing pages. Root instructions route each task through the same entry points; current status no longer requires reconstructing historical PRD sections.
+- Verified Matt Pocock's marketplace/plugin is already installed and enabled at 1.3.1. [Skill routing and verification](../AI_COLLABORATION.md) record selective phase-based use, machine-local installation limits and evidence scope. No personal configuration changes or new chats/automations were needed.
+- Corrected active overview references to retired YouTube/burgundy UI; preserved historical experiment evidence. Prepared-card scope, pending Quest acceptance, Spanish review and public-content rights remain explicit.
+- Added reusable docs/web verification entry points and CI definitions. Documentation/link checks and tooling checks are separate from historical app results; hosted CI, current physical headset behavior and native checks are not newly verified by this setup.

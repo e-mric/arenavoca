@@ -4,6 +4,8 @@ Version 10 · Virtual moment cards and gesture menu · 16 October 2026
 
 ## Project Handoff And Current State
 
+For the current milestone, blockers and verification handoff, read [docs/project-state.md](docs/project-state.md). This document owns product requirements; dated implementation narratives below preserve historical context.
+
 This PRD contains the complete product requirements, technical specification, implementation preferences, build checklist, future roadmap, research context, and visual design brief. It is the primary planning reference for the new project. The dated submission schedule and operational checklists are maintained in [docs/SUBMISSION_ROADMAP.md](docs/SUBMISSION_ROADMAP.md); this PRD remains the product authority.
 
 The project already exists at `https://github.com/e-mric/arenavoca.git`. Application code lives in `app/`. Read repository and scoped `AGENTS.md` instructions before implementation. The handoff below is the current priority and supersedes conflicting early-prototype statements elsewhere in this document; older dated sections remain historical context.
@@ -46,6 +48,8 @@ The private Alba/Barça recording remains the development benchmark. It is not a
 Live broadcasts, paid sports feeds, headset-camera recognition, model training, automatic account sync and additional XR platforms remain after these submissions unless the current core is already accepted. No change of XR framework is planned. The five-minute English community presentation remains separate from competition materials and uses its own script and media review.
 
 ### Tabletop Match Lab direction · 16 October 2026
+
+Deferred by the active XR design reset above; this section records the earlier experiment, not current implementation work.
 
 The user wants a miniature football field on a table, with small character players and a floating Spanish instruction card. The learner demonstrates comprehension by executing the requested action with the pieces. Apply the same pattern to a miniature F1 circuit. This is a new requested direction, not completed implementation: the current cutback activity uses a tactical board with selectable markers and two arrangements, rather than the full character/action playground.
 
