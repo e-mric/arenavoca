@@ -106,3 +106,29 @@ Compared the supplied concept with the runtime: replaced tile buttons with circl
 - Verified Matt Pocock's marketplace/plugin is already installed and enabled at 1.3.1. [Skill routing and verification](../AI_COLLABORATION.md) record selective phase-based use, machine-local installation limits and evidence scope. No personal configuration changes or new chats/automations were needed.
 - Corrected active overview references to retired YouTube/burgundy UI; preserved historical experiment evidence. Prepared-card scope, pending Quest acceptance, Spanish review and public-content rights remain explicit.
 - Added reusable docs/web verification entry points and CI definitions. Documentation/link checks and tooling checks are separate from historical app results; hosted CI, current physical headset behavior and native checks are not newly verified by this setup.
+
+## [2026-10-18] ingest | Football-summary source review
+
+- Retained a [commit-pinned source review](../FOOTBALL_SUMMARY_REPO_REVIEW_2026-10-18.md) of the user-supplied repository. Actual detection/tracking and transcription are separate from weak event heuristics, an inferred frame/time conversion defect and unverified quality/performance claims.
+- Proposed a bounded detector-assisted recognition comparison; no product change or adoption is approved by this research. Checkpoint provenance and reuse terms remain unresolved. No external code, models or media were executed or downloaded.
+- Verification: documentation checks passed for nine changed/new Markdown files and 117 local links/anchors, including four workflow-tooling tests. Diff whitespace and source review passed. Application, provider and device suites were not run for this research-only change.
+
+## [2026-10-18] ingest | Maintained detection and tracking candidates
+
+- Added a [dated comparison](../MAINTAINED_FOOTBALL_TRACKING_2026-10-18.md) with recent releases, pinned source evidence and component/checkpoint licensing distinctions. Retained RF-DETR + Roboflow Trackers + Supervision as the proposed bounded comparison; Ultralytics is an alternative, not an adoption decision.
+- Recorded Supervision's actual removal of `sv.ByteTrack`, the older state of the football demo, the need for a source-timed evidence adapter and unmeasured Windows/GPU/accuracy limits. No dependencies, models or media were installed/downloaded, and no product behavior changed.
+- Expanded documentation verification passed: 13 files and 175 local links/anchors, including both research notes, recognition/log pages and shared guidance; four workflow-tooling tests passed. The preceding entry's nine-file result covered the default shared-guidance set, not all changed/new Markdown files. Diff/source review passed; no application, model or physical-device test was run.
+
+## [2026-10-18] ingest | Actual Alba detection/tracking comparison
+
+- Installed isolated RF-DETR Small, ByteTrack and Supervision, and added offline source-PTS tracking plus a paired local evidence adapter. The [actual Mac trial](../ALBA_TRACKING_TRIAL_2026-10-18.md) preserves native detections, gaps, frame/video previews, request fingerprints and raw outputs privately.
+- Neither Qwen/Whisper arm recovered the cutback; the assisted arm lost the run and produced late/duplicate finish descriptions. The goal review guard withheld duplicates, but one mistimed shot remained. Tracking continuity and schema validity did not establish action accuracy; no prepared card or runtime integration was changed.
+- Closer source inspection revised the provisional AI backward-pass range from 813.4–814.6 to roughly 814.7–815.5. This is an AI observation with sampling uncertainty, not human contact/goal-line ground truth. Historical evidence remains unchanged.
+- Verification: 71 recognition Python tests, typecheck, 297 app unit tests and production build passed. Actual model checks ran on macOS/MPS; browser, Windows/CUDA and physical Quest checks were not run. Existing build warnings remain.
+
+## [2026-10-18] ingest | Cropped/tiled Alba ball detection and RTX handoff
+
+- Implemented fixed central cropping and overlapping tiles with source-coordinate restoration and duplicate merging. The [follow-up](../ALBA_TRACKING_TRIAL_2026-10-18.md#cropped-and-tiled-follow-up) matches all six AI-inspected ball points, versus four in the original full view; more off-point candidates remain. This is a development spot audit, not human ground truth or general accuracy.
+- A source/image/request/model-verified Qwen retry with cropped evidence timed out after 300 seconds without raw output. Preserved the failure and stopped that experiment's model. Better ball detection is distinct from unproven cutback action improvement.
+- Prepared a [Windows/CUDA guide](../WINDOWS_TRACKING_RUN_2026-10-18.md) and source-only transfer package for the user's proposed RTX repeat. Actual CUDA execution, speed and model output remain pending; no runtime card/provider behavior changed.
+- Verification: 76 recognition Python tests, typecheck, 297 app tests and production build passed. New fixtures cover coordinate restoration, overlap/vendor metadata, missing audit evidence, saved-control identity and refusal to fall back from unavailable CUDA. Existing build warnings remain; browser/native/headset checks were not run.

@@ -57,6 +57,89 @@ candidates remain `needs-review`; there is no automatic publishing/import.
 Repeated runs of a clip have stable event IDs if its bytes and event order match.
 This standalone authoring command does not deduplicate overlapping clips.
 
+## RF-DETR / ByteTrack offline comparison · 18 October 2026
+
+`track.py` is a separate experiment. It records source-PTS-aligned person/ball boxes,
+class-separated ByteTrack identities, missing observations and heuristic shot resets.
+It does not recognize football actions or publish cards. Raw observations, weights,
+environments, frame sequences and annotated video stay in the ignored
+`content-source/match-analysis/` directory. The tracking preview is silent; its
+fixed-rate display is an inspection aid, while JSON source timestamps are authoritative.
+
+From `app/`, create an isolated Python 3.11 environment and install the pinned tools:
+
+```sh
+uv venv --python 3.11 content-source/match-analysis/.venv-tracking
+uv pip install --python content-source/match-analysis/.venv-tracking/bin/python -r src/features/match-recognition/tracking-requirements.txt
+content-source/match-analysis/.venv-tracking/bin/python src/features/match-recognition/track.py --video public/media/user/barca-2018-h264.mp4 --start 808 --duration 20 --model small --device mps --download-weights
+```
+
+The explicit first-run flag downloads the official RF-DETR Small checkpoint; later
+runs can omit it. `--device cpu` is available; `--device cuda` is intended for the
+Windows desktop but is not verified by the Mac experiment. Medium is a separate
+`--model medium` choice with its own checkpoint. Tracking defaults to 25 fps at
+the recording's native dimensions, retaining actual source timestamps after sampling.
+Run state is fresh each time; cut resets use an HSV-histogram heuristic, not an
+accepted shot detector. Interpolated/predicted locations are never reported as observations.
+
+For a paired local comparison, install the explicit `qwen3-vl:8b-instruct` Ollama
+model and use a complete local faster-whisper Small model directory (including its
+tokenizer). Pass the new run's `tracking.json` path and local Whisper directory:
+
+```sh
+content-source/match-analysis/.venv-tracking/bin/python src/features/match-recognition/compare_tracking.py --video public/media/user/barca-2018-h264.mp4 --tracking content-source/match-analysis/recognition/tracking/RUN/tracking.json --whisper-model content-source/match-analysis/models/whisper-small
+content-source/match-analysis/.venv-tracking/bin/python -m unittest discover -s src/features/match-recognition -p 'test_*.py'
+```
+
+Replace `RUN` with the actual output directory. On Windows, create a separate venv
+using `py -3.12 -m venv` and use its `Scripts/python.exe` instead of the Mac `bin/python`
+paths. The comparison creates a fresh shared excerpt, ten 640px images at 0.5 fps,
+one CPU/int8 transcript, and two sequential Qwen requests with identical model,
+seed and 32,768-token context. The assisted request additionally receives compact
+tracking samples every 0.4 seconds. It contains no reference action boundaries,
+known player identities or expected answer. Recording hash and window mismatches
+are rejected. Raw responses survive validation failures; candidates still need review.
+Model/cache warmth differs between arms, so request times are not a fair speed comparison.
+No recognition request uploads footage to an external provider.
+
+### Ball crops and tiles
+
+`--ball-view full` preserves the initial single full-frame detector call. `crop`
+adds a fixed central half-width/half-height ball view; `tiles` adds four overlapping
+60%-width/height views covering the entire source. Person detection stays full-frame.
+Ball boxes are restored to source pixels and merged with the same NMS threshold
+before ByteTrack. These modes use two and five model calls per frame respectively;
+the central crop deliberately cannot detect a ball outside its region.
+
+```sh
+content-source/match-analysis/.venv-tracking/bin/python src/features/match-recognition/track.py --video public/media/user/barca-2018-h264.mp4 --device mps --ball-view crop
+content-source/match-analysis/.venv-tracking/bin/python src/features/match-recognition/track.py --video public/media/user/barca-2018-h264.mp4 --device mps --ball-view tiles
+```
+
+`audit_ball_views.py` compares source-aligned observations against separately
+provided point annotations. It verifies recording hash, image geometry, checkpoint,
+time window, sampling and threshold. It reports subset matches and unmatched
+candidates, not full-match accuracy. Reviewer provenance remains explicit.
+
+To test a new tracking result against an exact saved Qwen control, use
+`compare_tracking.py --reuse-inputs PATH_TO_PREVIOUS_PAIRED_RUN --tracking PATH_TO_NEW_TRACKING_JSON`
+with the same video and options. This rechecks source/image hashes, the control
+request fingerprint and model digest, reuses its transcript, and sends only the
+new assisted request. `--whisper-model` is required only for a fresh paired run.
+The new result records its original image root; keep that private input folder.
+See the [RTX reproduction guide](../../../../docs/WINDOWS_TRACKING_RUN_2026-10-18.md)
+for Windows/CUDA checks and source-only transfer.
+
+**Initial Mac result:** the [Alba trial](../../../../docs/ALBA_TRACKING_TRIAL_2026-10-18.md)
+completed both arms. Neither recovered the cutback; this tracking-assisted version
+produced worse late/duplicate finish descriptions. Keep it offline while improving
+ball evidence. Passing schemas/review policy is not action-accuracy approval.
+
+**Crop/tile follow-up:** both closer views matched six of six AI-inspected ball
+positions versus four in the full view, with extra off-point candidates. The
+cropped-evidence Qwen retry timed out after 300 seconds without raw output.
+Detection improved in that spot audit; cutback recognition remains unproven.
+
 ## Development status and Windows handoff · 15 October 2026
 
 The adjacent `stream.ts` and `serve.py` add an experimental recorded-as-live path

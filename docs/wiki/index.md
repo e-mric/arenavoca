@@ -1,6 +1,6 @@
 # ArenaVoca project wiki
 
-Reviewed: 2026-10-17
+Reviewed: 2026-10-18
 
 Start each task at the [context index](../index.md) and [current state](../project-state.md). Use this topic index to understand why the project works this way and what remains unproven. These pages synthesize existing documents and development history; they do not replace the [PRD](../../PRD.md). This is a small Git-backed Markdown wiki: no service, plugin, or model is required to read it.
 
@@ -26,6 +26,10 @@ Start each task at the [context index](../index.md) and [current state](../proje
 | Recognition setup, Windows commands, experiment details | [Recognition README](../../app/src/features/match-recognition/README.md) |
 | Implementation history and automated verification | [Implementation record](../IMPLEMENTATION.md) |
 | Measured local-model results and failed trials | [Windows Alba pilot and follow-up](../WINDOWS_LOCAL_AI_2026-10-16.md) |
+| External detection/tracking ideas and implementation limits | [Football-summary repository source review](../FOOTBALL_SUMMARY_REPO_REVIEW_2026-10-18.md) |
+| Maintained tools for detector-assisted recognition | [October 2026 candidate comparison](../MAINTAINED_FOOTBALL_TRACKING_2026-10-18.md) |
+| Actual RF-DETR/ByteTrack versus Qwen/Whisper on Alba | [Mac paired trial and cutback findings](../ALBA_TRACKING_TRIAL_2026-10-18.md) |
+| Repeat full/cropped/tiled ball detection on the RTX PC | [Windows/CUDA reproduction guide](../WINDOWS_TRACKING_RUN_2026-10-18.md) |
 | Physical headset acceptance | [Quest review](../QUEST_REVIEW.md) |
 | Language-learning research and its limits | [Spanish through sport research](../SPANISH_THROUGH_SPORT_RESEARCH.md) |
 | Users and needs | [Personas](../PERSONAS.md) |

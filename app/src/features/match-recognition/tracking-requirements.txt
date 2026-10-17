@@ -1,0 +1,6 @@
+# Isolated, offline recognition experiment; install into the ignored tracking venv.
+rfdetr==1.11.2
+trackers==2.6.1
+supervision==0.31.0
+opencv-python>=4.10,<5
+faster-whisper>=1.2,<2

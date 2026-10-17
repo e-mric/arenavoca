@@ -1,6 +1,6 @@
 # Recognition and evidence
 
-Reviewed: 2026-10-16
+Reviewed: 2026-10-18
 
 ## What Alba's sequence taught us
 
@@ -29,6 +29,22 @@ The [feature README](../../app/src/features/match-recognition/README.md) owns co
 The [follow-up trials](../WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement) did not solve the complete run → cutback → finish sequence. Clearer prompting, timestamp-labelled frames, denser sampling, larger context, short segments and local Qwen3.5 9B/27B comparisons were retained, including failures. The most conservative 27B result catches run/finish and withholds celebration as `other`, but still misses the cutback, takes 272 seconds and leaves very little GPU headroom. It is not an accepted live profile.
 
 Local review policy v1 separately rejects explicit goal/aftermath contradictions. Revalidating the unchanged original raw results reduced visual goal candidates from three to one and commentary goal candidates from two to one. This is filtering, not better raw model accuracy or a calibrated semantic guarantee. Production preparation reproduces the measured 27B request fingerprint. Original raw outputs, separate policy-review files and provisional AI annotations stay private; no human correction or physical Quest approval is implied.
+
+## External football-summary implementation review
+
+The [18 October source review](../FOOTBALL_SUMMARY_REPO_REVIEW_2026-10-18.md) inspected `ahmadalhriri/ai-football-match-summary` at a pinned commit. It implements YOLO detections, ByteTrack player tracking, Whisper transcription and Arabic transcript-phrase similarity. Its event rules are simple screen-space heuristics, not demonstrated action understanding: a player near a goalkeeper is labelled chance/goal. Source inspection also suggests a factor-of-two frame-to-time conversion error in the active default path. Neither accuracy nor latency was measured in this review.
+
+**Proposal:** evaluate suitably licensed player/ball detection and tracking as additional evidence alongside our current adapter, using annotated recorded windows with ordinary play, camera cuts and replays. Tracking could help preserve motion evidence, but improved cutback recognition remains a hypothesis. Keep original timestamps, distinguish interpolated positions from observations, compare accuracy/timing/resource use, and retain review gates. The repository's app, event rules and weights have not been adopted; reuse terms and checkpoint provenance need clarification. Prepared-card and Quest priorities are unchanged.
+
+### Maintained-tool follow-up
+
+The [maintained-tool comparison](../MAINTAINED_FOOTBALL_TRACKING_2026-10-18.md) verifies published September/October 2026 releases of RF-DETR, Roboflow Trackers, Supervision and Ultralytics. Proposed first comparison: RF-DETR Small/Medium plus ByteTrack, with BoT-SORT for camera pans and Supervision for inspection/evaluation. The older Roboflow Sports example remains reference material; its `sv.ByteTrack` API was removed in Supervision 0.31.0. Football-specific SoccerNet/TrackLab is a heavier later research option.
+
+The separate [Mac Alba experiment](../ALBA_TRACKING_TRIAL_2026-10-18.md) now implements that evidence adapter without changing the normal provider or prepared cards. RF-DETR Small/ByteTrack tracked 500 native frames in about 30 seconds, preserving source PTS and gaps. In a paired Qwen + Whisper comparison, neither arm recovered the cutback; the assisted arm produced worse late/duplicate finish descriptions. Review withheld duplicate goals but retained a mistimed shot, so policy success remains separate from factual accuracy.
+
+Dense AI source inspection also revises the provisional backward-pass range to roughly 814.7–815.5; the earlier 813.4–814.6 range starts during the dribble. Neither is human ground truth. Retain the historical Windows record and raw outputs. This single Mac trial does not establish Windows/CUDA performance, held-out accuracy or that all tracker-assisted approaches fail; no runtime adoption is approved by this result.
+
+The [crop/tile follow-up](../ALBA_TRACKING_TRIAL_2026-10-18.md#cropped-and-tiled-follow-up) improves the six AI-inspected ball-point matches from 4/6 to 6/6 with either view, at extra compute cost and with more off-point candidates. The central crop is selected for its lower ambiguity than tiles, but excludes image edges. Its Qwen retry, using the exact saved images/transcript, timed out on the Mac after 300 seconds without a raw response. Better detection therefore does not yet demonstrate better cutback recognition. The [RTX run guide](../WINDOWS_TRACKING_RUN_2026-10-18.md) preserves source/weight/threshold settings and verifies actual CUDA use before repeating the comparison.
 
 ## How this can lead to live viewing
 

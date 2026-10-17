@@ -1,6 +1,6 @@
 # Continuing on Windows
 
-Reviewed: 2026-10-16
+Reviewed: 2026-10-18
 
 The target is the user's Windows desktop with an RTX 5080 and 64 GB system RAM. The original Mac handoff had not verified GPU capacity or local performance and established no remote connection; the desktop pilot below supplies the first measurements.
 
@@ -9,6 +9,8 @@ The target is the user's Windows desktop with an RTX 5080 and 64 GB system RAM. 
 **Accuracy follow-up:** the local 27B labelled-frame profile improved conservative run/finish output and excluded celebration goals, but did not recover the cutback and took 272 seconds with CPU offload. It is an offline comparison, not a live upgrade. A separate raw-preserving review guard rejects obvious celebration/scoreboard-only goal candidates. Keep the prepared pack for demonstrations; see the [full trial record](../WINDOWS_LOCAL_AI_2026-10-16.md#accuracy-follow-up--partial-improvement) before selecting larger models or dense sampling.
 
 ## Setup or reproduction session
+
+For the **18 October detector experiment**, use the [RTX reproduction guide](../WINDOWS_TRACKING_RUN_2026-10-18.md). Mac full/crop/tile runs recovered more inspected ball points with closer views, but the cropped-evidence Qwen retry timed out; this is not a demonstrated cutback-recognition improvement. The guide keeps source/weights/thresholds aligned and checks an actual CUDA operation. Source-only transfer excludes the recording and weights; actual Windows execution remains pending. Continue the viewer/provider steps below only for their separately scoped acceptance work.
 
 1. Pull the repository and read the [PRD current-state handoff](../../PRD.md#project-handoff-and-current-state), then [recognition lessons](recognition.md).
 2. Follow the **Windows: first visual smoke test** section in the [recognition README](../../app/src/features/match-recognition/README.md). It owns installation and run commands. Create the Windows environment there; a Mac virtual environment is not portable.
