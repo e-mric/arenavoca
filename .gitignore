@@ -48,3 +48,9 @@ docs/demo/output/
 
 # Local match-recognition Python caches
 app/src/features/match-recognition/__pycache__/
+
+# Vega dependency and generated content/build outputs
+app/native/vegaTV/node_modules/
+app/native/vegaTV/generated/
+app/native/vegaTV/dist/
+app/native/vegaTV/buildinfo.json

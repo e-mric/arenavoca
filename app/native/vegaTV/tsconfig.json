@@ -1,0 +1,18 @@
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "types": ["@amazon-devices/react-native-kepler"],
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "react": ["node_modules/@types/react"],
+      "react/jsx-runtime": ["node_modules/@types/react/jsx-runtime.d.ts"]
+    },
+    "noEmit": true
+  },
+  "include": [
+    "../../src/features/tv-learning/vega/**/*.tsx",
+    "../../src/features/tv-learning/vega/learning.ts",
+    "src/**/*.ts"
+  ]
+}
