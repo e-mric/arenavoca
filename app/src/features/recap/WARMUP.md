@@ -1,0 +1,13 @@
+# Optional vocabulary warm-up
+
+Reviewed: 2026-10-21. Requirements live in the [PRD](../../../../PRD.md). Native Android presentation lives in [Warmup.kt](native/androidMain/Warmup.kt) and [PassingWarmup.kt](native/androidMain/PassingWarmup.kt).
+
+The first Football card combines the existing stadium illustration with a lavender sentence/pitch playground. Hold the player or ball in the stadium to show its bilingual label and highlight the matching Spanish words. A coral ring marks the ball. Its label sits above the ball with a short coral connector; the action label sits above the pass path. Both stay clear of the receiving player. Flick the small pitch ball right towards the receiving teammate to animate the pass, show its coral trail in both views and highlight **pasa**. The generated shaded football sprite rotates and shrinks slightly during the pass, then returns after a short pause for another attempt. There is no scoring, timer, mandatory interaction or completion gate.
+
+A stationary hold anywhere inside the lower lavender panel—including its empty space and miniature pitch—shows the full English sentence. Release, cancel, movement and backgrounding hide it. A moving gesture starting on the ball takes priority over translation; unrelated movement can scroll on smaller screens. Next card and Skip warm-up stay outside the hold target. Screen-reader semantics offer translation toggle, word selection/hide and Pass ball alternatives. These semantics are automated-test coverage, not physical TalkBack acceptance.
+
+Only the first passing card has the new playground. The other two Football cards and all F1 vocabulary cards retain the existing illustration/phrase reader. They remain generic practice, unrelated to event recognition or F1 race analysis. iOS, TV and XR are unchanged.
+
+Original artwork, [ball generation provenance](artwork/warmup-ball-prompt.md) and [receiver generation provenance](artwork/warmup-receiver-prompt.md) are kept with the feature. The hero is reused unchanged; all labels are native text. No game engine or runtime image generation is required.
+
+Verification: [PassingWarmupTest](native/androidTest/PassingWarmupTest.kt) exercises object holds/release/movement, lower empty-space translation, cancel, invalid and valid flicks, repeated passing, accessible alternatives, lifecycle reset, and optional next/skip. [WarmupTest](native/androidTest/WarmupTest.kt) and [HomeCollectionTest](native/androidTest/HomeCollectionTest.kt) cover existing sport separation and home/recap journeys. Actual emulator captures and run logs are kept locally under ignored `app/content-source/match-analysis/warmup-interaction/`. Physical phone/foldable/TalkBack usability and fluent Spanish review remain pending.

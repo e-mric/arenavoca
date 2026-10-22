@@ -36,7 +36,7 @@ def no_warning_overlay():
     assert 'Dismiss' not in visible and 'Uncaught Error' not in visible and 'forwardRef render' not in visible and 'Open debugger to view warnings' not in visible and 'Running debug build of JavaScript' not in visible, 'Development overlay obscures the app'
 def key(code):
     request('/execute/sync', {'script':'jsonrpc: injectInputKeyEvent','args':[[{'inputKeyEvent':str(code),'holdDuration':80}]]})
-    time.sleep(.12)
+    time.sleep(.45)
 def text(id):
     e=elements()[id]
     return e.get('description') or ''.join(e.itertext()).strip()
@@ -112,7 +112,12 @@ def assert_return_visible(id):
     assert float(e.get('y'))>=0 and float(e.get('y'))+float(e.get('height'))<=1080, 'Return clipped: '+id
 
 def restart():
-    controls();activate('moments');activate('about');activate('restart');wait_for_restart()
+    controls();activate('moments');activate('about')
+    if args.pack == 'alba':
+        assert 'Source: FC Barcelona YouTube channel' in text('source-details')
+        assert 'https://youtu.be/WMjohb2tq7Y' in text('source-details')
+        screenshot('source-credit')
+    activate('restart');wait_for_restart()
 
 # Pause explicitly while asserting menus: Appium latency must not be mistaken
 # for a future-card leak in this short 36-second recording.
@@ -151,6 +156,24 @@ assert position()==frozen, 'Learning controls changed paused clock'
 watch();set_playing(True);wait_until_time(ends[2]+.2);set_playing(False)
 controls();activate('moments');assert all('open-'+id in elements() for id in ids)
 screenshot('moments')
+# Layout bounds alone miss stale native decoder dimensions. Compare actual
+# paused pixels in both layouts before EOF, when no final-frame overlay exists.
+if args.pack == 'original':
+    from PIL import Image, ImageChops, ImageStat
+    reference=Image.open(pathlib.Path(__file__).resolve().parents[5] / 'native/vegaTV/generated/end-frame.jpg').convert('RGB').resize((320,180))
+    def assert_video_pixels(name, bounds):
+        screenshot(name)
+        frame=Image.open(args.output/(args.pack+'-'+name+'.png')).convert('RGB').crop(bounds).resize((320,180))
+        # Avoid bottom caption/temporary remote hint; compare the pitch itself.
+        difference=max(ImageStat.Stat(ImageChops.difference(frame.crop((0,20,320,145)),reference.crop((0,20,320,145)))).mean)
+        assert difference<12, 'Native surface not fitted: '+name+' '+str(difference)
+        return difference
+    assert 'ended-frame' not in elements(), 'Pixel regression must precede EOF'
+    panel_pixels=assert_video_pixels('paused-panel-pixels',(0,150,1382,928))
+    frozen_layout=position();watch();time.sleep(.5)
+    full_pixels=assert_video_pixels('paused-full-pixels',(0,0,1920,1080))
+    assert position()==frozen_layout and text('playback').startswith('Paused'), 'Layout changed paused playback'
+    controls();activate('moments')
 activate('open-'+ids[1]);assert text('card-phrase')==phrases[1]
 frozen=position();activate('meaning');assert 'card-translation' in elements() and text('card-phrase')==phrases[1]
 assert position()==frozen

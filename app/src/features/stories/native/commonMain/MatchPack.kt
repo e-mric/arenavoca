@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
-data class MatchSource(val id: String, val title: String, val youtubeUrl: String, val durationSeconds: Int, val sha256: String)
+data class MatchSource(val id: String, val title: String, val youtubeUrl: String, val durationSeconds: Int, val sha256: String, val playedOn: String? = null)
 
 @Serializable
 data class MatchAnalysis(val speechModel: String, val language: String, val analyzedStartSeconds: Int, val analyzedEndSeconds: Int, val method: String, val limitations: List<String>)

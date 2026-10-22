@@ -1,0 +1,38 @@
+{
+  "asset": "ArenaVoca kawaii player v2",
+  "units": "metres",
+  "blender_front": "-Y",
+  "blender_up": "+Z",
+  "glb_front": "+Z",
+  "glb_up": "+Y",
+  "bounds_min": [
+    -0.04900151863694191,
+    -0.042190130800008774,
+    9.999983012676239e-05
+  ],
+  "bounds_max": [
+    0.05196082219481468,
+    0.033380623906850815,
+    0.18632563948631287
+  ],
+  "dimensions": [
+    0.10096234083175659,
+    0.07557075470685959,
+    0.1862256396561861
+  ],
+  "triangles_authored": 59572,
+  "mesh_objects": 40,
+  "materials": 10,
+  "pose_samples": [
+    "Ready",
+    "Hello",
+    "Pass"
+  ],
+  "exported_pose": "Ready",
+  "export_contains": "player geometry and 7-bone toy rig only",
+  "not_verified": [
+    "IWSDK runtime compatibility",
+    "Quest performance and reach",
+    "skin deformation under large rotations"
+  ]
+}

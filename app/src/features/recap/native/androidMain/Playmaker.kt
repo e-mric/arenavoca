@@ -31,9 +31,15 @@ internal val PlaymakerCream = Color(0xFFFFFAF2)
         onBackground = PlaymakerInk, surface = PlaymakerCream,
         onSurface = PlaymakerInk, surfaceVariant = Color(0xFFECE8FC),
         onSurfaceVariant = Color(0xFF4E5268), outline = Color(0xFF74788B)
-    ), shapes = Shapes(medium = RoundedCornerShape(24.dp), large = RoundedCornerShape(32.dp)), content = content)
+    ), shapes = Shapes(small = RoundedCornerShape(4.dp), medium = RoundedCornerShape(8.dp), large = RoundedCornerShape(12.dp)), content = content)
 }
 internal fun artworkResource(name: String): Int = when(name) {
+    "comic_bale_run" -> R.drawable.comic_bale_run
+    "comic_bale_cross" -> R.drawable.comic_bale_cross
+    "comic_benzema_volley" -> R.drawable.comic_benzema_volley
+    "comic_alba_run" -> R.drawable.comic_alba_run
+    "comic_alba_cutback" -> R.drawable.comic_alba_cutback
+    "comic_alba_goal" -> R.drawable.comic_alba_goal
     "match_run" -> R.drawable.match_run
     "match_cutback" -> R.drawable.match_cutback
     "match_goal" -> R.drawable.match_goal
@@ -50,7 +56,7 @@ internal fun artworkResource(name: String): Int = when(name) {
     "playmaker_f1" -> R.drawable.playmaker_f1
     else -> R.drawable.playmaker_football
 }
-@Composable internal fun SportArtwork(name: String, modifier: Modifier = Modifier, cornerRadius: Dp = 24.dp) {
+@Composable internal fun SportArtwork(name: String, modifier: Modifier = Modifier, cornerRadius: Dp = 4.dp) {
     Image(painterResource(artworkResource(name)), contentDescription = null,
         modifier = modifier.fillMaxWidth().aspectRatio(1.5f).clip(RoundedCornerShape(cornerRadius)), contentScale = ContentScale.Fit)
 }

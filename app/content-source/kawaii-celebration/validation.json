@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "triangles": 24470,
+  "bytes": 529244,
+  "meshes": 42,
+  "articulation": "rigid shoulder/head pivots, not skin deformation",
+  "source": "Original v3 sculpture; standing legs and independent sleeves; no ball/studio exported",
+  "scope": "Blender geometry and fresh GLB import; runtime and Quest acceptance separate"
+}

@@ -12,6 +12,7 @@ internal data class RecapTransfer(
     val sport: String,
     val phraseIds: List<String>,
     val example: Boolean,
+    val playedOn: String? = null,
 )
 
 data class ImportResult(val session: WatchedSession?, val message: String)
@@ -24,6 +25,7 @@ internal fun parseRecap(raw: String): RecapTransfer {
     require(Regex("[a-zA-Z0-9._-]{1,160}").matches(transfer.sourceId))
     require(transfer.title.isNotBlank() && transfer.title.length <= 100 && transfer.title.none { it.code < 32 })
     require(transfer.sport in listOf("football", "f1"))
+    require(transfer.playedOn == null || isEventDate(transfer.playedOn))
     require(transfer.phraseIds.size in 1..3 && transfer.phraseIds.distinct().size == transfer.phraseIds.size)
     require(transfer.phraseIds.all { id -> PracticeCatalog.forSport(transfer.sport).any { it.id == id } })
     return transfer

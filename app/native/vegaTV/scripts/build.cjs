@@ -3,17 +3,18 @@ const {verifyPackage} = require('./verify-package.cjs');
 const path = require('path');
 const {prepare} = require('./prepare.cjs');
 const alba = process.argv.includes('--alba');
+const debug = alba || process.argv.includes('--debug');
 // Private footage is only staged for this explicitly requested Debug build.
 // Restore public content even if compilation fails, so later builds default public.
 try {
-  const sequence = prepare(alba);
+  const sequence = prepare(alba, process.argv.includes('--youtube'));
   const result = spawnSync(
     'npx',
     [
       'react-native',
       'build-vega',
       '--build-type',
-      alba ? 'Debug' : 'Release',
+      debug ? 'Debug' : 'Release',
       '--reset-cache',
       '--target',
       'aarch64',
@@ -27,7 +28,7 @@ try {
     verifyPackage(
       path.resolve(
         'build/aarch64-' +
-          (alba ? 'debug' : 'release') +
+          (debug ? 'debug' : 'release') +
           '/arenavocatv_aarch64.vpkg',
       ),
       sequence,

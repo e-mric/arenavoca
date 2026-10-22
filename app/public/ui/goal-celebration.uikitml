@@ -1,0 +1,11 @@
+<style>
+@font-face { font-family: 'Atkinson'; font-weight: 400; src: url('../fonts/AtkinsonHyperlegible-Regular.ttf'); }
+</style>
+<div id="celebration-surface" style="width: 600px; height: 160px; border-radius: 35px; background-color: #fffaf2; padding: 18px; align-items: center; justify-content: center; flex-direction: column; gap: 6px; font-family: 'Atkinson'">
+<span id="celebration-title" style="font-size: 30px; color: #142352">Goal!</span>
+<span id="celebration-instruction" style="font-size: 36px; color: #142352">Raise your hands here</span>
+<div style="width: 260px; height: 12px; border-radius: 6px; background-color: #ddd8ff; flex-direction: row">
+<div id="celebration-progress" style="width: 0px; height: 12px; border-radius: 6px; background-color: #2855ff"/>
+</div>
+<Button id="celebration-dismiss" style="position-type: absolute; position-top: 8px; position-right: 8px; width: 36px; height: 36px; border-radius: 18px; background-color: #ece8fc; padding: 0px"><X style="width: 20px; height: 20px; color: #142352"/></Button>
+</div>

@@ -36,14 +36,17 @@ class MainActivity : ComponentActivity() {
             var story by remember { mutableStateOf<SportStory?>(null) }
             var matchMoments by remember { mutableStateOf(false) }
             var sport by remember { mutableStateOf("football") }
-            var title by remember { mutableStateOf("") }
+            var warmup by remember { mutableStateOf(false) }
+            var racePreview by remember { mutableStateOf<ReviewEvent?>(null) }
             fun save() {
                 if (!storage.edit().putString("progress", library.exportProgress()).commit()) notice = "Device storage unavailable. Progress may not survive reopening."
                 revision++
             }
             val accent = PlaymakerBlue
             PlaymakerTheme {
-                if (matchMoments) {
+                if (warmup) {
+                    WarmupReader(sport) { warmup = false }
+                } else if (matchMoments) {
                     MatchMomentsReader { matchMoments = false }
                 } else if (story != null) {
                     StoryReader(story!!) { story = null }
@@ -54,11 +57,11 @@ class MainActivity : ComponentActivity() {
                     Column(Modifier.widthIn(max = 620.dp).fillMaxWidth().safeDrawingPadding().verticalScroll(scrollState).padding(24.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
                         @Suppress("UNUSED_VARIABLE") val currentRevision = revision
                         Text("ArenaVoca", color = accent, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                        Text(if (quiz != null) "Match recap" else if (session != null) "Your moments" else "Make your\nSpanish move.", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
+                        Text(if (quiz != null) "Match recap" else if (session != null) "Your moments" else if (racePreview != null) "Your race" else "Make your\nSpanish move.", style = if (quiz == null && session == null && racePreview == null) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
                         if (notice.isNotBlank()) Text(notice)
                         val attempt = quiz
                         val active = session
-                        LaunchedEffect(active?.id, attempt, attempt?.index) { scrollState.scrollTo(0) }
+                        LaunchedEffect(active?.id, attempt, attempt?.index, racePreview?.id) { scrollState.scrollTo(0) }
                         when {
                             attempt != null -> {
                                 if (attempt.complete) {
@@ -99,7 +102,7 @@ class MainActivity : ComponentActivity() {
                             }
                             active != null -> {
                                 Text(active.title, style = MaterialTheme.typography.titleLarge)
-                                Text(if (active.example) "Example session · sample vocabulary" else if (active.imported) "Imported from your viewing session · manually saved phrases" else "Manually selected vocabulary from your session", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(if (active.example) "General vocabulary practice" else if (active.imported) "Imported from your viewing session · manually saved phrases" else "Manually selected vocabulary from your session", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 val saved = library.savedPhraseIds(active.id)
                                 Action("Start recap · ${saved.size} questions", saved.isNotEmpty()) { quiz = library.startQuiz(active.id) }
                                 if (saved.isEmpty()) Text("Save a phrase to start your recap.")
@@ -119,44 +122,42 @@ class MainActivity : ComponentActivity() {
                                 }
                                 TextButton(onClick = { session = null }) { Text("All sessions") }
                             }
+                            racePreview != null -> {
+                                val race = racePreview!!
+                                SportArtwork("playmaker_f1")
+                                Text(race.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                                Text(eventDateLabel(race.playedOn))
+                                Text("Learning cards coming soon", style = MaterialTheme.typography.titleLarge)
+                                Text("This race is in your collection. Its moments and stories are not ready yet.")
+                                val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+                                Action("Ver los mejores momentos") { uriHandler.openUri(race.sourceUrl!!) }
+                                Text("Watch the highlights", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                TextButton(onClick = { racePreview = null }) { Text("Back to games") }
+                            }
                             else -> {
-                                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                        FilterChip(sport == "football", { sport = "football" }, { Text("Football") })
-                                        FilterChip(sport == "f1", { sport = "f1" }, { Text("F1") })
-                                    }
-                                    SportArtwork("playmaker_$sport")
-                                    Text(if(sport == "f1") "Race recap" else "Match recap", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                                    Text("Example session · 3 phrases · No timer")
-                                    Action("Try an example recap") { session = library.loadExample(sport); save() }
-                                } }
-                                if (sport == "football") MatchPackEntry { matchMoments = true }
-                                StoryEntry(sport) { story = it }
-                                Text("Your sessions", style = MaterialTheme.typography.titleLarge)
-                                ImportRecap(onImport = { raw ->
-                                    val result = library.importRecap(raw)
-                                    notice = result.message
-                                    result.session?.let { session = it; save() }
-                                }, onError = { notice = it })
-                                library.sessions().forEach { item ->
-                                    OutlinedCard(onClick = { session = item }, modifier = Modifier.fillMaxWidth()) {
-                                        Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                                            SportArtwork("playmaker_${item.sport}", Modifier.width(88.dp))
-                                            Text("${item.title}\n${library.savedPhraseIds(item.id).size} saved${if (item.example) " · Example" else ""}", fontWeight = FontWeight.Bold)
+                                val events = reviewEvents(library, sport)
+                                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    FilterChip(sport == "football", { sport = "football" }, { Text("Football") })
+                                    FilterChip(sport == "f1", { sport = "f1" }, { Text("F1") })
+                                }
+                                events.forEachIndexed { index, event ->
+                                    if (index == 1) Text("Previous games", style = MaterialTheme.typography.titleLarge)
+                                    ReviewEventCard(event) {
+                                        when {
+                                            event.session != null -> session = event.session
+                                            event.sourceUrl != null -> racePreview = event
+                                            else -> matchMoments = true
                                         }
                                     }
                                 }
-                                if (library.sessions().isEmpty()) Text("Your collection starts with one match.")
-                                OutlinedTextField(title, { title = it.take(100) }, label = { Text("Match or race you watched") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
-                                Action("Add my session", title.isNotBlank()) { session = library.createSession(title, sport); title = ""; save() }
-                                Text("Export saved phrases from the viewing app's browser phrase library, move the recap file to this phone, then import it here. Progress stays on this device; account sync is coming later.", style = MaterialTheme.typography.bodySmall)
+                                WarmupEntry(sport) { warmup = true }
                             }
                         }
                         Text("Prototype Spanish · awaiting fluent review", style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 }
-                BackHandler(session != null || quiz != null) { if (quiz != null) quiz = null else session = null }
+                BackHandler(session != null || quiz != null || racePreview != null) { if (quiz != null) quiz = null else if (session != null) session = null else if (racePreview != null) racePreview = null }
                 }
             }
         }

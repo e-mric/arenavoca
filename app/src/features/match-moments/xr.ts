@@ -27,6 +27,7 @@ import { GestureMenu } from "./gesture-menu";
 import { MomentNotice } from "./notice";
 import { PalmReader } from "./palm";
 import { WindowTargets } from "../spatial-windows/windows";
+import { attachGoalCelebration } from "./celebration-xr";
 
 /** One match screen and source-timed, physically flippable cards. */
 export function attachMinimalXR(
@@ -49,6 +50,7 @@ export function attachMinimalXR(
   const renderCard = attachHandheldCard(world, e, windows, true);
   const renderActions = attachMomentActions(world, e, fonts);
   const menu = new GestureMenu();
+  const celebration = attachGoalCelebration(world, e, fonts);
   menu.visible = true;
   const notice = new MomentNotice();
   const invitation = world.requireSceneObject<UIKitMLAsset>("moment-notice");
@@ -112,6 +114,12 @@ export function attachMinimalXR(
     cache.set(id, value);
   };
   const actions: Record<string, () => unknown> = {
+    "minimal-celebration": () =>
+      celebration.state.setEnabled(!celebration.state.enabled),
+    "minimal-celebration-demo": () => {
+      celebration.state.tryDemo();
+      if (celebration.state.enabled) menu.hide();
+    },
     "minimal-play": () => activatePlayback(e.session),
     "minimal-open": () => {
       if (delivery.arrivals.available.length) delivery.open();
@@ -188,6 +196,11 @@ export function attachMinimalXR(
       let hands = false,
         pressed = false,
         controllers = false;
+      let held = false;
+      for (const entity of world.getSystem(WindowTargets)!.queries.handles
+        .entities)
+        if (entity.hasComponent(Grabbed)) held = true;
+      celebration.frame(frame, delta, held);
       for (const source of frame.session.inputSources) {
         if (source.hand) hands = true;
         else if (source.gamepad) controllers = true;
@@ -198,11 +211,7 @@ export function attachMinimalXR(
       );
       if (hands) {
         palm.read(frame, space);
-        let held = false;
-        for (const entity of world.getSystem(WindowTargets)!.queries.handles
-          .entities)
-          if (entity.hasComponent(Grabbed)) held = true;
-        if (!held || !menu.visible)
+        if (celebration.state.phase === "idle" && (!held || !menu.visible))
           menu.observe(palm.up && !held, palm.tracked, delta);
       } else if (pressed) menu.toggle();
       else if (!controllers) menu.observe(false, false, delta);
@@ -237,6 +246,7 @@ export function attachMinimalXR(
         value === VisibilityState.Hidden ||
         value === VisibilityState.VisibleBlurred
       ) {
+        celebration.state.cancel();
         menu.hide();
         e.session.suspend();
       }
@@ -290,6 +300,15 @@ export function attachMinimalXR(
     const pending = delivery.arrivals.pending.length;
     show("minimal-open", active && e.labAvailable);
     show("minimal-options", menu.more);
+    show("celebration-options", e.labAvailable);
+    text(
+      "minimal-celebration-label",
+      `Celebrations: ${celebration.state.enabled ? "On" : "Off"}`,
+    );
+    dock
+      .requireElementById("minimal-celebration-demo")
+      .setProperties({ disabled: !celebration.state.enabled });
+    celebration.render();
     const roomAvailable = space.canShowRoom(
       world.renderer.xr.getSession()?.environmentBlendMode,
     );
@@ -351,7 +370,7 @@ export function attachMinimalXR(
           : "Close to hide / palm up to reopen",
     );
     // Compact by default; the optional tools expand only on demand.
-    const height = menu.more ? 0.45 : 0.13;
+    const height = menu.more ? (e.labAvailable ? 0.5 : 0.45) : 0.13;
     if (height !== lastHeight) {
       dock.document.setTargetDimensions(0.36, height);
       windows.size("minimal-dock", 0.36, height);

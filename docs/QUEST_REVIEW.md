@@ -297,3 +297,42 @@ Verification: typecheck, **295 unit tests**, production build and **16 affected 
 User Quest feedback showed the card bar visually detached after resizing. Replaced the card's fixed 18 cm clearance with a 5 cm local offset that scales with the card (2.5 cm at half size). The bar and corner grip continue following the card's transform on every frame. Screen/menu spacing is unchanged. A close grab candidate on dedicated manipulation chrome temporarily suppresses that hand's touch hover, restoring it immediately when the hand moves away, tracking is lost or the session releases. This avoids separating the bar from the card merely to avoid Replay/Listen/Save hover.
 
 Verification: 297 unit tests, typecheck, production build and 16 affected browser tests passed. Emulated near squeeze verified card/screen move, resize and release with the closer bar. Distance resize checks measured proportional card-to-bar spacing at small and large scales. On Quest, repeat shrinking/enlarging and rotating the card, grab the close bar with either hand, then move back to Replay/Listen/Save and confirm touch selection still works. Physical acceptance remains pending.
+
+### Optional goal celebration prototype · 18 October 2026
+
+The user requested physically celebrating at a meaningful goal with the kawaii player.
+The [feature guide](../app/src/features/match-moments/README.md) owns operation and
+source timing. The opt-in companion uses a smaller [original Blender derivative](../app/content-source/kawaii-celebration/README.md), not a restored pitch/tabletop.
+
+Actual managed-browser controller input verified the off-by-default state, More
+switch and labelled demo, rejection of one raised controller, completion after a
+held two-controller raise, advancing main playback and quiet expiry. Source-time
+goal gating, pause/seek/replay suppression, missing tracking and seated/standing
+head-relative wrist/grip reading are automated fixtures, not a physical-device
+result or an actual full-match goal playthrough. Model regression tests measure
+the exported hand meshes gaining height, separately from the celebration state.
+Runtime screenshots and input traces contain private footage and remain under
+the ignored `app/content-source/match-analysis/celebration-prototype/` directory.
+
+Software verification: typecheck, 306 unit tests, production build and 16 affected
+browser tests passed. The final managed demo kept the match playing while the source
+clock advanced from 5.88 to 8.71 seconds between invitation and completion. Asset
+material/clay diagnostics report 24,470 triangles and no warnings. The authored scene
+validates; its historical hero view is not used as proof of the transient runtime pose.
+Startup logs included aborted media requests and unavailable-gaze warnings; playback
+advanced during the journey, and no UIKit parser error was reported.
+
+Physical Quest checks still required:
+
+1. Leave Celebrations off: no cue or character appears. Enable it and play through the prepared goal naturally; the cue arrives only after its source window completes. Seeking past/replaying the goal stays quiet.
+2. Repeat seated and standing, hands-only and controllers. Place each wrist/controller grip into its floating hand outline. Confirm each fills blue independently, leaving a target resets the hold bar, and both held together complete. Confirm comfortable recognition without overhead reaching; one hand, brief movements, missing tracking and card/screen manipulation must not complete it.
+3. Ignore or close the cue: it leaves quietly. Pause/seek or turn the feature off during a normal invitation: it cancels. The demo is clearly labelled and can be tried while paused without starting the match.
+4. Verify readable floating text/hand outlines and the player beneath the screen in both viewing spaces. Turn/move the head during an invitation: targets stay fixed, rather than chasing the user. Screen move/resize affects the companion but not the reachable guide anchor. Check small-hop animation, hand occlusion, false activations and frame rate. Under reduced motion, verify the raised pose without hopping/oscillation.
+5. Keep a flipped card pinned and saved during the celebration; confirm no match pause/seek/mute/dim or change of selected card. Natural goal timing and physical gesture comfort remain pending acceptance.
+
+
+#### Floating hand-placement revision · 18 October 2026
+
+The user requested visible hand positions in the air with floating text. Original mirrored palm outlines now use an invitation-time anchor, independent of the movable match screen. A hand fills blue only inside its own target; the short hold bar confirms bilateral placement. Guides disappear on success and the companion celebrates while the match continues. [The feature guide](../app/src/features/match-moments/README.md) owns exact reach/tolerance and operation.
+
+Verification: typecheck, 311 unit tests, build and 16 affected browser tests passed. An actual managed-browser controller demo verified separate left-hand feedback, one-hand rejection, both-hand completion, progress reaching 1 and quiet expiry. Match time advanced 49.99 → 52.99 seconds across invitation/completion. Captures and the short MP4 remain under ignored `app/content-source/match-analysis/celebration-guides/`; this is emulator demo evidence, not a natural-goal or physical Quest run. The first recording attempt hit a host screenshot queue timeout; recording directly through the supported same-browser Playwright runner completed the journey. No application behavior was changed to manufacture success. Asset diagnostics report no warnings; scene validation passes. Startup aborted-media and unavailable-gaze warnings remain, without UIKit parser errors in the captured log.

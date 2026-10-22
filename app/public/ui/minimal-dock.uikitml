@@ -17,6 +17,10 @@
 </div>
 <span id="minimal-status" style="display: none; font-size: 15px; color: #142352; text-align: center">Palm up for controls / A or X on controller</span>
 <div id="minimal-options" style="display: none; flex-direction: column; gap: 8px">
+<div id="celebration-options" class="row">
+<Button id="minimal-celebration" class="small"><ButtonLabel id="minimal-celebration-label" class="label">Celebrations: Off</ButtonLabel></Button>
+<Button id="minimal-celebration-demo" class="small"><ButtonLabel class="label">Try celebration</ButtonLabel></Button>
+</div>
 <div class="row"><Button id="minimal-room" class="small"><ButtonLabel id="minimal-room-label" class="label">My room</ButtonLabel></Button><Button id="minimal-quiet" class="small"><ButtonLabel id="minimal-quiet-label" class="label">Quiet space</ButtonLabel></Button></div>
 <div class="row">
 <Button id="minimal-pregame" class="small"><ButtonLabel class="label">Before kick-off</ButtonLabel></Button>

@@ -301,6 +301,27 @@
                 "type": "asset"
               },
               "id": "minimal-screen"
+            },
+            {
+              "id": "goal-celebration-root",
+              "name": "Optional goal celebration",
+              "children": [
+                {
+                  "id": "goal-celebration-player",
+                  "content": {
+                    "type": "asset",
+                    "asset": "kawaii-celebration"
+                  },
+                  "transform": {
+                    "position": [
+                      1,
+                      -1.87,
+                      0.15
+                    ],
+                    "scale": 2.5
+                  }
+                }
+              ]
             }
           ],
           "id": "window-minimal-screen",
@@ -696,6 +717,65 @@
             ],
             "scale": 1
           }
+        },
+        {
+          "id": "celebration-guides",
+          "name": "Celebration placement guides",
+          "transform": {
+            "position": [
+              0,
+              1.6,
+              0
+            ]
+          },
+          "children": [
+            {
+              "id": "celebration-left-hand",
+              "content": {
+                "type": "asset",
+                "asset": "celebrationLeftHand"
+              },
+              "transform": {
+                "position": [
+                  -0.29,
+                  -0.02,
+                  -0.5
+                ]
+              }
+            },
+            {
+              "id": "celebration-right-hand",
+              "content": {
+                "type": "asset",
+                "asset": "celebrationRightHand"
+              },
+              "transform": {
+                "position": [
+                  0.29,
+                  -0.02,
+                  -0.5
+                ]
+              }
+            },
+            {
+              "id": "goal-celebration",
+              "content": {
+                "type": "asset",
+                "asset": "goal-celebration"
+              },
+              "components": {
+                "RayInteractable": {},
+                "PokeInteractable": {}
+              },
+              "transform": {
+                "position": [
+                  0,
+                  -0.27,
+                  -0.85
+                ]
+              }
+            }
+          ]
         }
       ],
       "id": "viewing-space",

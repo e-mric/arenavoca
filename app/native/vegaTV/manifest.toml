@@ -5,6 +5,10 @@ title = "ArenaVoca"
 version = "0.1.0"
 id = "com.arenavoca.tv"
 
+# Local wrapper server for official-simulator testing only. Production uses HTTPS.
+[network-traffic-policy.cleartext]
+allowed-domains = ["10.0.2.2"]
+
 [os.version]
 min = "1.2"
 target = "1.2"
@@ -27,6 +31,10 @@ id = "/com.amazon.kepler.keplerscript_4@IKeplerScript_0"
 
 [[needs.module]]
 id = "/com.amazon.kepler.w3cmedia_2@IW3cmedia_3"
+
+[[needs.module]]
+id = "/com.amazon.kepler.webview_4@IWebview_4"
+
 
 [components]
 [[components.interactive]]
@@ -52,7 +60,23 @@ id = "com.amazon.audio.stream"
 id = "com.amazon.audio.control"
 
 [[wants.service]]
+id = "com.amazon.audio.system"
+
+[[wants.service]]
 id = "com.amazon.media.server"
 
 [[wants.service]]
 id = "com.amazon.media.playersession.service"
+
+[[wants.service]]
+id = "com.amazon.gipc.uuid.*"
+
+[[wants.service]]
+id = "com.amazon.webview.renderer_service"
+
+[[wants.service]]
+id = "com.amazon.kepler.ucc.publisher"
+
+[offers]
+[[offers.service]]
+id = "com.amazon.gipc.uuid.*"

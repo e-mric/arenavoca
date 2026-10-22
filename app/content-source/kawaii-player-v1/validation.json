@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "source_reopened": true,
+  "reference_packed": true,
+  "finite_geometry_and_nonzero_faces": true,
+  "portable_export_reimported": true,
+  "rest_bounds_preserved": true,
+  "exported_triangles": 28112,
+  "export_bytes": 853740,
+  "exported_meshes": 51,
+  "rig_bones": 7,
+  "exported_materials": 9,
+  "excluded_from_export": [
+    "studio",
+    "reference",
+    "pose animations"
+  ],
+  "scope": "Blender source and GLB roundtrip only; no IWSDK or physical Quest acceptance"
+}

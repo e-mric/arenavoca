@@ -20,7 +20,7 @@ object PracticeCatalog {
 }
 
 @Serializable
-data class WatchedSession(val id: String, val title: String, val sport: String, val example: Boolean = false, val imported: Boolean = false)
+data class WatchedSession(val id: String, val title: String, val sport: String, val example: Boolean = false, val imported: Boolean = false, val playedOn: String? = null)
 @Serializable
 data class RecapResult(val sessionId: String, val correct: Int, val total: Int)
 @Serializable
@@ -43,7 +43,7 @@ class RecapLibrary(initialJson: String = "") {
                 val loaded = json.decodeFromString<SavedProgress>(initialJson)
                 require(loaded.version == 1 && loaded.sessions.size <= 100)
                 require(loaded.sessions.map { it.id }.distinct().size == loaded.sessions.size)
-                require(loaded.sessions.all { it.id.isNotBlank() && it.title.isNotBlank() && it.title.length <= 100 && it.sport in listOf("football", "f1") })
+                require(loaded.sessions.all { it.id.isNotBlank() && it.title.isNotBlank() && it.title.length <= 100 && it.sport in listOf("football", "f1") && (it.playedOn == null || isEventDate(it.playedOn)) })
                 require(loaded.saved.all { (id, phrases) ->
                     val session = loaded.sessions.find { it.id == id }
                     session != null && phrases.distinct().size == phrases.size && phrases.all { phrase -> PracticeCatalog.forSport(session.sport).any { it.id == phrase } }
@@ -66,7 +66,7 @@ class RecapLibrary(initialJson: String = "") {
         val existing = progress.sessions.find { it.id == id }
         if (existing != null && existing.example != transfer.example) return ImportResult(null, "This recap conflicts with the saved session. Your saved progress is unchanged.")
         if (existing == null && progress.sessions.size >= 100) return ImportResult(null, "Your collection has reached its 100-session limit. No progress was changed.")
-        val session = existing ?: WatchedSession(id, transfer.title.trim(), transfer.sport, transfer.example, true)
+        val session = existing ?: WatchedSession(id, transfer.title.trim(), transfer.sport, transfer.example, true, transfer.playedOn)
         val selected = (savedPhraseIds(id) + transfer.phraseIds).distinct()
         progress = progress.copy(
             sessions = if (existing == null) progress.sessions + session else progress.sessions,
@@ -74,10 +74,11 @@ class RecapLibrary(initialJson: String = "") {
         )
         return ImportResult(session, "${selected.size} saved phrases ready to practise. Existing progress has been kept.")
     }
-    fun createSession(title: String, sport: String): WatchedSession? {
+    fun createSession(title: String, sport: String, playedOn: String? = null): WatchedSession? {
+        if (playedOn != null && !isEventDate(playedOn)) return null
         val clean = title.trim()
         if (clean.isEmpty() || clean.length > 100 || sport !in listOf("football", "f1") || progress.sessions.size >= 100) return null
-        val session = WatchedSession("session-${progress.sessions.size + 1}", clean, sport)
+        val session = WatchedSession("session-${progress.sessions.size + 1}", clean, sport, playedOn = playedOn)
         progress = progress.copy(sessions = progress.sessions + session)
         return session
     }

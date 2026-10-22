@@ -38,6 +38,8 @@ Start each task at the [context index](../index.md) and [current state](../proje
 | Submission deadlines, eligibility, deliverables | [Submission roadmap](../SUBMISSION_ROADMAP.md) |
 | Live-service cost assumptions | [Dated cost estimate](../LIVE_COST_ESTIMATE.md) |
 | Asset provenance and review status | [Asset provenance](../../app/content-source/asset-provenance.md) |
+| Latest separate kawaii player model and comparison | [Astra Blender candidate v3](../../app/content-source/kawaii-player-v3/README.md) |
+| Optional physical celebration after a prepared goal | [Prototype operation](../../app/src/features/match-moments/README.md), [Quest acceptance](../QUEST_REVIEW.md#optional-goal-celebration-prototype--18-october-2026) |
 
 Prefer dated current-state sections over older prototype descriptions. If code, requirements, and evidence disagree, record the discrepancy and check it before changing behavior. External deadlines, prices, and platform capabilities require fresh verification when making a new decision.
 

@@ -2,10 +2,11 @@
   "version": 1,
   "source": {
     "id": "barca-2018-full",
-    "title": "Barcelona v Madrid · 2018",
+    "title": "Barcelona vs Madrid",
     "youtubeUrl": "https://youtu.be/WMjohb2tq7Y",
     "durationSeconds": 5961,
-    "sha256": "16450bd54c298888f4506383ac98e5b09fc4dd96a736b733ca47e0401b37b638"
+    "sha256": "16450bd54c298888f4506383ac98e5b09fc4dd96a736b733ca47e0401b37b638",
+    "playedOn": "2018-10-28"
   },
   "analysis": {
     "speechModel": "mlx-community/whisper-small-mlx / mlx-whisper 0.4.3",

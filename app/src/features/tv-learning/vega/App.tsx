@@ -10,15 +10,18 @@ import {
 } from 'react-native';
 import {useTVEventHandler} from '@amazon-devices/react-native-kepler';
 import {
-  sequence,
+  sequence as localSequence,
+  enableYouTube,
+  youtubeSequence,
   videoAsset,
   endFrameAsset,
   artwork,
 } from '../../../../native/vegaTV/generated/content';
-import {Learning, recallChoices} from './learning';
+import {Learning, recallChoices, type Sequence} from './learning';
 import {LocalProgress} from './storage';
 import AsyncStorage from '@amazon-devices/react-native-async-storage__async-storage';
 import {MatchVideo, type Playback, type PlayerControls} from './MatchVideo';
+import {YouTubeMatchVideo} from './YouTubeMatchVideo';
 
 type Route =
   | 'watch'
@@ -91,6 +94,12 @@ function Action({
   );
 }
 export function App() {
+  const [useYouTube, setUseYouTube] = useState(enableYouTube);
+  const sequence: Sequence = useYouTube ? youtubeSequence : localSequence;
+  return <MatchExperience key={sequence.id} sequence={sequence}
+    switchSource={() => setUseYouTube(!useYouTube)} />;
+}
+function MatchExperience({sequence, switchSource}: {sequence: Sequence; switchSource(): void}) {
   const [learning] = useState(() => new Learning(sequence));
   const [store] = useState(() => new LocalProgress(sequence, AsyncStorage));
   const [, render] = useState(0);
@@ -230,12 +239,19 @@ export function App() {
         } at ${playback.position.toFixed(1)} seconds`}
         style={[styles.videoArea, {width: panel ? '72%' : '100%'}]}
       >
-        {restored !== null && (
+        {restored !== null && (sequence.youtube ? (
+          <YouTubeMatchVideo key={attempt}
+            videoId={sequence.youtube.videoId} start={sequence.youtube.startSeconds}
+            duration={sequence.duration} restore={restored}
+            onObserve={observe} onError={setError}
+            onControls={c => { controls.current = c; }} onLeave={persist} />
+        ) : (
           <MatchVideo
             key={attempt}
             asset={videoAsset}
             endFrame={endFrameAsset}
             restore={restored}
+            compact={panel}
             onObserve={observe}
             onError={setError}
             onControls={(c) => {
@@ -243,8 +259,8 @@ export function App() {
             }}
             onLeave={persist}
           />
-        )}
-        {route === 'watch' && (
+        ))}
+        {!sequence.youtube && route === 'watch' && (
           <Pressable
             testID="watch-surface"
             accessibilityLabel={
@@ -259,7 +275,7 @@ export function App() {
             style={styles.watchTarget}
           />
         )}
-        {route === 'watch' && playback.paused && !error && (
+        {!sequence.youtube && route === 'watch' && playback.paused && !error && (
           <View pointerEvents="none" style={styles.watchHint}>
             <Text style={styles.title}>{sequence.title}</Text>
             <Text style={styles.subtitle}>
@@ -269,13 +285,13 @@ export function App() {
             </Text>
           </View>
         )}
-        {!!notice && route === 'watch' && !playback.paused && (
+        {!sequence.youtube && !!notice && route === 'watch' && !playback.paused && (
           <View pointerEvents="none" style={styles.invitation}>
             <Text style={styles.invitationTitle}>{notice}</Text>
             <Text style={styles.small}>OK · Open</Text>
           </View>
         )}
-        {!!error && (
+        {!sequence.youtube && !!error && (
           <View style={styles.error}>
             <Text style={styles.title}>{error}</Text>
             <Action
@@ -290,8 +306,9 @@ export function App() {
             />
           </View>
         )}
-        {route === 'controls' && (
-          <View style={styles.controls}>
+        {(route === 'controls' || !!sequence.youtube) && (
+          <View style={[styles.controls, sequence.youtube && styles.youtubeControls]}>
+            {!!sequence.youtube && !!error && <Text testID="youtube-error" style={styles.body}>{error}</Text>}
             <View style={styles.controlHeading}>
               <Text style={styles.controlTitle}>{sequence.title}</Text>
               <Text testID="playback-time" style={styles.small}>
@@ -302,6 +319,7 @@ export function App() {
             <View style={styles.row}>
               <Action
                 id="play-pause"
+                key={playback.ready ? 'ready' : 'loading'}
                 label={
                   playback.ended
                     ? 'Watch again'
@@ -309,7 +327,7 @@ export function App() {
                     ? 'Play'
                     : 'Pause'
                 }
-                first
+                first={playback.ready && (route === 'watch' || route === 'controls')}
                 disabled={!playback.ready}
                 onPress={() => {
                   controls.current?.toggle();
@@ -327,7 +345,13 @@ export function App() {
                 onPress={() => setRoute('saved')}
               />
             </View>
-            <Text style={styles.controlHint}>Back to hide controls</Text>
+            {!!sequence.youtube ? <>
+              <Text testID="publisher-credit" style={styles.controlHint}>
+                Source: FC Barcelona · YouTube · {notice || 'Prepared learning moments'}
+              </Text>
+              {!!error && <Action id="youtube-fallback" label="Watch original animation"
+                first onPress={switchSource} />}
+            </> : <Text style={styles.controlHint}>Back to hide controls</Text>}
           </View>
         )}
       </View>
@@ -480,11 +504,15 @@ export function App() {
             {route === 'about' && (
               <>
                 <Text style={styles.heading}>{sequence.title}</Text>
-                <Text style={styles.body}>{sequence.details}</Text>
+                <Text testID="source-details" style={styles.body}>
+                  {sequence.details}
+                </Text>
                 <Text style={styles.body}>
                   Cards follow this recording. Saved moments stay on this TV.
                   The mobile companion is separate.
                 </Text>
+                <Action id="switch-source" label={sequence.youtube ? 'Watch original animation' : 'Watch Barcelona vs Madrid on YouTube'}
+                  onPress={switchSource} />
                 {!!storageError && (
                   <Text style={styles.small}>{storageError}</Text>
                 )}
@@ -575,6 +603,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: colors.cream,
   },
+  youtubeControls: {position: 'relative', left: 0, right: 0, bottom: 0, borderRadius: 0},
   controlHeading: {
     flexDirection: 'row',
     justifyContent: 'space-between',

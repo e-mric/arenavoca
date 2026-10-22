@@ -1,8 +1,46 @@
 # ArenaVoca submission roadmap
 
-Updated 16 October 2026. Official submission requirements below were last reviewed 15 October; this update adds development/testing lessons, not a fresh eligibility review. Product authority: [PRD](../PRD.md). All unchecked work below is pending. This plan does not register, purchase, publish, contact organisers or submit. Emeric owns account/eligibility decisions and submission; Emeric and Codex prepare implementation, evidence and materials together.
+Updated 22 October 2026. The active targets are Amazon Build, Ship, Shape and Meta VR Start, confirmed by the user. Public overview/rules pages and Amazon updates were rechecked on 22 October. Account registration, draft fields and final submission status could not be verified because the Devpost connector requires reauthentication. Product authority: [PRD](../PRD.md). This plan does not register, publish, contact organisers or submit. Preserve the historical No Excuses notes below as future context, outside the current two-hackathon priority.
 
 Progress, 16 October: local benchmark preparation now runs on the Mac. The actual recording produced 373 planned windows and an unreviewed worksheet, with no inference or upload. [Usage and evidence](../app/src/features/match-recognition/README.md#full-recording-preparation--16-october-2026). The short-excerpt Ollama adapter and optional local Whisper path are also implemented with fixture/HTTP tests; [Windows commands](../app/src/features/match-recognition/README.md#local-ollama-adapter--16-october-2026) are ready. Match Lab now routes to the same local adapter with an explicit provider notice and no cloud fallback; [Windows service launch and Quest checks](../app/src/features/match-recognition/README.md#match-lab-local-service--16-october-2026) are documented. The subsequent [Windows pilot and accuracy follow-up](WINDOWS_LOCAL_AI_2026-10-16.md) measured actual local inference and verified desktop Match Lab delivery. Raw action/timing errors remain; a larger-model comparison still missed the cutback and was too slow for the live step. Keep the reviewed prepared pack for demonstrations. Physical Quest acceptance, fluent Spanish review, and full-game evaluation remain open.
+
+## Active submission order · 21 October
+
+1. **Amazon Build, Ship, Shape — 23 October 2026, 12:00 PDT / 21:00 Brussels.** Fire TV track: complete the existing recorded-football learning loop and package a reproducible build, repository, public English demo under three minutes, product/tool feedback and description of changes made during the event. The overview specifically requires demo footage on an actual Fire TV or Fire TV/Vega simulator. We have Android TV API 34 evidence and, on 22 October, actual ArenaVoca playback/card journeys on the official Vega simulator for both original and private Alba variants. The bounded Vega build is implemented; a public English submission video still needs recording. [Vega setup and evidence scope](../app/src/features/tv-learning/vega/README.md). The user has no Fire TV hardware. [Official requirements](https://amazonappdev2026.devpost.com/).
+2. **Meta VR Start — 18 November 2026, 12:00 PST / 21:00 Brussels.** Prioritize the hands-first Quest learning loop, accessible hosted IWSDK build, device testing and submission video after the Amazon package. [Official overview](https://start-developer-competition-26.devpost.com/).
+
+The separate event presentation was dropped; Amazon remains active. Avoid expanding scope into sync or live full-game recognition before securing a complete submission. Keep private broadcast material out of the public package unless its use is cleared; the original illustrated pack remains the available public-content fallback. These priorities supersede conflicting dates/tasks in the older combined Meta/No Excuses schedule below. No claim of registration, eligibility approval or submission is made.
+
+## Readiness check · 22 October
+
+**Assessment:** Amazon has a working tested local Vega candidate, but the submission package is not ready. This is a read-only readiness check plus documentation; no publishing, reviewer invitations or submission occurred. Official public pages were accessible; authenticated Devpost account/form state was unavailable.
+
+### Amazon — remaining work, in order
+
+Deadline remains **23 October, 21:00 Europe/Brussels**. The official rules accept Fire TV/Vega simulator demonstration and require a working project, accessible GitHub source, English materials, a public YouTube/Vimeo demo under three minutes and product feedback. Private repositories are allowed with the prescribed reviewer access; a public repository needs an open-source license. [Requirements](https://amazonappdev2026.devpost.com/), [rules](https://amazonappdev2026.devpost.com/rules), [latest reminders](https://amazonappdev2026.devpost.com/updates).
+
+| Item | Observed status | Next action / completion evidence |
+| --- | --- | --- |
+| Vega product and release build | Ready locally: original Release package exists; both media journeys and cold-launch checks passed in the preceding implementation turn. This audit inspected evidence without rerunning tests. | Preserve the tested version; use the original Blue/Amber pack for the public walkthrough. [Checks](../app/src/features/tv-learning/vega/README.md). |
+| Source delivery | Complete for original Vega: `78d66c5` pushed; clean dependency install, native typecheck, release build/hashes and 10 tests pass. | Use the [judge entry point](../SUBMISSION.md) and [verification record](submission/vega-verification.md). Unrelated local experiments remain outside the candidate. |
+| Judge access | Owner will grant access; repository remains private. | Form specifies `testing@devpost.com` and `@AmazonAppDev`. Owner to verify accepted access. |
+| Demo video | [2½-minute scenario and narration](submission/amazon-video.md) prepared; four ElevenLabs takes started. No finished public video. | Record the original-media official VVD walkthrough, select/review narration, edit and caption, then publish and check signed-out playback. |
+| Submission copy and tool feedback | Source notes exist, but no finished Amazon entry/feedback draft was found. | Prepare description, Fire TV track, scope/change summary, testing instructions and feedback per tool. The SDK notes provide concrete friction evidence: asset paths, image bounds, debug warnings and EOF scaling. |
+| Devpost/account/eligibility | Signed-in browser verified Arenavoca draft, 1/5 steps done. Pitch, details, video and additional info empty; no form changed. Connector auth remains separate. | Complete required fields and human eligibility declarations, verify links and obtain final submission receipt. |
+
+The original release avoids the private broadcast clip; final asset and Spanish review still deserve a short pass before recording. Alba screenshots/manhwa should not be substituted into the public demo as if they were the original-media build. The repository's asset provenance does not establish broadcast permission.
+
+A useful optional improvement is a structured friction log; the overview advertises up to a 10% judging bonus. This can reuse actual SDK findings instead of adding features. Phone sync, live computer vision, full-game analysis and a Vega comic reader are not prerequisites for this bounded Fire TV entry. Do not imply they already work. Keep judging access available through the judging period; recheck the official schedule when freezing the candidate.
+
+### Meta — after Amazon
+
+Deadline remains **18 November, 21:00 Europe/Brussels**. The IWSDK path can use a hosted build; hands-first end-to-end operation, a short public demo and entry materials are required. The FAQ says owning a headset is not required; physical Quest verification remains our product-quality checkpoint, distinct from a formal hardware-ownership requirement. [Overview](https://start-developer-competition-26.devpost.com/), [FAQ](https://start-developer-competition-26.devpost.com/details/faqs).
+
+Remaining: confirm Start/developer eligibility and project division/funding history; provide the original-content learning loop in the judged XR build (the unrelated calibration sample alone does not demonstrate it); complete hands-only interaction verification; deploy a stable accessible release and preserve the judged version; record the Meta video and finish its description/testing instructions. Current Quest acceptance cases remain open in [Quest review](QUEST_REVIEW.md). Identifiable non-entrants and commercial branding face explicit restrictions in the [Meta rules](https://start-developer-competition-26.devpost.com/rules), so the Alba presentation is not the default submission pack.
+
+### Recommended immediate checkpoint
+
+Freeze features for Amazon. Complete source delivery/judge access, the original-media video and English entry/feedback; then verify every required Devpost field before final submission. No registration, license choice, repository visibility change, invitation or final submission is authorized merely by this audit.
 
 ## Current XR priority: virtual moment cards
 

@@ -11,11 +11,13 @@ kotlin {
     }
     sourceSets {
         commonMain {
+            kotlin.srcDir("../../src/features/tv-learning/native/commonMain")
             kotlin.srcDir("../../src/features/recap/native/commonMain")
             kotlin.srcDir("../../src/features/stories/native/commonMain")
             dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0") }
         }
         commonTest {
+            kotlin.srcDir("../../src/features/tv-learning/native/commonTest")
             kotlin.srcDir("../../src/features/recap/native/commonTest")
             kotlin.srcDir("../../src/features/stories/native/commonTest")
             dependencies { implementation(kotlin("test")) }

@@ -77,15 +77,22 @@ Team choice supplies football/F1 identity within the shared palette. Prepared ac
 
 The user-supplied recording and its H264/AAC demo conversion stay local and are ignored by Git. `app/public/content/theater-source.json` points to `media/user/barca-2018-h264.mp4` (1280×720, 25 fps, 99:21). A fresh checkout needs that local file or the explicit calibration fallback. The retired F1 browser route used an 8:05 behind-the-scenes video, not a full race. No media was published.
 
+## Fire TV current-match cards
+
+A separate Android TV target now supports one football sequence with three timed
+learning cards and D-pad navigation, English meaning, local saves and recall.
+The optional local build uses the downloaded Alba sequence and the same prepared
+match cards as mobile. Clean builds use an original illustrated sequence.
+The phone companion remains separate; TV saves are not automatically synced.
+See [TV build, emulator checks and limits](app/src/features/tv-learning/README.md).
+
 ## Native KMP companion (first slice)
 
-The Android and iOS companion shares a Kotlin match-recap engine. Import saved phrases from a viewing session or create a manually named football/F1 session, answer questions and retry mistakes. Example sessions are labelled. Progress is local; account sync is not implemented. IWSDK remains the immersive runtime and event prototype, with no planned Meta Spatial SDK migration.
+The Android and iOS companions share a Kotlin recap engine, with local progress and no account sync. Android now opens on a Football/F1 event collection. Its optional **Calentemos** warm-up shows three illustrated vocabulary cards without blocking match access. The former More options section, import/add forms and fictional-story home entry have been removed. Existing saved-session practice remains; iOS retains its earlier interface. IWSDK remains the immersive runtime.
 
-For cards based on the actual Barcelona–Madrid recording, select **Football → Explore match moments → Reveal match moments**. Six illustrated cards and two stories cover an early Madrid chance and Barcelona’s opening goal. Each card includes a recording timestamp and **Why this card?** evidence. This offline batch combines a local English transcript with AI inspection of sequential frames; it is not live match detection, and Spanish still awaits fluent review. The recording, audio and extracted frames are not included in Git.
+For cards from the Barcelona–Madrid recording, select **Football → Repasemos el partido**. Six cards and two stories cover an early Madrid chance and Barcelona's opening goal. In **Stories → La jugada de Alba**, scroll the new three-panel comic and hold Spanish for English. Card details retain source evidence. This is prepared offline content, not live detection; Spanish awaits fluent review. Private media is excluded from Git. See [comic and warm-up scope](app/src/features/stories/COMIC.md).
 
-For optional practice between matches, select **Football** or **F1**, then **Explore a story**. “One minute left” and “Time to pit” each offer three fictional scenes followed by recognise → recall → use activities. English support and recall hints are optional. Personal responses use self-reflection, not AI grading. Story attempts are not saved in this first slice; existing recap progress remains local and persistent. Feature code and tests live in `app/src/features/stories/native/`.
-
-To continue a viewing session on mobile: save a phrase, leave immersive mode, open the browser **Your phrases** library and choose **Export saved phrases**. Move `arenavoca-recap.json` to your phone using your preferred file-transfer method. In the native app, choose **Import saved phrases**, select the file and start the recap. The export contains phrase IDs and session metadata, never the recording. Each current full-match sport pack contributes one implemented phrase, so its recap contains one question. Re-importing merges saves and keeps existing scores. Files larger than 32 KB, invalid documents and unsupported phrases are rejected without changing progress.
+The earlier fictional stories and shared recap/import engine remain in source and tests. The Android home no longer exposes import or manual session creation; do not follow historical Android instructions to look for those controls. Manual transfer is still supported by the iOS interface: export `arenavoca-recap.json` from the browser phrase library, move the file to the device, then choose **Import saved phrases**. Transfers contain phrase IDs and metadata, never the recording; validation rejects invalid/unsupported files without changing progress. Automatic TV/phone sync is not implemented.
 
 - Build configuration: `app/native/` (JDK 17, Android SDK 36, Gradle wrapper).
 - Shared feature and tests: `app/src/features/recap/native/commonMain` and `commonTest`.

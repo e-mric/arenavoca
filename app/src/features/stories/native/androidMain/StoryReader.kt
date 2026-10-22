@@ -7,6 +7,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arenavoca.stories.*
@@ -29,6 +31,8 @@ import com.arenavoca.stories.*
     var translated by remember(lesson, lesson.panelIndex, lesson.stage) { mutableStateOf(false) }
     var selected by remember(lesson, lesson.stage) { mutableStateOf("") }
     var answer by remember(lesson, lesson.stage) { mutableStateOf("") }
+    var details by remember { mutableStateOf(false) }
+    var phraseHelp by remember { mutableStateOf(false) }
     val scroll = rememberScrollState()
     @Suppress("UNUSED_VARIABLE") val observed = revision
     fun update(action: () -> Unit) { action(); revision++ }
@@ -36,28 +40,40 @@ import com.arenavoca.stories.*
     BackHandler { onClose() }
     Surface(Modifier.fillMaxSize()) {
         Box(contentAlignment = androidx.compose.ui.Alignment.TopCenter) {
-            Column(Modifier.widthIn(max = 620.dp).fillMaxWidth().safeDrawingPadding().verticalScroll(scroll).padding(24.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                TextButton(onClick = onClose) { Text("Close story") }
-                Text(story.title, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
-                Text(story.provenanceLabel, style = MaterialTheme.typography.labelMedium, color = PlaymakerBlue)
-                story.sourceTitle?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+            Column(Modifier.widthIn(max = 620.dp).fillMaxSize().safeDrawingPadding().padding(horizontal = 20.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    CompactBack("Close story", onClose)
+                    Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(story.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        if (lesson.stage == StoryStage.READ) Text("Read · Scene ${lesson.panelIndex + 1} of 3", style = MaterialTheme.typography.bodySmall)
+                    }
+                    IconButton(onClick = { details = !details }) { Icon(painterResource(R.drawable.ic_more), contentDescription = "Story details") }
+                }
+                Column(Modifier.weight(1f).verticalScroll(scroll).padding(vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                if (details) {
+                    Text(story.provenanceLabel, style = MaterialTheme.typography.labelMedium, color = PlaymakerBlue)
+                    story.sourceTitle?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                    Text("Prototype Spanish · awaiting fluent review", style = MaterialTheme.typography.bodySmall)
+                }
                 when (lesson.stage) {
                     StoryStage.READ -> {
-                        Text("Read · Scene ${lesson.panelIndex + 1} of 3", style = MaterialTheme.typography.labelLarge)
                         val evidence = lesson.panel.evidence
                         if (evidence == null) SportArtwork(lesson.panel.artwork)
                         else key(lesson.panelIndex) {
                             var replay by remember { mutableStateOf(false) }
-                            MatchReplayView(evidence, lesson.panel.artwork, replay) { replay = it }
+                            MatchReplayView(evidence, comicMomentArtwork(lesson.panel.artwork), replay, compact = true) { replay = it }
                         }
-                        Text(lesson.panel.title, style = MaterialTheme.typography.titleMedium)
-                        Text(lesson.panel.spanish, style = MaterialTheme.typography.titleLarge)
-                        lesson.panel.evidence?.let { MatchEvidenceDetails(it) }
-                        TextButton(onClick = { translated = !translated }) { Text(if (translated) "Hide English" else "Show English") }
-                        if (translated) Text(lesson.panel.english)
-                        if (lesson.panelIndex == 0) Text("Notice these phrases:\n${story.targets.joinToString(" · ")}", style = MaterialTheme.typography.bodyMedium)
-                        StoryAction(if (lesson.panelIndex == 2) "Try the activities" else "Next scene") { update { lesson.advance() } }
-                        if (lesson.panelIndex > 0) TextButton(onClick = { update { lesson.previousPanel() } }) { Text("Previous scene") }
+                        ComicCaption(Modifier.fillMaxWidth()) {
+                            Column(Modifier.padding(16.dp)) {
+                            Text(lesson.panel.spanish, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                            if (details) lesson.panel.evidence?.let { MatchEvidenceDetails(it) }
+                            TextButton(onClick = { translated = !translated }) { Text(if (translated) "Hide English" else "Show English") }
+                            if (translated) Text(lesson.panel.english, color = PlaymakerBlue)
+                            }
+                        }
+                        HorizontalDivider()
+                        TextButton(onClick = { phraseHelp = !phraseHelp }) { Text("Phrase help") }
+                        if (phraseHelp) Text(story.targets.joinToString(" · "), style = MaterialTheme.typography.bodyMedium)
                     }
                     StoryStage.RECOGNISE -> {
                         Text("1 · Recognise", style = MaterialTheme.typography.titleMedium)
@@ -117,7 +133,13 @@ import com.arenavoca.stories.*
                         TextButton(onClick = onClose) { Text("Done") }
                     }
                 }
-                Text("Prototype Spanish · awaiting fluent review", style = MaterialTheme.typography.labelSmall)
+                }
+                if (lesson.stage == StoryStage.READ) Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                    if (lesson.panelIndex > 0) CompactBack("Previous scene") { update { lesson.previousPanel() } }
+                    Button(onClick = { update { lesson.advance() } }, modifier = Modifier.weight(1f).heightIn(min = 54.dp)) {
+                        Text(if (lesson.panelIndex == 2) "Try the activities" else "Next scene")
+                    }
+                }
             }
         }
     }

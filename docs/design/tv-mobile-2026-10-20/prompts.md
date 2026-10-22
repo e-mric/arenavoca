@@ -1,0 +1,47 @@
+# Design generation prompts
+
+## Approved four-screen mobile revision
+
+Create a high-fidelity MOBILE APP LAYOUT PROPOSAL BOARD for ArenaVoca with FOUR full portrait Android app screens side by side, straight on, consistent equal widths, no device hardware, wide landscape board ideally 2400x1600. Use supplied images strictly as brand/artwork references, not as pixel layouts to retain. This is a refinement, preserve exactly the warm cream #FFFAF2, electric blue #1646ED, navy #142352, lavender #ECE8FC and coral #FFC4B7 palette. Preserve bold friendly sans serif type and the original editorial football illustrations; no kawaii characters, gradients, glass, new visual identity or photorealistic players. Layouts should be calm, readable, image-led, with generous useful spacing and one dominant blue action per screen. No technical metadata paragraphs, scores, streaks, fake games or invented completion percentages.
+
+Label the four panels OUTSIDE their screens: "Home", "Match moments", "Learning card", "Story". At bottom outside screens print "Layout proposal · not app screenshots".
+
+1 HOME: compact blue ArenaVoca wordmark then the existing headline "Make your Spanish move." on two lines, smaller than reference to leave room for content. Football / F1 selector with coral selected Football. One large lavender event card with the source stadium illustration, then "Barcelona vs Madrid", small "28 October 2018", one short line "6 cards · 2 stories", and a blue button "Repasemos el partido". Quiet "More options" below. No other games fabricated. This should feel unmistakably like the supplied home, only better proportioned.
+
+2 MATCH MOMENTS: small back arrow, header "Barcelona vs Madrid" and small date. Three compact visible tabs "Cards 6", "Stories 2", "Saved" with Cards selected, all fit without horizontal scrolling. Six readable illustrated rows with small thumbnails, not massive repeated containers. Exact titles in order: "Down the left", "Into the box", "Over the bar", "Behind the defence", "The pass back", "The opening goal". Use tiny clock labels only if space (not necessary). One selected row lavender "The pass back". A quiet footer "About this match". No primary full-width button on a browse list, tapping a row is the action.
+
+3 LEARNING CARD: back arrow top left, centered "5 / 6", bookmark outline top right. Dominant illustration of a Barcelona player passing backwards from the left byline into the penalty area, blue/lavender pitch and navy outlines, matching source illustration. Small outlined play control over bottom right of illustration labelled "Replay". Large Spanish sentence exactly "Alba pasa el balón hacia atrás." Beneath short quiet "Show meaning" button (English is hidden until tapped). A stable bottom blue CTA "Next card". A quiet text "Practise" and overflow icon allow secondary actions, do not create five separate full-width buttons. No Listen button because current match-card audio is unavailable. Saved control on top. No simultaneous translation or metadata essay.
+
+4 STORY: compact back header "The run, the pass, the goal", small "Scene 2 of 3" in same header group. One large relevant cutback illustration. Main Spanish narrative "Alba llega a la línea de fondo y pasa el balón hacia atrás." Below a quiet "Show English". A collapsed "Phrase help" row. Stable bottom blue button "Next scene" and small previous arrow. No always-visible source timestamps, repeated wordmark or disclaimer paragraphs; provenance can be in overflow. Important: preserve story narrative, do not turn this into a quiz or show an answer score.
+
+Use understated realistic icons, consistent spacing. Content must fit within each full portrait screen with safe areas. Keep lower navigation/action placement comfortable. Polished real product interface not marketing poster. All four screens are proposed variations of existing functionality, not a claim of implementation.
+
+Edit prompt:
+
+Edit this four-screen ArenaVoca layout board. Preserve all four screens, colours, illustrations and overall arrangement exactly. Only change the Home panel: remove the small profile/person icon at top right, leaving empty space. Directly below the blue 'Repasemos el partido' button inside the lavender event card, add the English translation 'Let’s review the match' in smaller quiet navy text, centered and clearly readable with appropriate bottom padding. Keep all other text and the footer 'Layout proposal · not app screenshots'. No live badge on this historic Barcelona 2018 match. This is an iterative design proposal, not an implemented screenshot.
+
+Saved output: `mobile-layout-v2.png`. References were existing ArenaVoca screenshots and artwork; Mobbin informed hierarchy only. No Mobbin screen pixels are included.
+
+Reviewed: 2026-10-20
+
+Mode: built-in image generation. Use case: `ui-mockup`. These are proposals, not application screenshots or implemented behavior. Generated football imagery is illustrative, not match evidence.
+
+## TV
+
+Use case: ui-mockup. Create a polished ArenaVoca TV interface proposal board, landscape 3:2 canvas, containing TWO equally sized precise 16:9 TV screen mockups stacked vertically, with very small captions outside the screens. Top caption "01 · Watch the match". Bottom caption "02 · Open a moment". Tiny footer "Design proposal".
+Reference image is ONLY the card illustration style: warm cream #FFF8EE, navy #17234E, electric blue #2855FF, pale lavender #E8E1FA, subtle coral accents, rounded friendly shapes, clean bold sans serif. No kawaii mascot.
+Top TV screen: edge-to-edge generic photorealistic football broadcast, high wide camera, green pitch with small blue-and-red versus white players, penalty area action, generic packed stadium. No famous faces, logos or broadcaster watermarks. The game fills the entire screen, no header, no toolbar, no extra score outside footage. One discreet cream rounded pill lower right reads "New moment" with a small blue card icon. Nothing else overlays the match. Make football visually dominant.
+Bottom TV screen: same football action and camera, full uncropped 16:9 video occupies 76 percent of screen width, centered vertically on a very dark navy canvas; 24 percent width right cream learning panel, full height, generous internal spacing. Preserve the video aspect ratio; dark letterbox space above/below the video is intentional. Card never covers the pitch. Panel small top label "2 / 3" and tiny close glyph. Upper half of panel has a LARGE beautiful lavender football cutback illustration using reference artwork style. Below it exact text "Alba pasa el balón hacia atrás." in navy, clear 3-4 lines. Beneath two compact labelled buttons "Meaning" electric blue with clearly visible focus outline and "Save" lavender with bookmark icon. Keep plenty of empty breathing space. NO English translation visible, no paragraphs, no player instructions, no technical metadata, no bottom navigation rail, no subtitle below the image. UI must be legible from a sofa. No arrows or annotation text inside screens. The contrast between immersive watching and optional compact card must be obvious.
+
+## Mobile
+
+The TV output was regenerated with this appended correction (the second TV generation is the saved proposal):
+
+CORRECTION / SUPERSEDING CANVAS INSTRUCTION: Output a PORTRAIT 3:4 board. Each of the two TV screens MUST have exact 16:9 widescreen proportions, not ultrawide 2.6:1. Increase the height of both screens substantially. Two 1280x720-like rectangles vertically stacked with small caption gaps, entire board taller than wide. Keep top full-screen match and bottom 76:24 video/card split. In the bottom screen the left video stays true 16:9 and letterboxes above and below. Increase panel text and illustration appropriately to use the taller screen. Same extremely minimal interface.
+
+Mobile prompt:
+
+Use case: ui-mockup. Create an ArenaVoca MOBILE design proposal, two front-on Android phone screen mockups side by side, clean cream presentation background. Small outside captions "Match moments" and "One phrase at a time"; tiny footer "Design proposal".
+Reference image1 is current app visual language, preserve cream navy electric blue lavender coral, friendly rounded cards, bold clean sans serif. Reference image2 is existing football illustration style. Improve hierarchy and radically reduce text density. No kawaii mascot, no new brand.
+Left screen: small blue ArenaVoca wordmark, main heading "Your match". Large beautiful illustrated football hero tile with blue/coral players and lavender pitch, below concise title "Barcelona–Madrid" and small "2018 · 3 moments". Then three generous compact image-led rows with thumbnails and only labels "Run", "Cutback", "Goal", small chevrons. Primary bottom blue button "Practise". Normal Android status and bottom system gesture inset. No marketing headline, no method paragraphs, no dashboard metrics, no sync claim. This is a viewed match collection after spoiler reveal.
+Right screen: back chevron and small "2 / 3" top. A very large lavender cutback action illustration takes roughly half the usable screen. Below in large navy readable type "Alba pasa el balón hacia atrás." Two wide comfortable labelled actions "Meaning" blue and "Save" lavender with bookmark icon. Small subtle information icon accessible below; no English until Meaning chosen. Warm editorial feel, lots of breathing room. Only two app screens, no photographic hands/device props. This is a visual proposal for existing match cards, not a live connection to the TV.

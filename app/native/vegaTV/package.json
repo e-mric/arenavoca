@@ -9,22 +9,25 @@
     "prepare:content": "node scripts/prepare.cjs",
     "typecheck": "tsc --noEmit",
     "build:release": "node scripts/build.cjs",
+    "build:youtube": "node scripts/build.cjs --youtube",
+    "player:serve": "node scripts/serve-youtube.cjs",
     "build:alba": "node scripts/build.cjs --alba",
     "start": "react-native start"
   },
   "dependencies": {
+    "@amazon-devices/react-native-async-storage__async-storage": "~2.1.0",
     "@amazon-devices/react-native-kepler": "~4.0.0",
-    "react": "19.2.0",
-    "react-native": "0.83.0",
     "@amazon-devices/react-native-w3cmedia": "2.3.2",
-    "@amazon-devices/react-native-async-storage__async-storage": "~2.1.0"
+    "@amazon-devices/webview": "4.0.2",
+    "react": "19.2.0",
+    "react-native": "0.83.0"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
-    "@amazon-devices/kepler-cli-platform": "^0",
     "@amazon-devices/eslint-plugin-kepler": "^0.1.4",
+    "@amazon-devices/kepler-cli-platform": "^0",
     "@react-native-community/cli": "20.0.0",
     "@react-native/babel-preset": "0.83.0",
     "@react-native/eslint-config": "0.83.0",

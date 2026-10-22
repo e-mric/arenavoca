@@ -12,6 +12,8 @@ export type Sequence = {
   details: string;
   duration: number;
   moments: Moment[];
+  /** Hosted playback uses the publisher's full-video clock, never a UI timer. */
+  youtube?: {videoId: string; startSeconds: number};
 };
 
 /** Only observed video time unlocks cards. This model has no playback commands. */

@@ -1,28 +1,31 @@
 import {mediaSource} from './media-source';
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, Image, View} from 'react-native';
+import {AppState, Image, View, useWindowDimensions} from 'react-native';
 // Avoid evaluating unused SDK MediaControls (SliderMetaData has a forwardRef warning).
 // These interfaces are published in the pinned SDK's system-module manifest.
 import {VideoPlayer} from '@amazon-devices/react-native-w3cmedia/dist/interface/VideoPlayer';
 import {KeplerVideoSurfaceView} from '@amazon-devices/react-native-w3cmedia/dist/interface/KeplerVideoSurfaceView';
-export type Playback = {
-  position: number;
-  paused: boolean;
-  ended: boolean;
-  ready: boolean;
-};
-export type PlayerControls = {toggle(): void; restart(): void};
+import type {Playback, PlayerControls} from './playback';
+export type {Playback, PlayerControls} from './playback';
 type Props = {
   asset: number;
   endFrame: number;
   restore: number;
+  compact: boolean;
   onObserve(s: Playback): void;
   onError(error: string): void;
   onControls(c: PlayerControls | null): void;
   onLeave(position: number): void;
 };
-/** Learning layout changes bounds, never the mounted surface or video source. */
+/** Scale one persistent surface; learning never clears the paused video buffer. */
 export function MatchVideo(props: Props) {
+  const {width: screenWidth} = useWindowDimensions();
+  const width = props.compact ? Math.floor(screenWidth * 0.72) : screenWidth;
+  const [scaling, setScaling] = useState<'fit' | 'fill'>('fit');
+  useEffect(() => {
+    const timer = setTimeout(() => setScaling((mode) => mode === 'fit' ? 'fill' : 'fit'), 100);
+    return () => clearTimeout(timer);
+  }, [width]);
   const callbacks = useRef(props);
   callbacks.current = props;
   const [ended, setEnded] = useState(false);
@@ -110,14 +113,14 @@ export function MatchVideo(props: Props) {
   return (
     <View style={{width: '100%', aspectRatio: 16 / 9}} testID="match-video">
       <KeplerVideoSurfaceView
-        scalingmode="fit"
-        style={{width: '100%', height: '100%'}}
+        scalingmode={scaling}
+        style={{width, height: width * 9 / 16}}
         onSurfaceViewCreated={(handle: string) => {
           surface.current = handle;
           if (initialized.current) player.setSurfaceHandle(handle);
         }}
         onSurfaceViewDestroyed={(handle: string) => {
-          surface.current = null;
+          if (surface.current === handle) surface.current = null;
           if (initialized.current) player.clearSurfaceHandle(handle);
         }}
       />

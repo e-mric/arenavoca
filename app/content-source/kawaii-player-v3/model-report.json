@@ -1,0 +1,39 @@
+{
+  "asset": "ArenaVoca kawaii player v3",
+  "units": "metres",
+  "blender_front": "-Y",
+  "blender_up": "+Z",
+  "glb_front": "+Z",
+  "glb_up": "+Y",
+  "bounds_min": [
+    -0.057116713374853134,
+    -0.0364999994635582,
+    -0.0004999999655410647
+  ],
+  "bounds_max": [
+    0.05876178666949272,
+    0.033391017466783524,
+    0.17920497059822083
+  ],
+  "dimensions": [
+    0.11587850004434586,
+    0.06989101693034172,
+    0.1797049705637619
+  ],
+  "mesh_objects": 40,
+  "triangles_authored": 96880,
+  "materials": 9,
+  "pose": "Static reference-inspired Hello; raised left boot, waving left hand, tilted head",
+  "rig": "Named editable assemblies; no skeletal animation rig",
+  "exports": {
+    "kawaii-player-v3.glb": "player only",
+    "football.glb": "separate football prop",
+    "hello-display.glb": "player and football, without plinth/studio/reference"
+  },
+  "not_verified": [
+    "IWSDK runtime compatibility",
+    "Quest performance",
+    "animation deformation",
+    "user visual approval"
+  ]
+}
