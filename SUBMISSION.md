@@ -46,6 +46,7 @@ artwork; those are not required for, or included in, the original-media release.
 - [Original animation authoring source](app/src/features/tv-learning/authoring/render_sequence.py)
 - [Existing card illustration source](app/src/features/recap/artwork/render-actions.mjs)
 - [Video scenario and narration](docs/submission/amazon-video.md)
+- [Clean-checkout verification](docs/submission/vega-verification.md)
 
 Source delivery does not complete the Devpost submission. Judge access, the public
 demo video, final project description and required tool feedback must also be
