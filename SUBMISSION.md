@@ -15,9 +15,18 @@ or the repository's older Quest/web prototype. Follow the
 It bundles a 36-second cut of **Barcelona vs Madrid (28 October 2018)**, recording
 13:28–14:04 of FC Barcelona's official YouTube upload, tracked in the repository;
 the full match is not included. The quickest way to try it is the prebuilt
-`.vpkg` supplied with the submission (`vega run-app <file>.vpkg
-com.arenavoca.tv.main -d VirtualDevice`). No API key or paid AI account is needed.
-Building from source needs Amazon's SDK and its dependency registry; FFmpeg must be
+release package in the repository, the exact build that passed the 23 October
+simulator journeys
+([`arenavoca-vega-aarch64-release.vpkg`](app/native/vegaTV/prebuilt/arenavoca-vega-aarch64-release.vpkg),
+SHA-256 `70fc46b64a0cd0f6576c31d3a44a7adee5636da785ef5a2ae8c78ca601b02817`):
+
+```bash
+vega virtual-device start --timeout 120
+vega run-app app/native/vegaTV/prebuilt/arenavoca-vega-aarch64-release.vpkg \
+  com.arenavoca.tv.main -d VirtualDevice
+```
+
+No API key or paid AI account is needed. Building from source needs Amazon's SDK and its dependency registry; FFmpeg must be
 on PATH.
 
 ## Try the learning loop
