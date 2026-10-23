@@ -109,3 +109,27 @@ this cut so it does not depend on the outstanding playback repair.
 The user will ask Opus to assemble the video. Final capture, editing, review,
 publication and adding the public URL to Devpost remain separate steps; this
 storyboard does not publish or submit anything.
+
+## Assembled edit · 23 October
+
+A 2:08.8 cut (1920×1080, 30 fps, −17.5 LUFS) is assembled locally as
+`app/content-source/match-analysis/amazon-video-2026-10-23/ArenaVoca-FireTV-Demo.mp4`
+with a retimed `.srt` alongside, by that folder's `render.py`. It is not
+published and not in Git.
+
+- **Footage:** official Vega 1080p simulator, recorded from a fresh install of the
+  committed prebuilt package (`ac53be4`). Match → card → English → Save is one
+  uninterrupted take; return to full screen and recall are explicit cuts.
+- **Recorder limit:** the emulator's screen recorder freezes the video plane's
+  size when a panel closes during recording (app screenshots taken without the
+  recorder show full screen). Each take starts only after a screenshot shows
+  picture at both screen edges, and no panel closes while recording.
+- **Narration:** take 01 placed sentence by sentence against measured on-screen
+  events; real match audio stays low underneath. Captions are a sidecar file for
+  YouTube rather than burned in, so they never cover the app.
+- **Graphics:** title, setup, how-it-works and closing cards plus the FC Barcelona
+  credit are drawn in code in the ArenaVoca palette.
+
+Still open: a human listen-through (pronunciation, mix), YouTube upload with the
+`.srt` and the source link in the description, signed-out playback check, and the
+Devpost video field.

@@ -219,7 +219,23 @@ with the existing bundle-size warning. Physical hardware and 720p remain unteste
 - Metro resolves the bundled video as `file:///pkg/...`. This local media player
   expects `/pkg/...`; `mediaSource` converts that path and leaves remote URLs
   untouched. A regression test covers both forms.
-- The Kepler remote event is `playpause` (lowercase), as declared in its TV types.
+- Remote Play/Pause reaches `useTVEventHandler` as `play` on the simulator (the TV
+  types also declare `playpause` and `pause`); the app treats all three as a toggle.
+- By default the W3C media player's built-in player session also acts on that key.
+  Its state follows `playing`/`pause` events only, so after Restart or Watch again
+  it could drop the key or answer Pause with `play()`. Declaring
+  `com.amazon.category.kepler.media` in `manifest.toml` makes the SDK skip that
+  session; the app then decides the target state at the key press and acts only if
+  the player is not already there. Device logs confirm no session operations.
+- A redundant `play()` on a playing player, and quick restart/pause/play sequences,
+  can stop `timeupdate` events while the video keeps playing, which froze the cards'
+  clock. The player view also polls the real position every 250 ms.
+- YouTube in the Vega WebView: progressive and MediaSource H.264/VP9 video and
+  AAC/Opus audio play, but YouTube's own IFrame sample stalls after about three
+  seconds with every YouTube host reachable, so the release bundles the clip.
+- The emulator screen recorder (`adb emu screenrecord`) freezes the video plane's
+  size when a side panel closes during recording; app screenshots without the
+  recorder show full screen. Demo takes start only after an edge-pixel check.
 - Reset Metro cache during packaging because the feature sources live outside
   the native build directory. The build wrapper supplies this flag.
 - W3C media 2.3.2's unused `SliderMetaData` control has a one-argument

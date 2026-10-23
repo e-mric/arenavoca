@@ -1,6 +1,6 @@
 # Amazon additional information — suggested answers
 
-Reviewed: 2026-10-22 against the signed-in additional-info form for ArenaVoca (draft 1253573). These are local suggestions; no form fields were changed. Personal declarations and subjective ratings need the entrant’s confirmation.
+Reviewed: 2026-10-23. The testing instructions, feedback 1–3/5, AI tools, feature requests and friction-log link were entered and saved in the Devpost draft (1253573) on 23 October; the entry was not submitted. The canonical saved wording lives on Devpost. Personal declarations and subjective ratings need the entrant’s confirmation.
 
 ## Selections and links
 
