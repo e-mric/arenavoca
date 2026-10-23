@@ -191,8 +191,10 @@ function MatchExperience({sequence, switchSource}: {sequence: Sequence; switchSo
   });
   useTVEventHandler((event) => {
     if (event.eventKeyAction === 0) return;
-    if (event.eventType === 'playpause') {
-      controls.current?.toggle();
+    // Remotes report Play/Pause as 'play', 'pause' or 'playpause'; each toggles.
+    if (['play', 'pause', 'playpause'].includes(event.eventType)) {
+      const c = controls.current;
+      c?.remoteKey ? c.remoteKey() : c?.toggle();
       return;
     }
     if (
@@ -349,7 +351,7 @@ function MatchExperience({sequence, switchSource}: {sequence: Sequence; switchSo
               <Text testID="publisher-credit" style={styles.controlHint}>
                 Source: FC Barcelona · YouTube · {notice || 'Prepared learning moments'}
               </Text>
-              {!!error && <Action id="youtube-fallback" label="Watch original animation"
+              {!!error && <Action id="youtube-fallback" label="Watch local recording"
                 first onPress={switchSource} />}
             </> : <Text style={styles.controlHint}>Back to hide controls</Text>}
           </View>
@@ -511,8 +513,8 @@ function MatchExperience({sequence, switchSource}: {sequence: Sequence; switchSo
                   Cards follow this recording. Saved moments stay on this TV.
                   The mobile companion is separate.
                 </Text>
-                <Action id="switch-source" label={sequence.youtube ? 'Watch original animation' : 'Watch Barcelona vs Madrid on YouTube'}
-                  onPress={switchSource} />
+                {enableYouTube && <Action id="switch-source" label={sequence.youtube ? 'Watch local recording' : 'Watch Barcelona vs Madrid on YouTube'}
+                  onPress={switchSource} />}
                 {!!storageError && (
                   <Text style={styles.small}>{storageError}</Text>
                 )}

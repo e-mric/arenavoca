@@ -1,6 +1,6 @@
 # ArenaVoca — Amazon Fire TV submission
 
-Reviewed: 2026-10-22. Judge entry point for the **Vega** prototype.
+Reviewed: 2026-10-23. Judge entry point for the **Vega** prototype.
 
 ArenaVoca lets sports fans practise Spanish through optional moments from the
 sequence they are watching. The match fills the screen by default. A remote opens
@@ -12,18 +12,23 @@ Opening a card does not pause or seek the match.
 The submission target is a separate React Native/Kepler app, not the Android APK
 or the repository's older Quest/web prototype. Follow the
 [Vega build guide](app/src/features/tv-learning/vega/README.md#build).
-It uses the original, bundled 36-second **Blue vs Amber** animation. No recording,
-API key or paid AI account is needed to run it. Amazon's SDK and its dependency
-registry must be available to build it; FFmpeg must be on PATH.
+It bundles a 36-second cut of **Barcelona vs Madrid (28 October 2018)**, recording
+13:28–14:04 of FC Barcelona's official YouTube upload, tracked in the repository;
+the full match is not included. The quickest way to try it is the prebuilt
+`.vpkg` supplied with the submission (`vega run-app <file>.vpkg
+com.arenavoca.tv.main -d VirtualDevice`). No API key or paid AI account is needed.
+Building from source needs Amazon's SDK and its dependency registry; FFmpeg must be
+on PATH.
 
 ## Try the learning loop
 
 1. Launch the app and press Select to show controls; choose Play.
-2. Watch the pass. At eight seconds, a moment becomes available. Open Moments
-   and The pass. The match continues while the Spanish card stays selected.
+2. Watch Jordi Alba's run. At six seconds, a moment becomes available. Open
+   Moments and Behind the defence. The match continues while the Spanish card
+   stays selected.
 3. Choose English, then Save. Return to watching with Back.
-4. The shot and save become available at 20 and 28 seconds. They are prepared
-   cues driven by the video's actual position.
+4. The pass back and the opening goal become available at 9 and 14 seconds. They
+   are prepared cues driven by the video's actual position.
 5. Open Saved, select a card and choose Practise. Try an answer and see feedback.
 6. Quit and reopen: saved cards and video position remain local; playback restores
    paused. Restart is in Match details; Watch again is available at the end.
@@ -36,17 +41,18 @@ Mobile and Quest are separate prototypes. Spanish awaits fluent review.
 The current device evidence is from the official Vega 1080p simulator; physical
 Fire TV, 720p and screen-reader usability remain unverified.
 
-The optional Alba Debug build needs private local media and additional local
-artwork; those are not required for, or included in, the original-media release.
+An opt-in YouTube build streams the same moment from FC Barcelona's upload. On
+the Vega simulator, YouTube streaming stalls after a few seconds for any video
+(including YouTube's own sample), so the submitted build plays the local cut.
 
 ## Sources and verification
 
 - [Implementation, tests and SDK findings](app/src/features/tv-learning/vega/README.md)
 - [Native build scripts and lockfile](app/native/vegaTV/package.json)
-- [Original animation authoring source](app/src/features/tv-learning/authoring/render_sequence.py)
-- [Existing card illustration source](app/src/features/recap/artwork/render-actions.mjs)
+- [Match cut and card provenance](app/content-source/asset-provenance.md)
+- [Card content](app/src/features/stories/content/barca-2018-opening.json)
 - [Video scenario and narration](docs/submission/amazon-video.md)
-- [Clean-checkout verification](docs/submission/vega-verification.md)
+- [Clean-checkout verification (22 October, Blue/Amber build)](docs/submission/vega-verification.md)
 
 Source delivery does not complete the Devpost submission. Judge access, the public
 demo video, final project description and required tool feedback must also be

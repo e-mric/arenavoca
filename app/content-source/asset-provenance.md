@@ -24,6 +24,14 @@ explicit debug build flag. Cards reuse the existing mobile match pack and its
 review limitations. It is not original media or cleared public submission content.
 See [TV feature guide](../src/features/tv-learning/README.md) for reproduction.
 
+**Vega, 23 October:** at the user's direction, the same 36-second cut (byte-identical,
+SHA-256 `0bc673b7…41ae9c`) is tracked at
+`src/features/tv-learning/vega/media/barca-2018-alba.mp4` and bundled in the Vega
+release, which no longer contains Blue/Amber. The source is FC Barcelona's YouTube
+upload `WMjohb2tq7Y`, credited in the app's Match details. The full match recording
+stays out of Git. This is the user's decision; it does not establish publication
+rights. Android TV keeps its existing Blue/Amber release and ignored local clip.
+
 ## Original 30-second sample
 
 The original 30-second sample assets do not represent a real match, club, or identifiable player. The separate streaming path references publisher-hosted YouTube content, without downloading or repackaging it. Spanish wording, translation, and pronunciation are awaiting a fluent human review. Generation is not review evidence.

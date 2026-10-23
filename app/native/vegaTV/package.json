@@ -11,7 +11,6 @@
     "build:release": "node scripts/build.cjs",
     "build:youtube": "node scripts/build.cjs --youtube",
     "player:serve": "node scripts/serve-youtube.cjs",
-    "build:alba": "node scripts/build.cjs --alba",
     "start": "react-native start"
   },
   "dependencies": {

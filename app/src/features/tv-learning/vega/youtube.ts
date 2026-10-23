@@ -72,5 +72,5 @@ export function youtubeError(code: unknown) {
   if (code === 101 || code === 150) return 'The publisher does not allow this video in an embedded player.';
   if (code === 100) return 'This YouTube video is unavailable.';
   if (code === 153) return 'YouTube could not verify this embedded player.';
-  return 'YouTube could not load the match. Check your connection or try the original animation.';
+  return 'YouTube could not load the match. Check your connection or watch the local recording.';
 }

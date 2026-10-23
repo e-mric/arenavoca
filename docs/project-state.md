@@ -1,8 +1,22 @@
 # Current project state
 
-Reviewed: 2026-10-22 against PRD, current source, Git and the linked evidence. Vega source delivered and verified on official simulator; mobile comic, passing warm-up and celebration prototypes included. This page owns the current handoff; the [PRD](../PRD.md) owns requirements and the [roadmap](SUBMISSION_ROADMAP.md) owns submission dates/deliverables.
+Reviewed: 2026-10-23 against current Vega source and simulator evidence; older dated records retain their own scope. Vega source and mobile comic, passing warm-up and celebration prototypes are committed at `4a8dbf0`. This page owns the current handoff; the [PRD](../PRD.md) owns requirements and the [roadmap](SUBMISSION_ROADMAP.md) owns submission dates/deliverables.
 
 ## Milestone and accepted scope
+
+**Barcelona-only Vega release, 23 October:** Blue/Amber is removed from Vega at
+the user's direction. `build:release` now bundles the tracked 36-second cut
+(alba-run / cutback / goal at 6/9/14 s); `build:alba` is gone; the YouTube source
+switch appears only in `build:youtube`. The intermittent remote-pause failure is
+fixed: Vega's player session drops `play` keys while its state lags after
+Restart/Watch again, so the app toggles itself when the session did not act
+(unit-tested). Release build, package hashes, native typecheck, 18 Vega pure tests,
+two consecutive complete simulator journeys and the paused cold-launch check pass.
+YouTube remains blocked by the platform: YouTube's own sample video also stalls
+after about three seconds in the simulator's WebView. Android TV still ships
+Blue/Amber. Judges get the demo video plus a prebuilt `.vpkg`; the `.vpkg` is not
+yet attached anywhere. Clean-checkout reverification of this build is
+pending. [Details](../app/src/features/tv-learning/vega/README.md#automated-and-simulator-checks).
 
 **Vega source delivered, 22 October:** the bounded original-media Vega target is committed and pushed. A clean clone passed fresh dependency installation, native typecheck, release packaging and asset hashes; its 10 pure tests and documentation checks pass. [Judge entry point](../SUBMISSION.md) and [verification record](submission/vega-verification.md). The signed-in browser confirms Devpost draft Arenavoca, 1/5 steps complete, with pitch/details/video/additional info still empty. No form was changed. The user will grant judge access. A 2½-minute [video scenario](submission/amazon-video.md) and narration are prepared; four ElevenLabs takes were started. Recording/editing/publication, final copy/tool feedback and eligibility declarations remain. Amazon closes 23 October at 21:00 Brussels; Meta remains 18 November at 21:00.
 

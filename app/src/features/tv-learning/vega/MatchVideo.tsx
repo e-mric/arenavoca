@@ -5,7 +5,7 @@ import {AppState, Image, View, useWindowDimensions} from 'react-native';
 // These interfaces are published in the pinned SDK's system-module manifest.
 import {VideoPlayer} from '@amazon-devices/react-native-w3cmedia/dist/interface/VideoPlayer';
 import {KeplerVideoSurfaceView} from '@amazon-devices/react-native-w3cmedia/dist/interface/KeplerVideoSurfaceView';
-import type {Playback, PlayerControls} from './playback';
+import {toggleUnlessHandled, type Playback, type PlayerControls} from './playback';
 export type {Playback, PlayerControls} from './playback';
 type Props = {
   asset: number;
@@ -74,14 +74,17 @@ export function MatchVideo(props: Props) {
         player.autoplay = false;
         player.src = mediaSource(Image.resolveAssetSource(props.asset).uri);
         console.info('ArenaVoca video source', player.src);
+        const toggle = () => {
+          if (!ready.current) return;
+          if (player.paused || player.ended) {
+            if (player.ended) player.currentTime = 0;
+            void player.play().catch(failure);
+          } else player.pause();
+        };
         callbacks.current.onControls({
-          toggle: () => {
-            if (!ready.current) return;
-            if (player.paused || player.ended) {
-              if (player.ended) player.currentTime = 0;
-              void player.play().catch(failure);
-            } else player.pause();
-          },
+          toggle,
+          remoteKey: () => toggleUnlessHandled(() => player.paused || player.ended, toggle,
+            (check) => setTimeout(() => active.current && check(), 400)),
           restart: () => {
             if (!ready.current) return;
             player.currentTime = 0;

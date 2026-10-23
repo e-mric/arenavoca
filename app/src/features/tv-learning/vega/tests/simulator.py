@@ -1,11 +1,11 @@
 """Real VVD/Appium remote journey. Requires a running ArenaVoca build and Appium.
-python3 simulator.py --pack original --output /tmp/vega-evidence
+python3 simulator.py --pack alba --output /tmp/vega-evidence
 Uses Linux D-pad/Select/Back events; never substitutes model time or clicks.
 """
 import argparse, base64, json, pathlib, re, sys, time, urllib.request
 import xml.etree.ElementTree as ET
 parser = argparse.ArgumentParser()
-parser.add_argument('--pack', choices=['original','alba'], required=True)
+parser.add_argument('--pack', choices=['alba','youtube'], required=True)
 parser.add_argument('--output', type=pathlib.Path, required=True)
 parser.add_argument('--cold-launch', action='store_true')
 parser.add_argument('--server', default='http://127.0.0.1:4725')
@@ -63,15 +63,18 @@ def activate(id):
     raise AssertionError('D-pad could not reach '+id)
 def watch():
     for _ in range(5):
+        if args.pack == 'youtube' and 'learning-panel' not in elements(): return
         if 'watch-surface' in elements(): return
         key(158)
     raise AssertionError('Back did not restore watch')
 def controls():
-    watch();key(108);assert 'play-pause' in elements()
+    watch()
+    if args.pack != 'youtube': key(108)
+    assert 'play-pause' in elements()
 def screenshot(name):
     (args.output/(args.pack+'-'+name+'.png')).write_bytes(base64.b64decode(request('/screenshot')))
 def wait_for_restart():
-    until=time.monotonic()+8
+    until=time.monotonic()+(45 if args.pack == 'youtube' else 8)
     while position()>=3 or not text('playback').startswith('Playing'):
         assert time.monotonic()<until, 'Restart did not seek: '+text('playback')
         time.sleep(.15)
@@ -80,9 +83,9 @@ def wait_until_time(seconds):
     while position()<seconds:
         assert time.monotonic()<until, 'Playback stopped before '+str(seconds)+': '+text('playback')
         time.sleep(.2)
-ids=['pass','shot','save'] if args.pack=='original' else ['alba-run','alba-cutback','coutinho-goal']
-ends=[8,20,28] if args.pack=='original' else [6,9,14]
-phrases=['El jugador pasa el balón.','El jugador dispara.','El portero para el balón.'] if args.pack=='original' else ['Jordi Alba corre al espacio.','Alba pasa el balón hacia atrás.','Coutinho marca el primer gol.']
+ids=['alba-run','alba-cutback','coutinho-goal']
+ends=[6,9,14]
+phrases=['Jordi Alba corre al espacio.','Alba pasa el balón hacia atrás.','Coutinho marca el primer gol.']
 if args.cold_launch:
     expected=json.loads((args.output/(args.pack+'-journey.json')).read_text())
     time.sleep(1)
@@ -113,23 +116,30 @@ def assert_return_visible(id):
 
 def restart():
     controls();activate('moments');activate('about')
-    if args.pack == 'alba':
-        assert 'Source: FC Barcelona YouTube channel' in text('source-details')
-        assert 'https://youtu.be/WMjohb2tq7Y' in text('source-details')
-        screenshot('source-credit')
+    assert 'Source: FC Barcelona YouTube channel' in text('source-details')
+    assert 'https://youtu.be/WMjohb2tq7Y' in text('source-details')
+    # The release build bundles only the local cut; YouTube stays an opt-in build.
+    assert ('switch-source' in elements()) == (args.pack == 'youtube'), 'Unexpected source switch'
+    screenshot('source-credit')
     activate('restart');wait_for_restart()
 
 # Pause explicitly while asserting menus: Appium latency must not be mistaken
 # for a future-card leak in this short 36-second recording.
+if args.pack == 'youtube':
+    ready_deadline=time.monotonic()+45
+    while elements().get('play-pause') is None or elements()['play-pause'].get('focusable')!='true':
+        assert time.monotonic()<ready_deadline, 'YouTube did not become ready'
+        assert 'youtube-error' not in elements(), text('youtube-error') if 'youtube-error' in elements() else ''
+        time.sleep(.3)
 restart();set_playing(False)
 assert position()<ends[0], 'Initial check must precede first moment'
 controls();activate('moments');assert not any(k.startswith('open-') for k in elements()), 'Future card leaked'
 screenshot('empty-moments')
 watch();assert float(elements()['playback'].get('width'))==1920
 set_playing(True);wait_until_time(ends[0]+.2)
-assert 'watch-surface' in elements() and 'card-phrase' not in elements(), 'Card auto-opened'
+assert 'learning-panel' not in elements() and 'card-phrase' not in elements(), 'Card auto-opened'
 screenshot('watch')
-if text('watch-surface')=='Open new moments':
+if 'watch-surface' in elements() and text('watch-surface')=='Open new moments':
     activate('watch-surface');assert 'open-'+ids[0] in elements(), 'Invitation failed to open moments'
 else:
     controls();activate('moments')
@@ -156,24 +166,6 @@ assert position()==frozen, 'Learning controls changed paused clock'
 watch();set_playing(True);wait_until_time(ends[2]+.2);set_playing(False)
 controls();activate('moments');assert all('open-'+id in elements() for id in ids)
 screenshot('moments')
-# Layout bounds alone miss stale native decoder dimensions. Compare actual
-# paused pixels in both layouts before EOF, when no final-frame overlay exists.
-if args.pack == 'original':
-    from PIL import Image, ImageChops, ImageStat
-    reference=Image.open(pathlib.Path(__file__).resolve().parents[5] / 'native/vegaTV/generated/end-frame.jpg').convert('RGB').resize((320,180))
-    def assert_video_pixels(name, bounds):
-        screenshot(name)
-        frame=Image.open(args.output/(args.pack+'-'+name+'.png')).convert('RGB').crop(bounds).resize((320,180))
-        # Avoid bottom caption/temporary remote hint; compare the pitch itself.
-        difference=max(ImageStat.Stat(ImageChops.difference(frame.crop((0,20,320,145)),reference.crop((0,20,320,145)))).mean)
-        assert difference<12, 'Native surface not fitted: '+name+' '+str(difference)
-        return difference
-    assert 'ended-frame' not in elements(), 'Pixel regression must precede EOF'
-    panel_pixels=assert_video_pixels('paused-panel-pixels',(0,150,1382,928))
-    frozen_layout=position();watch();time.sleep(.5)
-    full_pixels=assert_video_pixels('paused-full-pixels',(0,0,1920,1080))
-    assert position()==frozen_layout and text('playback').startswith('Paused'), 'Layout changed paused playback'
-    controls();activate('moments')
 activate('open-'+ids[1]);assert text('card-phrase')==phrases[1]
 frozen=position();activate('meaning');assert 'card-translation' in elements() and text('card-phrase')==phrases[1]
 assert position()==frozen
@@ -194,10 +186,12 @@ assert position()==ended_position and text('playback').startswith('Paused'), 'La
 from PIL import Image, ImageChops, ImageStat
 before_frame=Image.open(args.output/(args.pack+'-ended-full-before.png')).convert('RGB')
 after_frame=Image.open(args.output/(args.pack+'-ended-full-after.png')).convert('RGB')
-render_difference=max(ImageStat.Stat(ImageChops.difference(before_frame.crop((0,100,1920,850)),after_frame.crop((0,100,1920,850)))).mean)
-assert render_difference<3, 'Ended surface changed size: '+str(render_difference)
-for x in (16,1872):
-    assert max(ImageStat.Stat(after_frame.crop((x,250,x+32,700))).mean)>30, 'Ended image has empty full-screen edge'
+render_difference=None
+if args.pack != 'youtube':
+    render_difference=max(ImageStat.Stat(ImageChops.difference(before_frame.crop((0,100,1920,850)),after_frame.crop((0,100,1920,850)))).mean)
+    assert render_difference<3, 'Ended surface changed size: '+str(render_difference)
+    for x in (16,1872):
+        assert max(ImageStat.Stat(after_frame.crop((x,250,x+32,700))).mean)>30, 'Ended image has empty full-screen edge'
 controls();assert text('play-pause')=='Watch again';activate('play-pause');wait_for_restart()
 wait_until_time(3);set_playing(False);time.sleep(.4)
 no_warning_overlay();screenshot('final-paused')
@@ -205,6 +199,7 @@ result={'pack':args.pack,'device':args.device,'position':position(),'saved':ids[
  'end_frame_difference':render_difference,'passed':['remote navigation','timed gating','no auto-open',
  'Spanish plus on-demand English','pinned translation with advancing playback','save and recall',
  'fixed visible return controls','explicit media pause/resume','saved after rewind','source-matched artwork',
- 'ended full-screen pixels','watch again','no warning overlay']}
+ 'ended playback stays paused' if args.pack == 'youtube' else 'ended full-screen pixels',
+ 'watch again','no warning overlay']}
 (args.output/(args.pack+'-journey.json')).write_text(json.dumps(result,indent=2))
 print(json.dumps(result),flush=True)

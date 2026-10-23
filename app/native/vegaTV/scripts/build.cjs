@@ -2,12 +2,10 @@ const {spawnSync} = require('child_process');
 const {verifyPackage} = require('./verify-package.cjs');
 const path = require('path');
 const {prepare} = require('./prepare.cjs');
-const alba = process.argv.includes('--alba');
-const debug = alba || process.argv.includes('--debug');
-// Private footage is only staged for this explicitly requested Debug build.
-// Restore public content even if compilation fails, so later builds default public.
+const debug = process.argv.includes('--debug');
+// Restore the local-recording default even if compilation fails.
 try {
-  const sequence = prepare(alba, process.argv.includes('--youtube'));
+  const sequence = prepare(process.argv.includes('--youtube'));
   const result = spawnSync(
     'npx',
     [

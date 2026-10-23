@@ -3,7 +3,7 @@ const {execFileSync} = require('child_process');
 const path = require('path');
 const base = path.resolve(__dirname, '..');
 const features = path.resolve(base, '../../src/features');
-function prepare(alba = false, youtube = false) {
+function prepare(youtube = false) {
   const out = path.join(base, 'generated');
   fs.rmSync(out, {recursive: true, force: true});
   fs.mkdirSync(out, {recursive: true});
@@ -24,68 +24,31 @@ function prepare(alba = false, youtube = false) {
       .map(c => ({id: c.id, title: c.title, spanish: c.spanish, english: c.english,
         end: c.evidence.endSeconds - 808, artwork: c.artwork})),
   };
-  const sequence = alba
-    ? {
-        id: 'barca-2018-alba',
-        title: 'Barcelona vs Madrid · 28 Oct 2018',
-        duration: 36,
-        details:
-          'Recording 13:28–14:04\nSource: FC Barcelona YouTube channel\n' +
-          pack.source.youtubeUrl +
-          '\nPrepared match analysis · Spanish awaits review',
-        moments: pack.cards
-          .filter((c) =>
-            ['alba-run', 'alba-cutback', 'coutinho-goal'].includes(c.id),
-          )
-          .map((c) => ({
-            id: c.id,
-            title: c.title,
-            spanish: c.spanish,
-            english: c.english,
-            artwork: {
-              'alba-run': 'comic_alba_run',
-              'alba-cutback': 'comic_alba_cutback',
-              'coutinho-goal': 'comic_alba_goal',
-            }[c.id],
-            end: c.evidence.endSeconds - 808,
-          })),
-      }
-    : {
-        id: 'original-football',
-        title: 'Blue vs Amber',
-        duration: 36,
-        details:
-          'Original illustrated sequence · Prepared learning cards · Spanish awaits review',
-        moments: [
-          {
-            id: 'pass',
-            title: 'The pass',
-            spanish: 'El jugador pasa el balón.',
-            english: 'The player passes the ball.',
-            end: 8,
-            artwork: 'action_pass',
-          },
-          {
-            id: 'shot',
-            title: 'The shot',
-            spanish: 'El jugador dispara.',
-            english: 'The player shoots.',
-            end: 20,
-            artwork: 'action_shot',
-          },
-          {
-            id: 'save',
-            title: 'The save',
-            spanish: 'El portero para el balón.',
-            english: 'The goalkeeper saves the ball.',
-            end: 28,
-            artwork: 'action_save',
-          },
-        ],
-      };
-  const media = alba
-    ? path.resolve(base, '../local-media/tv/res/raw/tv_alba.mp4')
-    : path.join(features, 'tv-learning/res/raw/tv_football.mp4');
+  const sequence = {
+    id: 'barca-2018-alba',
+    title: 'Barcelona vs Madrid · 28 Oct 2018',
+    duration: 36,
+    details:
+      'Recording 13:28–14:04\nSource: FC Barcelona YouTube channel\n' +
+      pack.source.youtubeUrl +
+      '\nPrepared match analysis · Spanish awaits review',
+    moments: pack.cards
+      .filter((c) => ['alba-run', 'alba-cutback', 'coutinho-goal'].includes(c.id))
+      .map((c) => ({
+        id: c.id,
+        title: c.title,
+        spanish: c.spanish,
+        english: c.english,
+        artwork: {
+          'alba-run': 'comic_alba_run',
+          'alba-cutback': 'comic_alba_cutback',
+          'coutinho-goal': 'comic_alba_goal',
+        }[c.id],
+        end: c.evidence.endSeconds - 808,
+      })),
+  };
+  // Tracked 36-second cut of recording 808–844; the full match stays out of Git.
+  const media = path.join(features, 'tv-learning/vega/media/barca-2018-alba.mp4');
   if (!fs.existsSync(media)) throw Error('Missing sequence: ' + media);
   fs.copyFileSync(media, path.join(out, 'match.mp4'));
   // The SDK's frozen native surface does not reliably resize after EOF.
@@ -108,8 +71,7 @@ function prepare(alba = false, youtube = false) {
     fs.copyFileSync(
       path.join(
         features,
-        alba ? 'stories' : 'recap',
-        'artwork/res/drawable-nodpi',
+        'stories/artwork/res/drawable-nodpi',
         m.artwork + '.png',
       ),
       path.join(out, m.artwork + '.png'),
