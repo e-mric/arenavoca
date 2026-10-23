@@ -1,9 +1,0 @@
-{
-  "kind": "arenavoca-recap",
-  "version": 1,
-  "sourceId": "theater-f1-demo-f1",
-  "title": "F1 demo",
-  "sport": "f1",
-  "phraseIds": ["overtake"],
-  "example": false
-}

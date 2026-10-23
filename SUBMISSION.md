@@ -9,8 +9,8 @@ Opening a card does not pause or seek the match.
 
 ## Build and run
 
-The submission target is a separate React Native/Kepler app, not the Android APK
-or the repository's older Quest/web prototype. Follow the
+The submission target is a React Native/Kepler (Vega) app; other ArenaVoca
+prototypes live on the `full-project` branch. Follow the
 [Vega build guide](app/src/features/tv-learning/vega/README.md#build).
 It bundles a 36-second cut of **Barcelona vs Madrid (28 October 2018)**, recording
 13:28–14:04 of FC Barcelona's official YouTube upload, tracked in the repository;
@@ -18,7 +18,7 @@ the full match is not included. The quickest way to try it is the prebuilt
 release package in the repository, the exact build that passed the 23 October
 simulator journeys
 ([`arenavoca-vega-aarch64-release.vpkg`](app/native/vegaTV/prebuilt/arenavoca-vega-aarch64-release.vpkg),
-SHA-256 `70fc46b64a0cd0f6576c31d3a44a7adee5636da785ef5a2ae8c78ca601b02817`):
+SHA-256 `aad0e74b4a5079b7d17aa427709965994543a432f54bebc58c3fe9a882a4ec91`):
 
 ```bash
 vega virtual-device start --timeout 120
@@ -46,7 +46,7 @@ on PATH.
 
 This version uses prepared content, not live computer vision or automatic event
 recognition. It has no TV-to-phone sync, comic reader or independent replay.
-Mobile and Quest are separate prototypes. Spanish awaits fluent review.
+Mobile and Quest prototypes are on `full-project`. Spanish awaits fluent review.
 The current device evidence is from the official Vega 1080p simulator; physical
 Fire TV, 720p and screen-reader usability remain unverified.
 
@@ -58,7 +58,7 @@ the Vega simulator, YouTube streaming stalls after a few seconds for any video
 
 - [Implementation, tests and SDK findings](app/src/features/tv-learning/vega/README.md)
 - [Native build scripts and lockfile](app/native/vegaTV/package.json)
-- [Match cut and card provenance](app/content-source/asset-provenance.md)
+- [Media and credits](README.md#media-and-credits)
 - [Card content](app/src/features/stories/content/barca-2018-opening.json)
 - [Video scenario and narration](docs/submission/amazon-video.md)
 - [Clean-checkout verification (22 October, Blue/Amber build)](docs/submission/vega-verification.md)

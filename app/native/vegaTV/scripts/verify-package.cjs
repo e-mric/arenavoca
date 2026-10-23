@@ -27,6 +27,13 @@ function verifyPackage(file, sequence) {
   }
   if (entries.filter((e) => e.endsWith('.mp4')).length !== 1)
     throw Error('Unexpected video in package');
+  // Stale assets from earlier builds can survive in build/; package only staged files.
+  const staged = new Set(fs.readdirSync(path.join(root, 'generated')));
+  const stale = entries.filter(
+    (e) => e.startsWith('bundle/assets/generated/') &&
+      !staged.has(e.slice('bundle/assets/generated/'.length)),
+  );
+  if (stale.length) throw Error('Unstaged assets in package (delete build/ and rebuild): ' + stale.join(', '));
   console.log('Verified package media and artwork: ' + sequence.id);
 }
 module.exports = {verifyPackage};

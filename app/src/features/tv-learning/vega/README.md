@@ -2,7 +2,7 @@
 
 Reviewed: 2026-10-23. This is a separate React Native/Kepler application, not the
 Android APK. Build scaffolding lives in `app/native/vegaTV`; behavior lives here.
-The Android phone, Android TV and XR implementations remain separate.
+The Android phone, Android TV and XR implementations live on the `full-project` branch.
 
 ## Scope
 
@@ -19,7 +19,7 @@ The player owns time. Learning cannot seek, pause, mute or resume it, and later
 arrivals cannot replace a selected card. Saved IDs and playback position are
 namespaced per sequence in local AsyncStorage. Reopening restores paused.
 There is no phone sync, live detection, comic or independent replay in this
-bounded Vega version. Those Android features have not been ported here.
+bounded Vega version. Those mobile features (on `full-project`) have not been ported here.
 
 ## YouTube candidate — 23 October verification
 
@@ -105,7 +105,7 @@ Release stages the tracked 36-second Barcelona–Madrid cut
 Barcelona's official upload) with the run, cutback and goal cards (6/9/14 seconds)
 and their tracked comic artwork. The user decided on 23 October to drop the
 Blue/Amber animation from Vega and keep this cut in Git; the full match stays out.
-[Provenance](../../../../content-source/asset-provenance.md). The build verifies
+[Media and credits](../../../../../README.md#media-and-credits). The build verifies
 that its package contains exactly one video, its derived final frame and the
 expected artwork, matching staged SHA-256 hashes. Generated content, dependencies
 and packages stay ignored. Judges receive the demo video and a prebuilt `.vpkg`;
@@ -118,9 +118,8 @@ npm wrapper rather than packaging staged files.
 
 ## Automated and simulator checks
 
-For the bounded pure tests, run `cd app && npm ci && npx vitest run src/features/tv-learning/vega`.
-The broader `cd app && npm run check` covers the pure timing/storage/source tests, web
-TypeScript and the existing web production build. Native TSX additionally needs
+For the pure tests, run `npm ci && npm test` from the repository root.
+Native TSX additionally needs
 the Vega `typecheck` above. The simulator journey uses the actual media player,
 UI tree and remote key events, without overriding the video clock.
 
@@ -165,6 +164,12 @@ package hashes pass; two consecutive complete release journeys and the paused
 cold-launch check (3.8 s, both saves) pass on the official 1080p VVD. Evidence:
 ignored `app/content-source/match-analysis/vega-release-barca-2026-10-23/`.
 Physical Fire TV remains untested.
+
+The package check also rejects assets that were not staged by this build: an
+earlier prebuilt package carried three unused Blue/Amber images left in `build/`.
+The prebuilt `.vpkg` was replaced by a clean-checkout build of the Fire TV branch
+(fresh `npm ci`, prepare, typecheck, release); it passed the complete journey and
+the paused cold-launch check.
 
 Verified 22 October (historical, before Blue/Amber was removed): both complete media journeys and both cold-launch checks
 pass on the official aarch64 1080p VVD. Native typecheck, both package builds and

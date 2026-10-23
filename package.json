@@ -1,0 +1,11 @@
+{
+  "name": "arenavoca-firetv",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run app/src/features/tv-learning/vega"
+  },
+  "devDependencies": {
+    "vitest": "5.0.3"
+  }
+}
