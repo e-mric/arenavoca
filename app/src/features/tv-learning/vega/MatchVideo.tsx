@@ -5,7 +5,7 @@ import {AppState, Image, View, useWindowDimensions} from 'react-native';
 // These interfaces are published in the pinned SDK's system-module manifest.
 import {VideoPlayer} from '@amazon-devices/react-native-w3cmedia/dist/interface/VideoPlayer';
 import {KeplerVideoSurfaceView} from '@amazon-devices/react-native-w3cmedia/dist/interface/KeplerVideoSurfaceView';
-import {toggleUnlessHandled, type Playback, type PlayerControls} from './playback';
+import {remoteKeyTarget, settleRemoteKey, type Playback, type PlayerControls} from './playback';
 export type {Playback, PlayerControls} from './playback';
 type Props = {
   asset: number;
@@ -83,8 +83,18 @@ export function MatchVideo(props: Props) {
         };
         callbacks.current.onControls({
           toggle,
-          remoteKey: () => toggleUnlessHandled(() => player.paused || player.ended, toggle,
-            (check) => setTimeout(() => active.current && check(), 400)),
+          remoteKey: () => {
+            if (!ready.current) return;
+            const target = remoteKeyTarget(player.paused, player.ended);
+            setTimeout(() => {
+              if (!active.current) return;
+              settleRemoteKey(target, {paused: player.paused, ended: player.ended}, {
+                play: () => void player.play().catch(failure),
+                pause: () => player.pause(),
+                rewind: () => { player.currentTime = 0; },
+              });
+            }, 400);
+          },
           restart: () => {
             if (!ready.current) return;
             player.currentTime = 0;

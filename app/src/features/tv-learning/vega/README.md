@@ -154,14 +154,18 @@ source-matched cards, hardware Play/Pause and Back. Cold-launch mode checks
 persisted position, no autoplay and both saved cards after process termination.
 
 **Barcelona release and remote pause, 23 October:** the remote's Play/Pause key
-arrives as `play`, which Vega's built-in player session handles only while its
-state is current. After Restart or Watch again its state could lag, so the key was
-silently dropped (the earlier final hardware-pause failure). The app now waits
-400 ms after any Play/Pause key and toggles only if the session did not act
-(`toggleUnlessHandled`, unit-tested). The Blue/Amber-only paused-pixel check was
-removed with that pack. The release build, native typecheck, 18 Vega pure tests and
-package hashes pass; two consecutive complete release journeys and the paused
-cold-launch check (3.8 s, both saves) pass on the official 1080p VVD. Evidence:
+arrives as `play`. By default Vega's built-in player session also acts on it, but
+only while its state is current: after Restart or Watch again it dropped keys or
+answered Pause with `play()`, and a redundant `play()` on a playing Vega player
+stops its `timeupdate` events (freezing the cards' clock). The manifest now declares
+`com.amazon.category.kepler.media`, which makes the SDK skip that session, so only
+the app handles the key. It decides the target state when the key is pressed and,
+400 ms later, acts only if the player is not yet there (`remoteKeyTarget` /
+`settleRemoteKey`, unit-tested). Device logs show no session operations; an 8-cycle
+restart/pause/play stress run, three consecutive complete journeys and the paused
+cold-launch check pass. The Blue/Amber-only paused-pixel check was
+removed with that pack. The release build, native typecheck, 20 Vega pure tests and package hashes pass on
+the official 1080p VVD. Evidence:
 ignored `app/content-source/match-analysis/vega-release-barca-2026-10-23/`.
 Physical Fire TV remains untested.
 

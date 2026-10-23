@@ -18,7 +18,7 @@ the full match is not included. The quickest way to try it is the prebuilt
 release package in the repository, the exact build that passed the 23 October
 simulator journeys
 ([`arenavoca-vega-aarch64-release.vpkg`](app/native/vegaTV/prebuilt/arenavoca-vega-aarch64-release.vpkg),
-SHA-256 `aad0e74b4a5079b7d17aa427709965994543a432f54bebc58c3fe9a882a4ec91`):
+SHA-256 `3e01f0aacf4a7e703a310a37c7bae0691adde31bc7b1d75a2857b2a5ffe693f0`):
 
 ```bash
 vega virtual-device start --timeout 120
