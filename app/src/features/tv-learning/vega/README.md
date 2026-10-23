@@ -163,7 +163,12 @@ the app handles the key. It decides the target state when the key is pressed and
 400 ms later, acts only if the player is not yet there (`remoteKeyTarget` /
 `settleRemoteKey`, unit-tested). Device logs show no session operations; an 8-cycle
 restart/pause/play stress run, three consecutive complete journeys and the paused
-cold-launch check pass. The Blue/Amber-only paused-pixel check was
+cold-launch check pass. Separately, Vega can stop emitting `timeupdate` after a
+quick restart/pause/play while the video keeps playing, which froze the cards'
+clock until the end; the player view now also polls the real position every
+250 ms. The simulator journey waits 0.4 s after pausing before comparing positions
+and ignores card checks within the label's 0.1 s rounding of an unlock time.
+The Blue/Amber-only paused-pixel check was
 removed with that pack. The release build, native typecheck, 20 Vega pure tests and package hashes pass on
 the official 1080p VVD. Evidence:
 ignored `app/content-source/match-analysis/vega-release-barca-2026-10-23/`.

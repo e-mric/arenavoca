@@ -109,6 +109,8 @@ def set_playing(wanted):
     while not text('playback').startswith(prefix):
         assert time.monotonic()<deadline, 'Media key failed: '+text('playback')
         time.sleep(.1)
+    # The 250 ms position poll may report the settled pause position once more.
+    if not wanted: time.sleep(.4)
 
 def assert_return_visible(id):
     e=elements()[id]
@@ -146,7 +148,8 @@ else:
 set_playing(False)
 frozen=position()
 print('First card clock', frozen, flush=True)
-assert all(('open-'+id in elements())==(end<=frozen) for id,end in zip(ids,ends)), 'Visible cards disagree with playback clock'
+# The label rounds to 0.1 s; skip cards whose unlock time is within that rounding.
+assert all(('open-'+id in elements())==(end<=frozen) for id,end in zip(ids,ends) if abs(end-frozen)>.1), 'Visible cards disagree with playback clock'
 activate('open-'+ids[0]);assert text('card-phrase')==phrases[0]
 assert float(elements()['playback'].get('width'))==1382
 assert float(elements()['card-artwork'].get('width'))<=538 and float(elements()['card-artwork'].get('height'))<=300, 'Artwork escaped panel'

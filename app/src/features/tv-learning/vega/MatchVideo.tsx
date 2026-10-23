@@ -36,6 +36,7 @@ export function MatchVideo(props: Props) {
   const surface = useRef<string | null>(null);
   useEffect(() => {
     active.current = true;
+    let poll: ReturnType<typeof setInterval> | undefined;
     const observe = () => {
       if (active.current && initialized.current) {
         setEnded(player.ended);
@@ -68,6 +69,9 @@ export function MatchVideo(props: Props) {
           return;
         }
         events.forEach((e) => player.addEventListener(e, observe));
+        // Vega can stop emitting timeupdate after quick restart/pause/play while the
+        // video keeps playing; poll the real position so cards keep unlocking.
+        poll = setInterval(observe, 250);
         player.addEventListener('loadedmetadata', metadata);
         player.addEventListener('error', failure);
         if (surface.current) player.setSurfaceHandle(surface.current);
@@ -111,6 +115,7 @@ export function MatchVideo(props: Props) {
     });
     return () => {
       active.current = false;
+      if (poll !== undefined) clearInterval(poll);
       sub.remove();
       callbacks.current.onControls(null);
       if (initialized.current) {
