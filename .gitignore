@@ -56,3 +56,8 @@ app/native/vegaTV/node_modules/
 app/native/vegaTV/generated/
 app/native/vegaTV/dist/
 app/native/vegaTV/buildinfo.json
+
+# Local evidence, captures and tool caches (formerly in app/.gitignore)
+app/.vite/
+app/content-source/
+app/dist/
