@@ -1,21 +1,23 @@
 What if watching football could help you practise Spanish, one moment at a time?
 
-This is ArenaVoca, running on Amazon's Vega simulator. It connects optional language practice to the action you are watching.
+This is ArenaVoca, running on Amazon's Vega simulator. Watching comes first. Learning is there when you want it.
 
-The match takes the full screen. For this demonstration, we use an original illustrated football sequence, with three prepared learning moments: a pass, a shot, and a save.
+Our demonstration follows Barcelona against Madrid, from October twenty-eighth, twenty eighteen. The match footage comes from FC Barcelona's official YouTube channel.
 
-After the pass, a moment becomes available. Nothing opens automatically. Using the remote, I choose the moment when I am ready.
+Jordi Alba runs into space, passes the ball back, and Coutinho scores the opening goal. Three connected actions become three small opportunities to learn.
 
-The Spanish phrase describes the action: El jugador pasa el balón. I can reveal English underneath: The player passes the ball. The video keeps moving, and my selected card stays in place.
+As the action unfolds, matching moments become available. Nothing opens automatically. With the remote, I choose a moment when I am ready.
 
-I can save this phrase, then return to full-screen watching with Back. The other moments become available as the sequence reaches them. Learning stays optional throughout.
+Here is the pass back. The illustrated card connects the movement to its Spanish phrase: Alba pasa el balón hacia atrás.
 
-Later, Saved brings me back to the phrases I chose. Practise asks me to recall the meaning. An incorrect answer gives feedback, and I can try again.
+I can reveal the English underneath: Alba passes the ball back. The match keeps playing, while my selected card stays in place.
 
-Saved cards and playback position stay on this device. When I reopen the app, it restores the position with playback paused, so I decide when to continue.
+I save the phrase and return to full-screen watching. There is no exercise to finish before I can enjoy the game.
 
-The TV app uses React Native with Amazon's Kepler framework, its media player, and local storage. The video's position controls which moments are available. Opening a learning card never sends a pause or seek command.
+Later, Saved brings me back to the phrases I chose. Practise asks me to recall the meaning. If I get it wrong, feedback helps me try again. My saved cards stay on this device.
 
-This prototype uses prepared content. It does not claim live match recognition or phone synchronisation. The working loop is simple: watch an action, understand its Spanish, and practise remembering it.
+The TV app uses React Native with Amazon's Kepler framework and media player. The video's position determines which prepared moments are available. Opening a card does not pause or seek the match.
+
+The illustrations and learning content are prepared ahead of time. This prototype does not claim live match recognition or phone synchronisation.
 
 ArenaVoca. Watch. Notice. Remember.
