@@ -32,6 +32,17 @@ The user authorized the official Vega simulator path and a bounded native Vega a
 
 ### Vega visual refinement · 22 October 2026
 
+**YouTube feasibility follow-up, authorized 22 October:** try FC Barcelona's
+official hosted Barcelona–Madrid upload in the native Vega WebView, using the
+YouTube IFrame API's actual playback position for the existing three Alba cards.
+Keep YouTube's player unobstructed, with ArenaVoca controls outside its bounds and
+learning beside it. Credit the publisher and original URL. Retain the original
+animation as a fallback and keep downloaded broadcast footage out of Git and
+public release packages. This is separate from the retired web/XR streaming route.
+Promote the opt-in candidate only after real Vega playback, remote controls,
+card timing and paused restoration pass; a successful build or visible thumbnail
+does not establish acceptance. [Current evidence](app/src/features/tv-learning/vega/README.md#youtube-candidate--23-october-verification).
+
 The user approved the generated Watch / Moments / Learn proposal. Default viewing stays full screen, with a brief optional new-moment invitation; Select opens Moments while the invitation is visible. Use a 28% cream sidebar with compact illustrated rows, a clear blue/coral remote focus, and a fixed return footer. Alba cards use the corresponding existing manhwa artwork; the original sequence keeps its own artwork. Spanish remains visible when English is explicitly shown beneath it. Keep Save and existing recall reachable without hiding return controls. The primary playback bar contains Play/Pause, Moments and Saved; secondary restart and source details live in Match details. Layout and language changes never command playback. Preserve paused/ended frame sizing on returning to full-screen view without seeking or resuming the recording. [Approved visual proposal](docs/design/tv-mobile-2026-10-20/vega-approved-proposal.png).
 
 ### Mobile comic presentation · 22 October 2026

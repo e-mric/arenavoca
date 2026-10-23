@@ -260,3 +260,23 @@ Compared the supplied concept with the runtime: replaced tile buttons with circl
 - **Observed →** bounded Vega source `78d66c5` pushed; separate clean clone installed dependencies, typechecked, built and verified original package assets. Ten pure tests and clean-clone docs checks pass.
 - **Account →** signed-in browser reads Arenavoca draft 1/5 complete; earlier connector failure did not establish browser access. No form edits. User owns judge access.
 - **Next →** [video scenario](../submission/amazon-video.md) and draft ElevenLabs narration are prepared; record/edit/publish, finish project copy and tool feedback, then final submission. [Verification](../submission/vega-verification.md).
+
+## [2026-10-23] ingest | Vega Gemini follow-up verification
+
+- **Expected:** the user reported Gemini had fixed the blocked Vega playback path.
+- **Observed:** commit `4a8dbf0` includes WebView/audio declarations; fresh typecheck, packaging and 15 pure tests pass. Actual YouTube remains buffering at source 808/0. The local Alba journey passes cards, English, saves, recall, EOF and Watch again but fails its final hardware-pause assertion. Focused on-screen pause and cold-launch restoration pass at 3.8 seconds with both saves retained.
+- **Learned:** source configuration, successful packaging and local-file playback do not establish hosted YouTube acceptance. Unsuccessful default-media-control and warm-decoder trials were reverted; Gemini's implementation is preserved.
+- **Evidence:** [Vega candidate and reproduction](../../app/src/features/tv-learning/vega/README.md#youtube-candidate--23-october-verification); local captures/results remain in the ignored dated evidence folders.
+- **Next check:** advancing YouTube pixels/clock, remote pause and restoration before promoting that candidate. No public deployment or Devpost change was made.
+
+## [2026-10-23] ingest | Barcelona demo narration handoff
+
+- **Decision:** the user is retiring the fictional-team demo, leaving playback repairs/local moment cuts to Claude and video assembly to Opus.
+- **Prepared:** [storyboard and spoken copy](../submission/amazon-video.md) now follow Alba's run, backward pass and Coutinho's opening goal, using the prepared source timestamps and FC Barcelona channel credit. Four updated ElevenLabs takes completed and decode successfully. The local submission-video folder includes the storyboard/script, all MP3s and provenance, plus take-01 SRT, words and paragraph timings; its 254-word transcript matches the script.
+- **Next check:** narration delivery/pronunciation, final trimmed-clip cue mappings, repaired runtime capture, caption retiming and export review. Earlier footage/audio/subtitles are superseded; no runtime code, public video or Devpost form was changed by this task.
+
+## [2026-10-23] ingest | Bundled short excerpt for judge testing
+
+- **Decision:** the user explicitly authorized including the short local Barcelona–Madrid excerpt in Git so judges can test it; the full recording stays outside Git.
+- **Observed:** the working tree contains a 36-second, 1280×720 H.264/AAC clip, and the default Vega preparation code stages it. The media file remains untracked, so its presence locally does not establish remote delivery.
+- **Next check:** Claude's playback/build work, commit/push of the clip and matching changes, then a fresh-checkout judge build and runtime journey. The storyboard/local editing handoff now reflects this plan; narration remains unchanged.

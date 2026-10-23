@@ -18,6 +18,43 @@ Blue/Amber. Judges get the demo video plus a prebuilt `.vpkg`; the `.vpkg` is no
 yet attached anywhere. Clean-checkout reverification of this build is
 pending. [Details](../app/src/features/tv-learning/vega/README.md#automated-and-simulator-checks).
 
+**Judge media decision, 23 October:** the user explicitly chose to include the
+short Barcelona–Madrid excerpt in Git for judge testing; the full recording stays
+outside Git. The current working tree has the 36-second 720p H.264/AAC clip at
+`app/src/features/tv-learning/vega/media/barca-2018-alba.mp4`, and Claude's default
+Vega build changes stage it. The clip is untracked at this check; commit/push,
+fresh-checkout packaging and repaired-playback acceptance remain. This supersedes
+the original-media-only judge plan and private-Alba requirement below. The
+[video handoff](submission/amazon-video.md) reflects the bundled local-clip plan;
+its existing Barcelona narration remains applicable. Playback code is left to Claude.
+
+**Video handoff revised, 23 October:** the user is retiring the fictional-team
+demo and has assigned playback repair and local moment trimming to Claude.
+The [storyboard and narration](submission/amazon-video.md) now follow the real
+Barcelona–Madrid Alba run, backward pass and Coutinho goal, crediting FC Barcelona's
+YouTube channel as the source. Four new ElevenLabs narration takes are complete,
+downloaded and decode-checked; take 01 has script-matched Scribe timings, SRT and
+paragraph beats. The local editing folder and start file are in the storyboard.
+The old audio, subtitles and edited export are superseded. The user will ask Opus
+to assemble fresh simulator footage. Final clip offsets, repaired playback,
+caption alignment, export review and publication remain to be checked; this
+documentation/audio task does not establish runtime acceptance or update Devpost.
+
+**Gemini follow-up checked, 23 October:** the current commit includes WebView and
+audio-system declarations. A fresh official VVD boot, native typecheck, YouTube
+Release and local Alba Debug packaging, and 15 Vega pure tests pass. The actual
+YouTube candidate still buffers at source 808/0 without advancing, and its pause
+callback fails during that stall. It is not accepted for the demo. The local
+Barcelona excerpt advances and passed cards/translation/saves/recall/EOF/Watch again;
+the complete journey then failed its final hardware-pause check. A focused
+on-screen pause and cold-launch check passed, restoring 3.8 seconds paused and both
+saved cards. The installed simulator app is that local Alba Debug build, left paused.
+[Reproduction and limits](../app/src/features/tv-learning/vega/README.md#youtube-candidate--23-october-verification).
+Next: resolve WebView streaming and remote pause before promoting YouTube; use the
+separately verified original-media release for clean-checkout testing. Keep private
+footage out of public packages. The demo edit remains a local draft awaiting final
+playback choice, review and publication; no Devpost update was made in this check.
+
 **Vega source delivered, 22 October:** the bounded original-media Vega target is committed and pushed. A clean clone passed fresh dependency installation, native typecheck, release packaging and asset hashes; its 10 pure tests and documentation checks pass. [Judge entry point](../SUBMISSION.md) and [verification record](submission/vega-verification.md). The signed-in browser confirms Devpost draft Arenavoca, 1/5 steps complete, with pitch/details/video/additional info still empty. No form was changed. The user will grant judge access. A 2½-minute [video scenario](submission/amazon-video.md) and narration are prepared; four ElevenLabs takes were started. Recording/editing/publication, final copy/tool feedback and eligibility declarations remain. Amazon closes 23 October at 21:00 Brussels; Meta remains 18 November at 21:00.
 
 **Vega design implemented, 22 October:** the approved Watch / Moments / Learn
